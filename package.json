@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/buzz-buzz/buzz-admin#readme",
   "dependencies": {
-    "koa": "^2.4.1"
+    "koa": "^2.4.1",
+    "koa-basic-auth": "^2.0.0"
   }
 }
