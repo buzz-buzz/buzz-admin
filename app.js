@@ -12,10 +12,11 @@ let assetspath = path.join(__dirname, 'public');
 react(app, {views: viewpath});
 
 register({
-    presets: ['react'],
+    presets: ['es2015', 'react'],
     extensions: ['.jsx']
 });
 
+app.use(staticCache('.'));
 app.use(staticCache(assetspath));
 
 app.use(async (ctx, next) => {

@@ -1,11 +1,11 @@
-var React = require('react');
+import * as React from "react";
 
-var Layout = React.createClass({
-    propTypes: {
-        title: React.PropTypes.string
-    },
+export default class Layout extends React.Component {
+    constructor() {
+        super();
+    }
 
-    render: function () {
+    render() {
         return (
             <html>
             <head>
@@ -19,6 +19,4 @@ var Layout = React.createClass({
             </html>
         );
     }
-});
-
-module.exports = Layout;
+}
