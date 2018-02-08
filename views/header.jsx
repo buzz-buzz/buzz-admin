@@ -2,17 +2,16 @@ import * as React from "react";
 import {Menu} from "semantic-ui-react";
 
 export default class Header extends React.Component {
-    state = {}
-    handleItemClick = (e, {name}) => this.setState({activeItem: name})
+    constructor(props) {
+        super(props);
+    }
 
     render() {
-        const {activeItem} = this.state
+        const activeItem = this.props.path;
         return (
             <Menu>
-                <Menu.Item name="students" active={activeItem === 'students'}
-                           onClick={this.handleItemClick}>Students</Menu.Item>
-                <Menu.Item name="classes" active={activeItem === 'classes'}
-                           onClick={this.handleItemClick}>Classes</Menu.Item>
+                <Menu.Item name="students" active={activeItem === '/students'} href="/students">Students</Menu.Item>
+                <Menu.Item name="classes" active={activeItem === '/classes'} href="/classes">Classes</Menu.Item>
             </Menu>
         )
     }

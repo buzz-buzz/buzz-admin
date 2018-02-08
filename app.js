@@ -9,6 +9,7 @@ const Router = require('koa-router');
 const router = new Router();
 let viewpath = path.join(__dirname, 'views');
 let assetspath = path.join(__dirname, 'public');
+let nodeModules = path.join(__dirname, 'node_modules');
 
 koaReactView(app, {views: viewpath});
 
@@ -19,6 +20,7 @@ register({
 
 app.use(staticCache('.'));
 app.use(staticCache(assetspath));
+app.use(staticCache(nodeModules));
 
 app.use(async (ctx, next) => {
     try {
@@ -36,16 +38,24 @@ app.use(async (ctx, next) => {
 
 app.use(auth({name: process.env.BASIC_NAME, pass: process.env.BASIC_PASS}));
 
+app.use(async (ctx, next) => {
+    ctx.state.path = ctx.path;
+    await next();
+});
+
 router
+    .get('/ping', async ctx => {
+        ctx.body = ctx.state;
+    })
     .get('/', async ctx => {
-        ctx.render('index', {
-            title: 'Buzzbuzz Admin'
-        });
+        ctx.render('index', Object.assign({
+            title: 'Home | Buzzbuzz admin'
+        }));
     })
     .get('/students', async ctx => {
-        ctx.render('students/list', {
+        ctx.render('students/list', Object.assign({
             title: 'Students | Buzzbuzz admin'
-        })
+        }));
     })
 ;
 
