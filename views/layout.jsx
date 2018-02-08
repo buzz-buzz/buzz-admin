@@ -12,11 +12,10 @@ export default class Layout extends React.Component {
             <head>
                 <title>{this.props.title}</title>
                 <link rel="stylesheet"
-                      href="/node_modules/semantic-ui-css/semantic.min.css"></link>
+                      href="/css/semantic.min.css"></link>
             </head>
             <body>
             <Header title={this.props.title} path={this.props.path}/>
-            <p>{this.props.path}</p>
             {this.props.children}
             <script src="/js/bundle.js"></script>
             </body>
