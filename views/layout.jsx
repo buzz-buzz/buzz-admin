@@ -1,4 +1,5 @@
 import * as React from "react";
+import Header from "./header";
 
 export default class Layout extends React.Component {
     constructor() {
@@ -10,11 +11,12 @@ export default class Layout extends React.Component {
             <html>
             <head>
                 <title>{this.props.title}</title>
-                <link rel="stylesheet" href="/css/main.css"/>
+                <link rel="stylesheet"
+                      href="//cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.2.12/semantic.min.css"></link>
             </head>
             <body>
+            <Header/>
             {this.props.children}
-            <script src="/js/bundle.js"></script>
             </body>
             </html>
         );

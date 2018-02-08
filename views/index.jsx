@@ -15,7 +15,7 @@ export default class index extends React.Component {
 
         return (
             <Layout title={this.props.title}>
-                <h1>{this.props.title}</h1>
+                <h1>Welcome to Buzzbuzz Admin!</h1>
             </Layout>
         );
     }

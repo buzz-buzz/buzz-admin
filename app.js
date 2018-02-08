@@ -2,17 +2,18 @@ const Koa = require('koa');
 const app = new Koa();
 const auth = require('koa-basic-auth');
 const staticCache = require('koa-static-cache');
-const react = require('koa-react-view');
+const koaReactView = require('koa-react-view');
 const path = require('path');
 const register = require('babel-register');
-
+const Router = require('koa-router');
+const router = new Router();
 let viewpath = path.join(__dirname, 'views');
 let assetspath = path.join(__dirname, 'public');
 
-react(app, {views: viewpath});
+koaReactView(app, {views: viewpath});
 
 register({
-    presets: ['es2015', 'react'],
+    presets: ['es2015', 'react', 'stage-0'],
     extensions: ['.jsx']
 });
 
@@ -35,15 +36,23 @@ app.use(async (ctx, next) => {
 
 app.use(auth({name: process.env.BASIC_NAME, pass: process.env.BASIC_PASS}));
 
-app.use(async ctx => {
-    ctx.render('index', {
-        title: 'Buzzbuzz Admin',
-        list: [
-            'hello koa',
-            'hello react'
-        ]
-    });
-});
+router
+    .get('/', async ctx => {
+        ctx.render('index', {
+            title: 'Buzzbuzz Admin'
+        });
+    })
+    .get('/students', async ctx => {
+        ctx.render('students/list', {
+            title: 'Students | Buzzbuzz admin'
+        })
+    })
+;
+
+app
+    .use(router.routes())
+    .use(router.allowedMethods())
+;
 
 app.listen(process.env.PORT || 16666, function () {
     console.log('started!');
