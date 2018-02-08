@@ -43,20 +43,18 @@ app.use(async (ctx, next) => {
     await next();
 });
 
+let clientPage = async ctx => {
+    ctx.render('index', Object.assign({
+        title: 'Home | Buzzbuzz admin'
+    }));
+};
 router
     .get('/ping', async ctx => {
         ctx.body = ctx.state;
     })
-    .get('/', async ctx => {
-        ctx.render('index', Object.assign({
-            title: 'Home | Buzzbuzz admin'
-        }));
-    })
-    .get('/students', async ctx => {
-        ctx.render('students/list', Object.assign({
-            title: 'Students | Buzzbuzz admin'
-        }));
-    })
+    .get('/', clientPage)
+    .get('/students', clientPage)
+    .get('/classes', clientPage)
 ;
 
 app
