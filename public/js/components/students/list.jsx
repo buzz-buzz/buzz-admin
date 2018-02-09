@@ -8,8 +8,8 @@ export default class StudentList extends React.Component {
 
         this.state = {
             searchParams: {
-                wechatNickName: '',
-                userName: '',
+                wechat_name: '',
+                display_name: '',
                 mobile: '',
                 email: ''
             },
@@ -17,7 +17,6 @@ export default class StudentList extends React.Component {
             students: []
         };
 
-        this.clickMe = this.clickMe.bind(this);
         this.searchUsers = this.searchUsers.bind(this);
         this.handleTextChange = this.handleTextChange.bind(this);
     }
@@ -26,7 +25,7 @@ export default class StudentList extends React.Component {
         this.setState({loading: true});
         let students = await ServiceProxy.proxyTo({
             body: {
-                uri: '{buzzService}/api/v1/users'
+                uri: '{buzzService}/api/v1/users?role=s'
             }
         });
 
@@ -34,13 +33,18 @@ export default class StudentList extends React.Component {
         this.setState({loading: false, students: students});
     }
 
-    clickMe() {
-        alert('ai');
-    }
-
-    searchUsers() {
+    async searchUsers() {
         console.log('searching with ', this.state.searchParams);
         this.setState({loading: true});
+        let students = await
+            ServiceProxy.proxyTo({
+                body: {
+                    uri: '{buzzService}/api/v1/users?role=s',
+                    qs: this.state.searchParams
+                }
+            });
+
+        this.setState({loading: false, students: students});
     }
 
     handleTextChange(event, {value, name}) {
@@ -57,11 +61,11 @@ export default class StudentList extends React.Component {
             <Container>
                 <Form onSubmit={this.searchUsers} loading={this.state.loading}>
                     <Form.Group widths='equal'>
-                        <Form.Field control={Input} label="微信昵称" name="wechatNickName"
-                                    value={this.state.searchParams.wechatNickName}
+                        <Form.Field control={Input} label="微信昵称" name="wechat_name"
+                                    value={this.state.searchParams.wechat_name}
                                     onChange={this.handleTextChange}></Form.Field>
-                        <Form.Field control={Input} label="用户名称" value={this.state.searchParams.userName}
-                                    name="userName"
+                        <Form.Field control={Input} label="用户名称" value={this.state.searchParams.display_name}
+                                    name="display_name"
                                     onChange={this.handleTextChange}></Form.Field>
                         <Form.Field control={Input} label="手机号" value={this.state.searchParams.mobile}
                                     name="mobile" onChange={this.handleTextChange}></Form.Field>
@@ -91,7 +95,7 @@ export default class StudentList extends React.Component {
                                         <Image src={student.avatar} avatar/>
                                     </Table.Cell>
                                     <Table.Cell>
-                                        {student.name}
+                                        {student.wechat_name}
                                     </Table.Cell>
                                     <Table.Cell>
                                         {student.display_name}
