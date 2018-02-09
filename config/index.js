@@ -13,7 +13,7 @@ let config = {
     },
     production: {
         endPoints: {
-            buzzService: '',
+            buzzService: 'https://buzz-corner-service.herokuapp.com',
         }
     }
 };
