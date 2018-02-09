@@ -13,7 +13,7 @@ let config = {
     },
     production: {
         endPoints: {
-            buzzService: 'http://service.bridgeplus.cn:16160',
+            buzzService: '',
         }
     }
 };

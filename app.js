@@ -55,7 +55,9 @@ let clientPage = async ctx => {
 };
 router
     .get('/ping', async ctx => {
-        ctx.body = ctx.state;
+        ctx.body = Object.assign(ctx.state, {
+            NODE_ENV: process.env.NODE_ENV
+        });
     })
     .get('/', clientPage)
     .get('/students', clientPage)
