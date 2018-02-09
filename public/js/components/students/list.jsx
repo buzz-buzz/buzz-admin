@@ -1,5 +1,6 @@
 import * as React from "react";
-import {Button, Container, Form, Icon, Input, Menu, Table} from "semantic-ui-react";
+import {Button, Container, Form, Icon, Image, Input, Menu, Table} from "semantic-ui-react";
+import ServiceProxy from "../../service-proxy";
 
 export default class StudentList extends React.Component {
     constructor() {
@@ -12,12 +13,25 @@ export default class StudentList extends React.Component {
                 mobile: '',
                 email: ''
             },
-            loading: false
+            loading: false,
+            students: []
         };
 
         this.clickMe = this.clickMe.bind(this);
         this.searchUsers = this.searchUsers.bind(this);
         this.handleTextChange = this.handleTextChange.bind(this);
+    }
+
+    async componentDidMount() {
+        this.setState({loading: true});
+        let students = await ServiceProxy.proxyTo({
+            body: {
+                uri: '{buzzService}/api/v1/users'
+            }
+        });
+
+        console.log('students = ', students);
+        this.setState({loading: false, students: students});
     }
 
     clickMe() {
@@ -70,6 +84,30 @@ export default class StudentList extends React.Component {
                         </Table.Row>
                     </Table.Header>
                     <Table.Body>
+                        {
+                            this.state.students.map((student, i) =>
+                                <Table.Row key={student.user_id}>
+                                    <Table.Cell>
+                                        <Image src={student.avatar} avatar/>
+                                    </Table.Cell>
+                                    <Table.Cell>
+                                        {student.name}
+                                    </Table.Cell>
+                                    <Table.Cell>
+                                        {student.display_name}
+                                    </Table.Cell>
+                                    <Table.Cell>
+                                        {student.mobile}
+                                    </Table.Cell>
+                                    <Table.Cell>
+                                        {student.email}
+                                    </Table.Cell>
+                                    <Table.Cell>
+                                        0
+                                    </Table.Cell>
+                                </Table.Row>
+                            )
+                        }
                     </Table.Body>
                     <Table.Footer>
                         <Table.Row>

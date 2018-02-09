@@ -7,6 +7,10 @@ const path = require('path');
 const register = require('babel-register');
 const Router = require('koa-router');
 const router = new Router();
+const config = require('./config');
+const oldRequest = require('request');
+const bodyParser = require('koa-bodyparser');
+
 let viewpath = path.join(__dirname, 'views');
 let assetspath = path.join(__dirname, 'public');
 let nodeModules = path.join(__dirname, 'node_modules');
@@ -18,6 +22,7 @@ register({
     extensions: ['.jsx']
 });
 
+app.use(bodyParser());
 app.use(staticCache('.'));
 app.use(staticCache(assetspath));
 app.use(staticCache(nodeModules));
@@ -55,6 +60,18 @@ router
     .get('/', clientPage)
     .get('/students', clientPage)
     .get('/classes', clientPage)
+
+    .post('/proxy', async ctx => {
+        if (ctx.request.body.uri) {
+            ctx.request.body.uri = ctx.request.body.uri
+                .replace('{buzzService}', config.endPoints.buzzService)
+            ;
+        }
+
+        console.log('proxing with ...', ctx.request.body);
+
+        ctx.body = await oldRequest(ctx.request.body);
+    })
 ;
 
 app
