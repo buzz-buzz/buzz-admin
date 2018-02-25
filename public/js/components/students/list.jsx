@@ -2,6 +2,7 @@ import * as React from "react";
 import {Button, Container, Form, Icon, Image, Input, Menu, Table} from "semantic-ui-react";
 import ServiceProxy from "../../service-proxy";
 import ClassHours from "./class-hours";
+import Profile from "./profile";
 
 export default class StudentList extends React.Component {
     constructor() {
@@ -23,6 +24,8 @@ export default class StudentList extends React.Component {
         this.openClassHours = this.openClassHours.bind(this);
         this.closeClassHoursModal = this.closeClassHoursModal.bind(this);
         this.classHoursUpdated = this.classHoursUpdated.bind(this);
+        this.closeProfileModal = this.closeProfileModal.bind(this);
+        this.profileUpdated = this.profileUpdated.bind(this);
     }
 
     classHoursUpdated(newClassHours) {
@@ -112,20 +115,20 @@ export default class StudentList extends React.Component {
                     <Table.Body>
                         {
                             this.state.students.map((student, i) =>
-                                <Table.Row key={student.user_id}>
-                                    <Table.Cell>
+                                <Table.Row key={student.user_id} style={{cursor: 'pointer'}}>
+                                    <Table.Cell onClick={() => this.openProfile(student)}>
                                         <Image src={student.avatar} avatar/>
                                     </Table.Cell>
-                                    <Table.Cell>
+                                    <Table.Cell onClick={() => this.openProfile(student)}>
                                         {student.wechat_name}
                                     </Table.Cell>
-                                    <Table.Cell>
+                                    <Table.Cell onClick={() => this.openProfile(student)}>
                                         {student.display_name}
                                     </Table.Cell>
-                                    <Table.Cell>
+                                    <Table.Cell onClick={() => this.openProfile(student)}>
                                         {student.mobile}
                                     </Table.Cell>
-                                    <Table.Cell>
+                                    <Table.Cell onClick={() => this.openProfile(student)}>
                                         {student.email}
                                     </Table.Cell>
                                     <Table.Cell onClick={() => this.openClassHours(student)}
@@ -136,7 +139,7 @@ export default class StudentList extends React.Component {
                             )
                         }
                     </Table.Body>
-                    <Table.Footer>
+                    <Table.Footer style={{display: 'none'}}>
                         <Table.Row>
                             <Table.HeaderCell colSpan="6">
                                 <Menu floated="right" pagination>
@@ -159,6 +162,8 @@ export default class StudentList extends React.Component {
                 <ClassHours open={this.state.classHoursModalOpen} student={this.state.currentStudent}
                             classHoursUpdateCallback={this.classHoursUpdated}
                             onCloseCallback={this.closeClassHoursModal}/>
+                <Profile open={this.state.profileModalOpen} user={this.state.currentStudent}
+                         profileUpdateCallback={this.profileUpdated} onCloseCallback={this.closeProfileModal}/>
             </Container>
         )
     }
@@ -172,5 +177,35 @@ export default class StudentList extends React.Component {
 
     closeClassHoursModal() {
         this.setState({classHoursModalOpen: false})
+    }
+
+    openProfile(student) {
+        this.setState({
+            profileModalOpen: true,
+            currentStudent: student
+        })
+    }
+
+    closeProfileModal() {
+        this.setState({profileModalOpen: false});
+    }
+
+    profileUpdated(newProfile) {
+        let copy = Object.assign({}, this.state.currentStudent);
+        copy.email = newProfile.email;
+        copy.mobile = newProfile.mobile;
+
+        let newStudents = this.state.students.map(s => {
+            if (s.user_id === copy.user_id) {
+                return copy;
+            }
+
+            return s;
+        })
+
+        this.setState({
+            currentStudent: copy,
+            students: newStudents
+        })
     }
 }
