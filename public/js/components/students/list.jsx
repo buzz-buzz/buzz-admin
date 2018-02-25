@@ -1,6 +1,7 @@
 import * as React from "react";
 import {Button, Container, Form, Icon, Image, Input, Menu, Table} from "semantic-ui-react";
 import ServiceProxy from "../../service-proxy";
+import ClassHours from "./class-hours";
 
 export default class StudentList extends React.Component {
     constructor() {
@@ -19,6 +20,27 @@ export default class StudentList extends React.Component {
 
         this.searchUsers = this.searchUsers.bind(this);
         this.handleTextChange = this.handleTextChange.bind(this);
+        this.openClassHours = this.openClassHours.bind(this);
+        this.closeClassHoursModal = this.closeClassHoursModal.bind(this);
+        this.classHoursUpdated = this.classHoursUpdated.bind(this);
+    }
+
+    classHoursUpdated(newClassHours) {
+        let copy = Object.assign({}, this.state.currentStudent);
+        copy.class_hours = newClassHours;
+
+        let newStudents = this.state.students.map(s => {
+            if (s.user_id === copy.user_id) {
+                return copy;
+            }
+
+            return s;
+        })
+
+        this.setState({
+            currentStudent: copy,
+            students: newStudents
+        })
     }
 
     async componentDidMount() {
@@ -106,8 +128,9 @@ export default class StudentList extends React.Component {
                                     <Table.Cell>
                                         {student.email}
                                     </Table.Cell>
-                                    <Table.Cell>
-                                        0
+                                    <Table.Cell onClick={() => this.openClassHours(student)}
+                                                style={{cursor: 'pointer'}}>
+                                        {student.class_hours || 0}
                                     </Table.Cell>
                                 </Table.Row>
                             )
@@ -133,7 +156,21 @@ export default class StudentList extends React.Component {
                         </Table.Row>
                     </Table.Footer>
                 </Table>
+                <ClassHours open={this.state.classHoursModalOpen} student={this.state.currentStudent}
+                            classHoursUpdateCallback={this.classHoursUpdated}
+                            onCloseCallback={this.closeClassHoursModal}/>
             </Container>
         )
+    }
+
+    openClassHours(student) {
+        this.setState({
+            classHoursModalOpen: true,
+            currentStudent: student
+        });
+    }
+
+    closeClassHoursModal() {
+        this.setState({classHoursModalOpen: false})
     }
 }
