@@ -3,6 +3,7 @@ import {Button, Container, Form, Icon, Image, Input, Menu, Table} from "semantic
 import ServiceProxy from "../../service-proxy";
 import ClassHours from "./class-hours";
 import Profile from "./profile";
+import SchedulePreference from "./schedule-preference";
 
 export default class StudentList extends React.Component {
     constructor() {
@@ -109,6 +110,7 @@ export default class StudentList extends React.Component {
                             <Table.HeaderCell>用户名称</Table.HeaderCell>
                             <Table.HeaderCell>手机号</Table.HeaderCell>
                             <Table.HeaderCell>邮箱</Table.HeaderCell>
+                            <Table.HeaderCell>时间偏好</Table.HeaderCell>
                             <Table.HeaderCell>课时数</Table.HeaderCell>
                         </Table.Row>
                     </Table.Header>
@@ -130,6 +132,9 @@ export default class StudentList extends React.Component {
                                     </Table.Cell>
                                     <Table.Cell onClick={() => this.openProfile(student)}>
                                         {student.email}
+                                    </Table.Cell>
+                                    <Table.Cell onClick={() => this.openSchedulePreferenceModal(student)}>
+                                        ……
                                     </Table.Cell>
                                     <Table.Cell onClick={() => this.openClassHours(student)}
                                                 style={{cursor: 'pointer'}}>
@@ -164,6 +169,8 @@ export default class StudentList extends React.Component {
                             onCloseCallback={this.closeClassHoursModal}/>
                 <Profile open={this.state.profileModalOpen} user={this.state.currentStudent}
                          profileUpdateCallback={this.profileUpdated} onCloseCallback={this.closeProfileModal}/>
+                <SchedulePreference open={this.state.schedulePreferenceModalOpen} user={this.state.currentStudent}
+                                    onCloseCallback={this.closeSchedulePreferenceModal}/>
             </Container>
         )
     }
@@ -188,6 +195,19 @@ export default class StudentList extends React.Component {
 
     closeProfileModal() {
         this.setState({profileModalOpen: false});
+    }
+
+    openSchedulePreferenceModal(student) {
+        this.setState({
+            schedulePreferenceModalOpen: true,
+            currentStudent: student
+        })
+    }
+
+    closeSchedulePreferenceModal() {
+        this.setState({
+            schedulePreferenceModalOpen: false
+        })
     }
 
     profileUpdated(newProfile) {
