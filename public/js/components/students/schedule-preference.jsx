@@ -98,6 +98,7 @@ export default class SchedulePreference extends React.Component {
                             events={this.state.events}
                             startAccessor='start_time'
                             endAccessor='end_time'
+                            defaultDate={new Date()}
                         />
                     </Segment>
                 </Modal.Content>
