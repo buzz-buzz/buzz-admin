@@ -27,6 +27,7 @@ export default class StudentList extends React.Component {
         this.classHoursUpdated = this.classHoursUpdated.bind(this);
         this.closeProfileModal = this.closeProfileModal.bind(this);
         this.profileUpdated = this.profileUpdated.bind(this);
+        this.closeSchedulePreferenceModal = this.closeSchedulePreferenceModal.bind(this);
     }
 
     classHoursUpdated(newClassHours) {

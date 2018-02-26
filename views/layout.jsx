@@ -13,6 +13,7 @@ export default class Layout extends React.Component {
                 <title>{this.props.title}</title>
                 <link rel="stylesheet"
                       href="/css/semantic.min.css"></link>
+                <link rel="stylesheet" href="/css/react-big-calendar.css"></link>
             </head>
             <body>
             <Header title={this.props.title} path={this.props.path}/>

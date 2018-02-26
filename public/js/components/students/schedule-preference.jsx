@@ -1,13 +1,18 @@
 import * as React from 'react';
 import {Header, Modal, Segment} from "semantic-ui-react";
 import ServiceProxy from "../../service-proxy";
+import BigCalendar from 'react-big-calendar'
+import moment from 'moment'
+
+BigCalendar.setLocalizer(BigCalendar.momentLocalizer(moment))
 
 export default class SchedulePreference extends React.Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            user: {}
+            user: {},
+            events: []
         };
 
         this.close = this.close.bind(this);
@@ -17,7 +22,6 @@ export default class SchedulePreference extends React.Component {
         this.setState({
             user: nextProps.user || {}
         }, async () => {
-            console.log('user set', nextProps.user)
 
             if (!nextProps.user) {
                 return;
@@ -25,7 +29,6 @@ export default class SchedulePreference extends React.Component {
 
             try {
                 this.setState({loading: true})
-                console.log('current user = ', this.state.user);
 
                 let result = await
                     ServiceProxy.proxyTo({
@@ -36,6 +39,13 @@ export default class SchedulePreference extends React.Component {
                     });
 
                 console.log(result);
+                this.setState({
+                    events: result.map(e => {
+                        e.start_time = new Date(e.start_time);
+                        e.end_time = new Date(e.end_time);
+                        return e;
+                    })
+                })
             } catch (error) {
                 this.setState({
                     error: true,
@@ -83,8 +93,12 @@ export default class SchedulePreference extends React.Component {
             <Modal open={this.props.open} closeOnEscape={true} closeOnRootNodeClick={true} onClose={this.close}>
                 <Header content="时间偏好"></Header>
                 <Modal.Content>
-                    <Segment loading={this.state.loading}>
-                        <p>time</p>
+                    <Segment loading={this.state.loading} style={{height: '600px'}}>
+                        <BigCalendar
+                            events={this.state.events}
+                            startAccessor='start_time'
+                            endAccessor='end_time'
+                        />
                     </Segment>
                 </Modal.Content>
             </Modal>
