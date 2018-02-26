@@ -4,6 +4,34 @@ import ServiceProxy from "../../service-proxy";
 import ClassHours from "./class-hours";
 import Profile from "./profile";
 import SchedulePreference from "./schedule-preference";
+import BigCalendar from 'react-big-calendar'
+import moment from 'moment'
+
+BigCalendar.setLocalizer(BigCalendar.momentLocalizer(moment))
+
+function attachEvents(students) {
+    let self = this;
+    return students.map(s => {
+        s.events = [];
+
+        ServiceProxy.proxyTo({
+            body: {
+                uri: `{buzzService}/api/v1/student-class-schedule/${s.user_id}`,
+                method: 'GET'
+            }
+        }).then((events) => {
+            s.events = events.map(e => {
+                e.start_time = new Date(e.start_time);
+                e.end_time = new Date(e.end_time);
+                return e;
+            })
+
+            self.forceUpdate();
+        });
+
+        return s;
+    })
+}
 
 export default class StudentList extends React.Component {
     constructor() {
@@ -57,7 +85,7 @@ export default class StudentList extends React.Component {
         });
 
         console.log('students = ', students);
-        this.setState({loading: false, students: students});
+        this.setState({loading: false, students: attachEvents.call(this, students)});
     }
 
     async searchUsers() {
@@ -71,7 +99,7 @@ export default class StudentList extends React.Component {
                 }
             });
 
-        this.setState({loading: false, students: students});
+        this.setState({loading: false, students: attachEvents.call(this, students)});
     }
 
     handleTextChange(event, {value, name}) {
@@ -134,8 +162,15 @@ export default class StudentList extends React.Component {
                                     <Table.Cell onClick={() => this.openProfile(student)}>
                                         {student.email}
                                     </Table.Cell>
-                                    <Table.Cell onClick={() => this.openSchedulePreferenceModal(student)}>
-                                        ……
+                                    <Table.Cell onClick={() => this.openSchedulePreferenceModal(student)}
+                                                style={{height: '250px'}}>
+                                        <BigCalendar
+                                            events={student.events}
+                                            startAccessor='start_time'
+                                            endAccessor='end_time'
+                                            defaultDate={new Date()}
+                                            defaultView="agenda"
+                                        />
                                     </Table.Cell>
                                     <Table.Cell onClick={() => this.openClassHours(student)}
                                                 style={{cursor: 'pointer'}}>

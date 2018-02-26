@@ -27,6 +27,13 @@ export default class SchedulePreference extends React.Component {
                 return;
             }
 
+            if (nextProps.user.events) {
+                this.setState({
+                    events: nextProps.user.events
+                });
+                return;
+            }
+
             try {
                 this.setState({loading: true})
 
