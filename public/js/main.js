@@ -14,7 +14,8 @@ function initApp() {
                 <Route path='/students' component={StudentList}/>
                 <Route path="/classes" component={ClassList}/>
             </Switch>
-        </BrowserRouter>,
+        </BrowserRouter>
+        ,
         container
     );
 }

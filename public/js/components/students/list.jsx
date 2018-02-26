@@ -139,7 +139,7 @@ export default class StudentList extends React.Component {
                             <Table.HeaderCell>用户名称</Table.HeaderCell>
                             <Table.HeaderCell>手机号</Table.HeaderCell>
                             <Table.HeaderCell>邮箱</Table.HeaderCell>
-                            <Table.HeaderCell>时间偏好</Table.HeaderCell>
+                            <Table.HeaderCell>课程安排</Table.HeaderCell>
                             <Table.HeaderCell>课时数</Table.HeaderCell>
                         </Table.Row>
                     </Table.Header>
