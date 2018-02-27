@@ -139,8 +139,9 @@ export default class StudentList extends React.Component {
                             <Table.HeaderCell>用户名称</Table.HeaderCell>
                             <Table.HeaderCell>手机号</Table.HeaderCell>
                             <Table.HeaderCell>邮箱</Table.HeaderCell>
-                            <Table.HeaderCell>课程安排</Table.HeaderCell>
                             <Table.HeaderCell>课时数</Table.HeaderCell>
+                            <Table.HeaderCell>能力评级</Table.HeaderCell>
+                            <Table.HeaderCell>课程安排</Table.HeaderCell>
                         </Table.Row>
                     </Table.Header>
                     <Table.Body>
@@ -162,6 +163,13 @@ export default class StudentList extends React.Component {
                                     <Table.Cell onClick={() => this.openProfile(student)}>
                                         {student.email}
                                     </Table.Cell>
+                                    <Table.Cell onClick={() => this.openClassHours(student)}
+                                                style={{cursor: 'pointer'}}>
+                                        {student.class_hours || 0}
+                                    </Table.Cell>
+                                    <Table.Cell>
+                                        {student.level}
+                                    </Table.Cell>
                                     <Table.Cell onClick={() => this.openSchedulePreferenceModal(student)}
                                                 style={{height: '250px'}}>
                                         <BigCalendar
@@ -171,10 +179,6 @@ export default class StudentList extends React.Component {
                                             defaultDate={new Date()}
                                             defaultView="agenda"
                                         />
-                                    </Table.Cell>
-                                    <Table.Cell onClick={() => this.openClassHours(student)}
-                                                style={{cursor: 'pointer'}}>
-                                        {student.class_hours || 0}
                                     </Table.Cell>
                                 </Table.Row>
                             )
