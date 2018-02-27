@@ -10,10 +10,12 @@ async function checkStatus(response) {
         if (response.status === 401) {
             error.authPath = await response.text();
         }
+
+        let errorResult = await response.text();
         try {
-            error.result = await response.json();
+            error.result = JSON.parse(errorResult);
         } catch (e) {
-            error.result = await response.text();
+            error.result = errorResult;
         }
         throw error;
     }

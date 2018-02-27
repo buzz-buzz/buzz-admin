@@ -155,6 +155,6 @@ export default class SchedulePreference extends React.Component {
         let events = this.state.events;
         events.push(event);
 
-        this.setState({events});
+        this.setState({events, selectedEvent: event});
     }
 };
