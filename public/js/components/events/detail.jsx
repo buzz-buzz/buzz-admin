@@ -74,7 +74,7 @@ export default class EventDetail extends React.Component {
                 start_time: this.state.event.start_time,
                 end_time: this.state.event.end_time,
                 user_id: this.state.event.user_id,
-                status: 'booking'
+                status: this.state.event.status
             };
             let result = await ServiceProxy.proxyTo({
                 body: {

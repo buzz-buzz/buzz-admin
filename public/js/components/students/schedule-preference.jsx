@@ -35,7 +35,10 @@ export default class SchedulePreference extends React.Component {
 
             if (nextProps.user.events) {
                 this.setState({
-                    events: nextProps.user.events
+                    events: nextProps.user.events.map(e => {
+                        e.title = e.status;
+                        return e;
+                    })
                 });
                 return;
             }
@@ -56,6 +59,9 @@ export default class SchedulePreference extends React.Component {
                     events: result.map(e => {
                         e.start_time = new Date(e.start_time);
                         e.end_time = new Date(e.end_time);
+                        e.title = e.status;
+
+                        console.log(e);
                         return e;
                     })
                 })
@@ -112,7 +118,9 @@ export default class SchedulePreference extends React.Component {
                 start_time: slotInfo.start,
                 end_time: slotInfo.end,
                 saved: false,
-                user_id: this.state.user.user_id
+                user_id: this.state.user.user_id,
+                status: 'booking',
+                title: 'booking'
             }
         })
     }
