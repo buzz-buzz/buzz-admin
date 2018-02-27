@@ -20,6 +20,7 @@ export default class SchedulePreference extends React.Component {
         this.selectSlot = this.selectSlot.bind(this);
         this.selectEvent = this.selectEvent.bind(this);
         this.closeEventDetailModal = this.closeEventDetailModal.bind(this);
+        this.eventCancelled = this.eventCancelled.bind(this);
     }
 
     async componentWillReceiveProps(nextProps) {
@@ -96,7 +97,7 @@ export default class SchedulePreference extends React.Component {
                     </Segment>
                 </Modal.Content>
                 <EventDetail open={this.state.eventDetailModalOpen} onClose={this.closeEventDetailModal}
-                             event={this.state.selectedEvent}/>
+                             event={this.state.selectedEvent} onEventCancelled={this.eventCancelled}/>
             </Modal>
         );
     }
@@ -117,5 +118,17 @@ export default class SchedulePreference extends React.Component {
         this.setState({
             eventDetailModalOpen: false
         })
+    }
+
+    eventCancelled(event) {
+        let events = this.state.events;
+        events.map(e => {
+            if (e.start_time === this.state.selectedEvent.start_time) {
+                e.status = event.status;
+            }
+
+            return e;
+        });
+        this.setState({events: events})
     }
 };
