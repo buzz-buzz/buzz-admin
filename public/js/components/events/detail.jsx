@@ -6,8 +6,9 @@ export default class EventDetail extends React.Component {
     constructor() {
         super();
 
-        this.state = {};
+        this.state = {event: {}};
         this.cancelEvent = this.cancelEvent.bind(this);
+        this.saveEvent = this.saveEvent.bind(this);
     }
 
     async componentWillReceiveProps(nextProps) {
@@ -28,7 +29,12 @@ export default class EventDetail extends React.Component {
                     </Form>
                 </Modal.Content>
                 <Modal.Actions>
-                    <Button icon='close' content='取消' onClick={this.cancelEvent}/>
+                    {
+                        this.state.event.saved !== false ?
+                            <Button icon='close' content='取消' onClick={this.cancelEvent}/>
+                            :
+                            <Button icon='save' content='保存' onClick={this.saveEvent}/>
+                    }
                 </Modal.Actions>
             </Modal>
         )
@@ -47,8 +53,6 @@ export default class EventDetail extends React.Component {
                 }
             })
 
-            console.log('result = ', result);
-
             let event = this.state.event;
             event.status = result.status;
             this.setState({
@@ -56,6 +60,33 @@ export default class EventDetail extends React.Component {
             });
 
             this.props.onEventCancelled(event);
+        } catch (error) {
+            this.setState({error: true, message: JSON.stringify(error.result)});
+        } finally {
+            this.setState({loading: false});
+        }
+    }
+
+    async saveEvent() {
+        this.setState({loading: true, error: false});
+        try {
+            let newEvent = {
+                start_time: this.state.event.start_time,
+                end_time: this.state.event.end_time,
+                user_id: this.state.event.user_id,
+                status: 'booking'
+            };
+            let result = await ServiceProxy.proxyTo({
+                body: {
+                    uri: `{buzzService}/api/v1/student-class-schedule/${this.state.event.user_id}`,
+                    method: 'POST',
+                    json: [newEvent]
+                }
+            });
+
+            console.log('save result = ', result);
+
+            this.props.onEventSaved(newEvent);
         } catch (error) {
             this.setState({error: true, message: JSON.stringify(error.result)});
         } finally {

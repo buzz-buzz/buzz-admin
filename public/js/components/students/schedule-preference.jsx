@@ -21,6 +21,7 @@ export default class SchedulePreference extends React.Component {
         this.selectEvent = this.selectEvent.bind(this);
         this.closeEventDetailModal = this.closeEventDetailModal.bind(this);
         this.eventCancelled = this.eventCancelled.bind(this);
+        this.eventSaved = this.eventSaved.bind(this);
     }
 
     async componentWillReceiveProps(nextProps) {
@@ -97,13 +98,23 @@ export default class SchedulePreference extends React.Component {
                     </Segment>
                 </Modal.Content>
                 <EventDetail open={this.state.eventDetailModalOpen} onClose={this.closeEventDetailModal}
-                             event={this.state.selectedEvent} onEventCancelled={this.eventCancelled}/>
+                             event={this.state.selectedEvent} onEventCancelled={this.eventCancelled}
+                             onEventSaved={this.eventSaved}/>
             </Modal>
         );
     }
 
     selectSlot(slotInfo) {
         console.log(slotInfo);
+        this.setState({
+            eventDetailModalOpen: true,
+            selectedEvent: {
+                start_time: slotInfo.start,
+                end_time: slotInfo.end,
+                saved: false,
+                user_id: this.state.user.user_id
+            }
+        })
     }
 
     selectEvent(event) {
@@ -130,5 +141,12 @@ export default class SchedulePreference extends React.Component {
             return e;
         });
         this.setState({events: events})
+    }
+
+    eventSaved(event) {
+        let events = this.state.events;
+        events.push(event);
+
+        this.setState({events});
     }
 };
