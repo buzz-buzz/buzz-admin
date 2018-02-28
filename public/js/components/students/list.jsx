@@ -6,6 +6,7 @@ import Profile from "./profile";
 import SchedulePreference from "./schedule-preference";
 import BigCalendar from 'react-big-calendar'
 import moment from 'moment'
+import LevelModal from "./level-modal";
 
 BigCalendar.setLocalizer(BigCalendar.momentLocalizer(moment))
 
@@ -56,6 +57,9 @@ export default class StudentList extends React.Component {
         this.closeProfileModal = this.closeProfileModal.bind(this);
         this.profileUpdated = this.profileUpdated.bind(this);
         this.closeSchedulePreferenceModal = this.closeSchedulePreferenceModal.bind(this);
+        this.onLevelUpdated = this.onLevelUpdated.bind(this);
+        this.openLevelModal = this.openLevelModal.bind(this);
+        this.onCloseLevelModal = this.onCloseLevelModal.bind(this);
     }
 
     classHoursUpdated(newClassHours) {
@@ -167,7 +171,7 @@ export default class StudentList extends React.Component {
                                                 style={{cursor: 'pointer'}}>
                                         {student.class_hours || 0}
                                     </Table.Cell>
-                                    <Table.Cell>
+                                    <Table.Cell onClick={() => this.openLevelModal(student)}>
                                         {student.level}
                                     </Table.Cell>
                                     <Table.Cell onClick={() => this.openSchedulePreferenceModal(student)}
@@ -211,6 +215,8 @@ export default class StudentList extends React.Component {
                          profileUpdateCallback={this.profileUpdated} onCloseCallback={this.closeProfileModal}/>
                 <SchedulePreference open={this.state.schedulePreferenceModalOpen} user={this.state.currentStudent}
                                     onCloseCallback={this.closeSchedulePreferenceModal}/>
+                <LevelModal open={this.state.levelModalOpen} user={this.state.currentStudent}
+                            onCloseCallback={this.onCloseLevelModal} onLevelUpdated={this.onLevelUpdated}/>
             </Container>
         )
     }
@@ -267,5 +273,32 @@ export default class StudentList extends React.Component {
             currentStudent: copy,
             students: newStudents
         })
+    }
+
+    openLevelModal(student) {
+        console.log('student = ', student);
+        this.setState({
+            currentStudent: student,
+            levelModalOpen: true
+        })
+    }
+
+    onCloseLevelModal() {
+        this.setState({
+            levelModalOpen: false
+        })
+    }
+
+    onLevelUpdated(placementTestResult) {
+        let student = this.state.currentStudent;
+        student.level = placementTestResult.level;
+        let newStudents = this.state.students.map(s => {
+            if (s.user_id === student.user_id) {
+                return student;
+            }
+
+            return s;
+        });
+        this.setState({currentStudent: student, students: newStudents})
     }
 }
