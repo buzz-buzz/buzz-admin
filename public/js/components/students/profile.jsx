@@ -76,11 +76,28 @@ export default class Profile extends React.Component {
                     <Form error={this.state.error} loading={this.state.loading} onSubmit={this.updateProfile}>
                         <Message error header="出错了" content={this.state.message}/>
                         <Form.Group>
+                            <Form.Input placeholder="微信昵称" name="wechat_name" value={this.state.user.wechat_name || ''}
+                                        label="微信昵称" readOnly/>
+                            <Form.Input placeholder="性别" name="gender"
+                                        value={this.state.user.gender === 'm' ? '男' : (this.state.user.gender === 'f' ? '女' : '')}
+                                        label="性别"
+                                        readOnly/>
                             <Form.Input placeholder="手机号" name="mobile" value={this.state.mobile}
                                         onChange={this.handleChange}
-                                        type="number"/>
+                                        type="number" label="手机号"/>
                             <Form.Input placeholder="邮箱" name="email" value={this.state.email}
-                                        onChange={this.handleChange} type="email"/>
+                                        onChange={this.handleChange} type="email" label="邮箱"/>
+                        </Form.Group>
+                        <Form.Group>
+                            <Form.Input placeholder="生日" name="birthday" value={this.state.user.birthday || ''}
+                                        label="生日"
+                                        readOnly/>
+                            <Form.Input placeholder="年级" name="grade" value={this.state.user.grade || ''} label="年级"
+                                        readOnly/>
+                            <Form.Input placeholder="所在城市" name="location" value={this.state.user.location || ''}
+                                        label="所在城市" readOnly/>
+                            <Form.Input placeholder="兴趣爱好" name="interests" value={this.state.user.interests || ''}
+                                        label="兴趣爱好" readOnly/>
                         </Form.Group>
                         <Form.Group>
                             <Form.Button content="修改" type="submit"/>
