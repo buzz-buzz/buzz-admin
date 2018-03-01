@@ -153,7 +153,8 @@ export default class StudentList extends React.Component {
                             this.state.students.map((student, i) =>
                                 <Table.Row key={student.user_id} style={{cursor: 'pointer'}}>
                                     <Table.Cell onClick={() => this.openProfile(student)}>
-                                        <Image src={student.avatar} avatar/>
+                                        <Image src={student.avatar} avatar title={student.user_id}
+                                               alt={student.user_id}/>
                                     </Table.Cell>
                                     <Table.Cell onClick={() => this.openProfile(student)}>
                                         {student.wechat_name}
