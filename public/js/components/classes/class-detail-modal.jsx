@@ -39,9 +39,7 @@ export default class ClassDetail extends React.Component {
         let exercises = nextProps.class ? nextProps.class.exercises : '';
         let startTime = nextProps.class ? nextProps.class.start_time : '';
         let endTime = nextProps.class ? nextProps.class.end_time : '';
-
-        console.log(startTime)
-        console.log(endTime);
+        let students = nextProps.class ? (nextProps.class.students || []).join(',') : '';
 
         try {
             exercises = JSON.parse(exercises).join('\n');
@@ -56,7 +54,7 @@ export default class ClassDetail extends React.Component {
                 startTime: startTime,
                 endTime: endTime,
                 companionId: nextProps.class ? nextProps.class.companion_id : '',
-                students: nextProps.class ? nextProps.class.students : '',
+                students: students,
                 exercises: exercises,
                 remark: nextProps.class ? nextProps.class.remark : '',
                 class_id: nextProps.class ? nextProps.class.class_id : ''
