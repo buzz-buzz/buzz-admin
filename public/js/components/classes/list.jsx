@@ -94,13 +94,13 @@ export default class ClassList extends React.Component {
                                         {c.status}
                                     </Table.Cell>
                                     <Table.Cell>
-                                        {c.start_time}
+                                        {new Date(c.start_time).toLocaleDateString()}
                                     </Table.Cell>
                                     <Table.Cell>
-                                        {c.start_time}
+                                        {new Date(c.start_time).toLocaleTimeString()}
                                     </Table.Cell>
                                     <Table.Cell>
-                                        {c.end_time}
+                                        {new Date(c.end_time).toLocaleTimeString()}
                                     </Table.Cell>
                                     <Table.Cell>
                                         {c.room_url}

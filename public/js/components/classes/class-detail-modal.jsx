@@ -1,5 +1,5 @@
 import * as React from "react";
-import {Button, Form, Header, Message, Modal, TextArea} from "semantic-ui-react";
+import {Button, Dropdown, Form, Header, Message, Modal, TextArea} from "semantic-ui-react";
 import ServiceProxy from "../../service-proxy";
 
 export default class ClassDetail extends React.Component {
@@ -12,9 +12,10 @@ export default class ClassDetail extends React.Component {
             startTime: '',
             endTime: '',
             companions: '',
-            students: '',
+            students: [],
             exercises: '',
             remark: '',
+            availableStudents: [],
             error: false
         }
 
@@ -40,7 +41,7 @@ export default class ClassDetail extends React.Component {
         let exercises = nextProps.class ? nextProps.class.exercises : '';
         let startTime = nextProps.class ? nextProps.class.start_time : '';
         let endTime = nextProps.class ? nextProps.class.end_time : '';
-        let students = nextProps.class ? (nextProps.class.students || []).join(',') : '';
+        let students = nextProps.class ? nextProps.class.students.map(userId => Number(userId)) : [];
         let companions = nextProps.class ? (nextProps.class.companions || []).join(',') : '';
 
         try {
@@ -69,7 +70,7 @@ export default class ClassDetail extends React.Component {
         try {
             let json = {
                 companions: (this.state.companions || '').split(','),
-                students: (this.state.students || '').split(','),
+                students: this.state.students,
                 start_time: new Date(this.state.startTime),
                 end_time: new Date(this.state.endTime),
                 status: 'opened',
@@ -107,6 +108,11 @@ export default class ClassDetail extends React.Component {
         }
     }
 
+    async componentWillMount() {
+        console.log('props = ', this.props);
+        this.setState({availableStudents: await this.getOptions()});
+    }
+
     render() {
         return (
             <Modal open={this.props.open} onClose={this.close}>
@@ -129,8 +135,12 @@ export default class ClassDetail extends React.Component {
                         <Form.Group>
                             <Form.Input label="外籍伙伴" placeholder="外籍伙伴" value={this.state.companions}
                                         name="companions" onChange={this.handleChange}/>
-                            <Form.Input label="中国学生" placeholder="中国学生" value={this.state.students} name="students"
-                                        onChange={this.handleChange}/>
+                            <Dropdown fluid selection multiple={true} search={this.state.searchStudent} name="students"
+                                      options={this.state.availableStudents}
+                                      value={this.state.students}
+                                      placeholder="添加学生" onChange={this.handleChange}
+                                      onSearchChange={this.handleSearchChange} disabled={this.state.loading}
+                                      loading={this.state.loading}/>
                         </Form.Group>
                         <Form.Group>
                             <TextArea autoHeight placeholder="练习音频链接，一行一个" rows="3"
@@ -152,5 +162,23 @@ export default class ClassDetail extends React.Component {
                 </Modal.Content>
             </Modal>
         );
+    }
+
+    async getOptions() {
+        this.setState({loading: true});
+        let students = await ServiceProxy.proxyTo({
+            body: {
+                uri: '{buzzService}/api/v1/users?role=s'
+            }
+        });
+
+        this.setState({loading: false});
+        return students.map(s => {
+            return {
+                key: s.user_id,
+                text: s.display_name || s.name || s.wechat_name,
+                value: s.user_id
+            }
+        })
     }
 }
