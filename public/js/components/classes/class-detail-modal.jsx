@@ -24,6 +24,8 @@ export default class ClassDetail extends React.Component {
         this.close = this.close.bind(this);
         this.saveClass = this.saveClass.bind(this);
         this.handleChange = this.handleChange.bind(this);
+        this.handleSearchStudentChange = this.handleSearchStudentChange.bind(this);
+        this.handleSearchCompanionChange = this.handleSearchCompanionChange.bind(this);
     }
 
     close() {
@@ -141,21 +143,21 @@ export default class ClassDetail extends React.Component {
                             <Form.Field>
                                 <label>外籍伙伴</label>
                                 <Dropdown selection multiple={false}
-                                          search={this.state.searchCompanion} name="companion"
+                                          search={true} name="companion"
                                           options={this.state.availableCompanions}
                                           value={this.state.companion}
                                           placeholder="设置伙伴" onChange={this.handleChange}
-                                          onSearchChange={this.handleSearchChange}
+                                          onSearchChange={this.handleSearchCompanionChange}
                                           disabled={this.state.loading}
                                           loading={this.state.loading} label="外籍伙伴"/>
                             </Form.Field>
                             <Form.Field>
                                 <label>中国学生</label>
-                                <Dropdown selection multiple={true} search={this.state.searchStudent} name="students"
+                                <Dropdown selection multiple={true} search={true} name="students"
                                           options={this.state.availableStudents}
                                           value={this.state.students}
                                           placeholder="添加学生" onChange={this.handleChange}
-                                          onSearchChange={this.handleSearchChange} disabled={this.state.loading}
+                                          onSearchChange={this.handleSearchStudentChange} disabled={this.state.loading}
                                           loading={this.state.loading} label="中国学生"/>
                             </Form.Field>
                         </Form.Group>
@@ -200,5 +202,13 @@ export default class ClassDetail extends React.Component {
                 value: s.user_id
             }
         })
+    }
+
+    handleSearchStudentChange(e, {search}) {
+        this.setState({searchStudent: search});
+    }
+
+    handleSearchCompanionChange(e, {search}) {
+        this.setState({searchCompanion: search});
     }
 }
