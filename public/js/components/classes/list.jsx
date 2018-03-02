@@ -14,6 +14,7 @@ export default class ClassList extends React.Component {
         this.openClassDetail = this.openClassDetail.bind(this);
         this.onClassDetailClosed = this.onClassDetailClosed.bind(this);
         this.onClassSaved = this.onClassSaved.bind(this);
+        this.openClassDetail = this.openClassDetail.bind(this);
     }
 
     async componentDidMount() {
@@ -67,7 +68,7 @@ export default class ClassList extends React.Component {
         return (
             <Container>
                 <Segment loading={this.state.loading}>
-                    <Button onClick={this.openClassDetail}>创建班级</Button>
+                    <Button onClick={() => this.openClassDetail()}>创建班级</Button>
                 </Segment>
                 <Table celled>
                     <Table.Header>
