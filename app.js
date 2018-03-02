@@ -10,6 +10,7 @@ const router = new Router();
 const config = require('./config');
 const oldRequest = require('request');
 const bodyParser = require('koa-bodyparser');
+const request = require('request-promise-native');
 
 let viewpath = path.join(__dirname, 'views');
 let assetspath = path.join(__dirname, 'public');
@@ -49,8 +50,8 @@ app.use(async (ctx, next) => {
 });
 
 let clientPage = async ctx => {
-    ctx.render('index', Object.assign({
-        title: 'Home | Buzzbuzz admin'
+    ctx.render('index', Object.assign(ctx.state, {
+        title: 'Home | Buzzbuzz admin',
     }));
 };
 router
@@ -60,9 +61,15 @@ router
         });
     })
     .get('/', clientPage)
-    .get('/students', clientPage)
+    .get('/students/:userId?', clientPage)
     .get('/classes', clientPage)
 
+    .get('/avatar/:userId', async ctx => {
+        let profile = await request(`${config.endPoints.buzzService}/api/v1/users/${ctx.params.userId}`);
+
+        profile = JSON.parse(profile);
+        ctx.body = await oldRequest(profile.avatar);
+    })
     .post('/proxy', async ctx => {
         if (ctx.request.body.uri) {
             ctx.request.body.uri = ctx.request.body.uri

@@ -1,5 +1,5 @@
 import * as React from "react";
-import {Button, Container, Icon, Menu, Segment, Table} from "semantic-ui-react";
+import {Button, Container, Icon, Image, Menu, Segment, Table} from "semantic-ui-react";
 import ServiceProxy from "../../service-proxy";
 import ClassDetail from "./class-detail-modal";
 
@@ -25,9 +25,14 @@ export default class ClassList extends React.Component {
             }
         })
 
-        console.log('result = ', result);
-
-        this.setState({loading: false, classes: result})
+        this.setState({
+            loading: false, classes: result.map(c => {
+                let uniqueFilter = (value, index, self) => self.indexOf(value) === index;
+                c.companions = c.companions.split(',').filter(uniqueFilter);
+                c.students = c.students.split(',').filter(uniqueFilter);
+                return c;
+            })
+        })
     }
 
     openClassDetail(c) {
@@ -101,10 +106,15 @@ export default class ClassList extends React.Component {
                                         {c.room_url}
                                     </Table.Cell>
                                     <Table.Cell>
-                                        {c.companion_id}
+                                        {c.companions.map(userId => <Image avatar alt={userId} title={userId}
+                                                                           src={`/avatar/${userId}`} key={userId}/>)}
                                     </Table.Cell>
-                                    <Table.Cell>
-
+                                    <Table.Cell onClick={(event) => event.stopPropagation()}>
+                                        {c.students.map(userId => <a href={`/students/${userId}`} target="_blank"
+                                                                     key={userId}>
+                                            <Image avatar alt={userId} title={userId}
+                                                   src={`/avatar/${userId}`}
+                                                   key={userId}/></a>)}
                                     </Table.Cell>
                                 </Table.Row>
                             )

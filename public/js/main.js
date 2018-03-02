@@ -11,7 +11,7 @@ function initApp() {
     ReactDOM.render(
         <BrowserRouter>
             <Switch>
-                <Route path='/students' component={StudentList}/>
+                <Route path='/students/:userId?' component={StudentList}/>
                 <Route path="/classes" component={ClassList}/>
             </Switch>
         </BrowserRouter>

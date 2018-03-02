@@ -35,8 +35,8 @@ function attachEvents(students) {
 }
 
 export default class StudentList extends React.Component {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
 
         this.state = {
             searchParams: {
@@ -88,8 +88,14 @@ export default class StudentList extends React.Component {
             }
         });
 
-        console.log('students = ', students);
         this.setState({loading: false, students: attachEvents.call(this, students)});
+
+        if (this.props.match.params.userId) {
+            let theStudents = students.filter(s => s.user_id === Number(this.props.match.params.userId));
+            if (theStudents.length) {
+                this.openProfile(theStudents[0]);
+            }
+        }
     }
 
     async searchUsers() {

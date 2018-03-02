@@ -11,10 +11,11 @@ export default class ClassDetail extends React.Component {
             classroomUrl: '',
             startTime: '',
             endTime: '',
-            companionId: '',
+            companions: '',
             students: '',
             exercises: '',
-            remark: ''
+            remark: '',
+            error: false
         }
 
         this.close = this.close.bind(this);
@@ -40,6 +41,7 @@ export default class ClassDetail extends React.Component {
         let startTime = nextProps.class ? nextProps.class.start_time : '';
         let endTime = nextProps.class ? nextProps.class.end_time : '';
         let students = nextProps.class ? (nextProps.class.students || []).join(',') : '';
+        let companions = nextProps.class ? (nextProps.class.companions || []).join(',') : '';
 
         try {
             exercises = JSON.parse(exercises).join('\n');
@@ -53,7 +55,7 @@ export default class ClassDetail extends React.Component {
                 classroomUrl: nextProps.class ? nextProps.class.room_url : '',
                 startTime: startTime,
                 endTime: endTime,
-                companionId: nextProps.class ? nextProps.class.companion_id : '',
+                companions: companions,
                 students: students,
                 exercises: exercises,
                 remark: nextProps.class ? nextProps.class.remark : '',
@@ -66,7 +68,7 @@ export default class ClassDetail extends React.Component {
         this.setState({loading: true});
         try {
             let json = {
-                companions: [this.state.companionId],
+                companions: (this.state.companions || '').split(','),
                 students: (this.state.students || '').split(','),
                 start_time: new Date(this.state.startTime),
                 end_time: new Date(this.state.endTime),
@@ -90,7 +92,8 @@ export default class ClassDetail extends React.Component {
             json.end_time = json.end_time.toISOString();
             json.class_id = result.class_id;
             this.setState({
-                class_id: result.class_id
+                class_id: result.class_id,
+                error: false
             })
 
             this.props.onClassSaved(json);
@@ -124,8 +127,8 @@ export default class ClassDetail extends React.Component {
                                         type="datetime-local" name="endTime" onChange={this.handleChange}/>
                         </Form.Group>
                         <Form.Group>
-                            <Form.Input label="外籍伙伴" placeholder="外籍伙伴" value={this.state.companionId}
-                                        name="companionId" onChange={this.handleChange}/>
+                            <Form.Input label="外籍伙伴" placeholder="外籍伙伴" value={this.state.companions}
+                                        name="companions" onChange={this.handleChange}/>
                             <Form.Input label="中国学生" placeholder="中国学生" value={this.state.students} name="students"
                                         onChange={this.handleChange}/>
                         </Form.Group>
