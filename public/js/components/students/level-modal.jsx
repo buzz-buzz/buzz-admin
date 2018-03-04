@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {Form, Header, Message, Modal} from "semantic-ui-react";
+import {Form, Header, Message, Modal, TextArea} from "semantic-ui-react";
 import ServiceProxy from "../../service-proxy";
 
 export default class LevelModal extends React.Component {
@@ -8,6 +8,7 @@ export default class LevelModal extends React.Component {
 
         this.state = {
             level: '',
+            levelDetail: '正在加载中……'
         }
 
         this.handleChange = this.handleChange.bind(this);
@@ -25,11 +26,31 @@ export default class LevelModal extends React.Component {
 
     }
 
-    componentWillReceiveProps(nextProps) {
+    async componentWillReceiveProps(nextProps) {
         this.setState({
             level: nextProps.user ? (nextProps.user.level || '') : '',
             userId: nextProps.user ? nextProps.user.user_id : 0
         })
+
+        if (nextProps.user && nextProps.user.user_id && !this.state.detail) {
+            this.setState({loading: true});
+
+            try {
+                let result = await ServiceProxy.proxyTo({
+                    body: {
+                        uri: `{buzzService}/api/v1/user-placement-tests/${nextProps.user.user_id}`,
+                        method: 'GET'
+                    }
+                })
+
+                console.log('result = ', result);
+                this.setState({levelDetail: result.detail});
+            } catch (error) {
+
+            } finally {
+                this.setState({loading: false})
+            }
+        }
     }
 
     async saveLevel() {
@@ -74,6 +95,9 @@ export default class LevelModal extends React.Component {
                     <p>当前评级：{this.state.level}</p>
                     <Form error={this.state.error} loading={this.state.loading}>
                         <Message error header="出错了" content={this.state.message}/>
+                        <Form.Group>
+                            <TextArea autoHeight rows={3} value={this.state.levelDetail}></TextArea>
+                        </Form.Group>
                         <Form.Group>
                             <Form.Input placeholder="等级" name="level" value={level} onChange={this.handleChange}/>
                             <Form.Button content="保存" type="button" onClick={this.saveLevel}/>
