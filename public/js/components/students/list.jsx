@@ -2,8 +2,8 @@ import * as React from "react";
 import {Button, Container, Form, Icon, Image, Input, Menu, Table} from "semantic-ui-react";
 import ServiceProxy from "../../service-proxy";
 import ClassHours from "./class-hours";
-import Profile from "./profile";
-import SchedulePreference from "./schedule-preference";
+import Profile from "../users/profile";
+import SchedulePreference from "../users/schedule-preference";
 import BigCalendar from 'react-big-calendar'
 import moment from 'moment'
 import LevelModal from "./level-modal";

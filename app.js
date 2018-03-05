@@ -45,11 +45,14 @@ app.use(async (ctx, next) => {
 app.use(auth({name: process.env.BASIC_NAME, pass: process.env.BASIC_PASS}));
 
 app.use(async (ctx, next) => {
+    console.log('path = ', ctx.path);
     ctx.state.path = ctx.path;
+    console.log('path = ', ctx.state.path);
     await next();
 });
 
 let clientPage = async ctx => {
+    console.log('state = ', ctx.state);
     ctx.render('index', Object.assign(ctx.state, {
         title: 'Home | Buzzbuzz admin',
     }));
@@ -62,6 +65,7 @@ router
     })
     .get('/', clientPage)
     .get('/students/:userId?', clientPage)
+    .get('/companions/:userId?', clientPage)
     .get('/classes', clientPage)
 
     .get('/avatar/:userId', async ctx => {
