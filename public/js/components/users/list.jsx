@@ -32,7 +32,7 @@ function attachEvents(users) {
                 e.start_time = new Date(e.start_time);
                 e.end_time = new Date(e.end_time);
                 return e;
-            })
+            }).filter(e => e.status !== 'cancelled')
 
             self.forceUpdate();
         });
@@ -262,7 +262,7 @@ export default class UserList extends React.Component {
                     this.props['user-type'] === UserTypes.student &&
                     <Table.HeaderCell>能力评级</Table.HeaderCell>
                 }
-                <Table.HeaderCell>课程安排</Table.HeaderCell>
+                <Table.HeaderCell>预约需求</Table.HeaderCell>
             </Table.Row>
         </Table.Header>;
     }
