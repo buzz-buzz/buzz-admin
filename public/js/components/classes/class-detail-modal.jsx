@@ -40,7 +40,6 @@ export default class ClassDetail extends React.Component {
     }
 
     handleChange(event, {name, value}) {
-        console.log('change = ', event, name, value);
         if (name === 'companion') {
             this.setState({companions: [value]})
         }
@@ -52,7 +51,7 @@ export default class ClassDetail extends React.Component {
         let exercises = nextProps.class ? nextProps.class.exercises : '';
         let startTime = nextProps.class ? nextProps.class.start_time : '';
         let endTime = nextProps.class ? nextProps.class.end_time : '';
-        let students = nextProps.class ? nextProps.class.students.map(userId => Number(userId)) : [];
+        let students = nextProps.class ? nextProps.class.users.map(userId => Number(userId)) : [];
         let companions = nextProps.class ? nextProps.class.companions.map(userId => Number(userId)) : [];
 
         try {
@@ -84,7 +83,7 @@ export default class ClassDetail extends React.Component {
         try {
             let json = {
                 companions: [this.state.companion],
-                students: this.state.students,
+                students: this.state.users,
                 start_time: new Date(this.state.startTime),
                 end_time: new Date(this.state.endTime),
                 status: 'opened',
@@ -164,7 +163,7 @@ export default class ClassDetail extends React.Component {
                                 <label>中国学生</label>
                                 <Dropdown selection multiple={true} search={true} name="students"
                                           options={this.state.availableStudents}
-                                          value={this.state.students}
+                                          value={this.state.users}
                                           placeholder="添加学生" onChange={this.handleChange}
                                           onSearchChange={this.handleSearchStudentChange} disabled={this.state.loading}
                                           loading={this.state.loading} label="中国学生"/>

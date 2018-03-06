@@ -30,7 +30,7 @@ export default class ClassList extends React.Component {
             loading: false, classes: result.map(c => {
                 let uniqueFilter = (value, index, self) => self.indexOf(value) === index;
                 c.companions = c.companions.split(',').filter(uniqueFilter);
-                c.students = c.students.split(',').filter(uniqueFilter);
+                c.users = c.users.split(',').filter(uniqueFilter);
                 return c;
             })
         })
@@ -111,8 +111,8 @@ export default class ClassList extends React.Component {
                                                                            src={`/avatar/${userId}`} key={userId}/>)}
                                     </Table.Cell>
                                     <Table.Cell onClick={(event) => event.stopPropagation()}>
-                                        {c.students.map(userId => <a href={`/students/${userId}`} target="_blank"
-                                                                     key={userId}>
+                                        {c.users.map(userId => <a href={`/students/${userId}`} target="_blank"
+                                                                  key={userId}>
                                             <Image avatar alt={userId} title={userId}
                                                    src={`/avatar/${userId}`}
                                                    key={userId}/></a>)}

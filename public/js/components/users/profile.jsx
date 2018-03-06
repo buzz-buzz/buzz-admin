@@ -16,6 +16,7 @@ export default class Profile extends React.Component {
         this.handleChange = this.handleChange.bind(this);
         this.close = this.close.bind(this);
         this.updateProfile = this.updateProfile.bind(this);
+        this.createUser = this.createUser.bind(this);
     }
 
     handleChange(e, {name, value}) {
@@ -44,11 +45,11 @@ export default class Profile extends React.Component {
         this.props.onCloseCallback();
     }
 
-    async updateProfile() {
+    async updateProfile(userId = this.state.user.user_id) {
         try {
             this.setState({loading: true});
 
-            let updatedUser = Object.assign(this.state.user, {
+            let updatedUser = Object.assign({
                 mobile: this.state.mobile,
                 email: this.state.email,
                 parent_name: this.state.parentName
@@ -56,13 +57,41 @@ export default class Profile extends React.Component {
 
             let result = await ServiceProxy.proxyTo({
                 body: {
-                    uri: `{buzzService}/api/v1/users/${this.state.user.user_id}`,
+                    uri: `{buzzService}/api/v1/users/${userId}`,
                     json: updatedUser,
                     method: 'PUT'
                 }
             })
 
             this.props.profileUpdateCallback(result);
+            this.setState({error: false});
+        } catch (error) {
+            this.setState({error: true, message: JSON.stringify(error.result)});
+        } finally {
+            this.setState({loading: false});
+        }
+    }
+
+    async createUser() {
+        try {
+            this.setState({loading: true});
+
+            let newUser = {
+                name: '',
+                role: 'c',
+            }
+
+            let userId = await ServiceProxy.proxyTo({
+                body: {
+                    uri: `{buzzService}/api/v1/users/`,
+                    json: newUser,
+                    method: 'POST'
+                }
+            })
+
+            await this.updateProfile(userId);
+
+            this.props.userCreatedCallback(userId);
             this.setState({error: false});
         } catch (error) {
             this.setState({error: true, message: JSON.stringify(error.result)});
@@ -83,10 +112,10 @@ export default class Profile extends React.Component {
                         <Form.Group>
                             <Form.Input placeholder="微信昵称" name="wechat_name" value={this.state.user.wechat_name || ''}
                                         label="微信昵称" readOnly/>
-                            <Form.Input placeholder="性别" name="gender"
-                                        value={this.state.user.gender === 'm' ? '男' : (this.state.user.gender === 'f' ? '女' : '')}
-                                        label="性别"
-                                        readOnly/>
+
+                            <Form.Input placeholder="父母名称" name="parentName" value={this.state.parentName}
+                                        onChange={this.handleChange}
+                                        label="父母名称"/>
                             <Form.Input placeholder="手机号" name="mobile" value={this.state.mobile}
                                         onChange={this.handleChange}
                                         type="number" label="手机号"/>
@@ -94,6 +123,10 @@ export default class Profile extends React.Component {
                                         onChange={this.handleChange} type="email" label="邮箱"/>
                         </Form.Group>
                         <Form.Group>
+                            <Form.Input placeholder="性别" name="gender"
+                                        value={this.state.user.gender === 'm' ? '男' : (this.state.user.gender === 'f' ? '女' : '')}
+                                        label="性别"
+                                        readOnly/>
                             <Form.Input placeholder="生日" name="birthday" value={this.state.user.birthday || ''}
                                         label="生日"
                                         readOnly/>
@@ -101,18 +134,21 @@ export default class Profile extends React.Component {
                                         readOnly/>
                             <Form.Input placeholder="所在城市" name="location" value={this.state.user.location || ''}
                                         label="所在城市" readOnly/>
+                        </Form.Group>
+                        <Form.Group>
                             <Form.Input placeholder="兴趣爱好" name="interests" value={this.state.user.interests || ''}
                                         label="兴趣爱好" readOnly/>
                         </Form.Group>
                         <Form.Group>
-                            <Form.Input placeholder="父母名称" name="parentName" value={this.state.parentName}
-                                        onChange={this.handleChange}
-                                        label="父母名称"/>
                             <Form.Input placeholder="Facebook 名称" name="facebookName"
                                         value={this.state.user.facebook_name || ''} label="Facebook 名称"/>
                         </Form.Group>
                         <Form.Group>
-                            <Form.Button content="修改" type="submit"/>
+                            {
+                                this.state.user.user_id ?
+                                    <Form.Button content="修改" type="submit"/> :
+                                    <Form.Button content="创建" type="button" onClick={this.createUser}/>
+                            }
                             <Form.Button content="取消" type="button" onClick={this.close}/>
                         </Form.Group>
                     </Form>

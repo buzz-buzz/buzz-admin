@@ -54,7 +54,7 @@ export default class UserList extends React.Component {
                 email: ''
             },
             loading: false,
-            students: []
+            users: []
         };
 
         this.searchUsers = this.searchUsers.bind(this);
@@ -68,13 +68,15 @@ export default class UserList extends React.Component {
         this.onLevelUpdated = this.onLevelUpdated.bind(this);
         this.openLevelModal = this.openLevelModal.bind(this);
         this.onCloseLevelModal = this.onCloseLevelModal.bind(this);
+        this.createNewUser = this.createNewUser.bind(this);
+        this.userCreated = this.userCreated.bind(this);
     }
 
     classHoursUpdated(newClassHours) {
-        let copy = Object.assign({}, this.state.currentStudent);
+        let copy = Object.assign({}, this.state.currentUser);
         copy.class_hours = newClassHours;
 
-        let newStudents = this.state.students.map(s => {
+        let newStudents = this.state.users.map(s => {
             if (s.user_id === copy.user_id) {
                 return copy;
             }
@@ -83,23 +85,23 @@ export default class UserList extends React.Component {
         })
 
         this.setState({
-            currentStudent: copy,
-            students: newStudents
+            currentUser: copy,
+            users: newStudents
         })
     }
 
     async componentDidMount() {
         this.setState({loading: true});
-        let students = await ServiceProxy.proxyTo({
+        let users = await ServiceProxy.proxyTo({
             body: {
                 uri: `{buzzService}/api/v1/users?role=${this.props['user-type']}`
             }
         });
 
-        this.setState({loading: false, students: attachEvents.call(this, students)});
+        this.setState({loading: false, users: attachEvents.call(this, users)});
 
         if (this.props.match.params.userId) {
-            let theStudents = students.filter(s => s.user_id === Number(this.props.match.params.userId));
+            let theStudents = users.filter(s => s.user_id === Number(this.props.match.params.userId));
             if (theStudents.length) {
                 this.openProfile(theStudents[0]);
             }
@@ -117,7 +119,7 @@ export default class UserList extends React.Component {
                 }
             });
 
-        this.setState({loading: false, students: attachEvents.call(this, students)});
+        this.setState({loading: false, users: attachEvents.call(this, students)});
     }
 
     handleTextChange(event, {value, name}) {
@@ -147,13 +149,17 @@ export default class UserList extends React.Component {
                     </Form.Group>
                     <Form.Group>
                         <Button type="submit">查询</Button>
+                        {
+                            this.props['user-type'] === UserTypes.companion &&
+                            <Button thpe="button" onClick={this.createNewUser}>创建新用户</Button>
+                        }
                     </Form.Group>
                 </Form>
                 <Table celled>
                     {this.renderTableHeader()}
                     <Table.Body>
                         {
-                            this.state.students.map((student, i) =>
+                            this.state.users.map((student, i) =>
                                 <Table.Row key={student.user_id} style={{cursor: 'pointer'}}>
                                     <Table.Cell onClick={() => this.openProfile(student)}>
                                         <Image src={student.avatar} avatar title={student.user_id}
@@ -218,14 +224,15 @@ export default class UserList extends React.Component {
                         </Table.Row>
                     </Table.Footer>
                 </Table>
-                <ClassHours open={this.state.classHoursModalOpen} student={this.state.currentStudent}
+                <ClassHours open={this.state.classHoursModalOpen} student={this.state.currentUser}
                             classHoursUpdateCallback={this.classHoursUpdated}
                             onCloseCallback={this.closeClassHoursModal}/>
-                <LevelModal open={this.state.levelModalOpen} user={this.state.currentStudent}
+                <LevelModal open={this.state.levelModalOpen} user={this.state.currentUser}
                             onCloseCallback={this.onCloseLevelModal} onLevelUpdated={this.onLevelUpdated}/>
-                <Profile open={this.state.profileModalOpen} user={this.state.currentStudent}
-                         profileUpdateCallback={this.profileUpdated} onCloseCallback={this.closeProfileModal}/>
-                <SchedulePreference open={this.state.schedulePreferenceModalOpen} user={this.state.currentStudent}
+                <Profile open={this.state.profileModalOpen} user={this.state.currentUser}
+                         profileUpdateCallback={this.profileUpdated} onCloseCallback={this.closeProfileModal}
+                         userCreatedCallback={this.userCreated}/>
+                <SchedulePreference open={this.state.schedulePreferenceModalOpen} user={this.state.currentUser}
                                     onCloseCallback={this.closeSchedulePreferenceModal}/>
             </Container>
         )
@@ -255,7 +262,7 @@ export default class UserList extends React.Component {
     openClassHours(student) {
         this.setState({
             classHoursModalOpen: true,
-            currentStudent: student
+            currentUser: student
         });
     }
 
@@ -266,7 +273,7 @@ export default class UserList extends React.Component {
     openProfile(student) {
         this.setState({
             profileModalOpen: true,
-            currentStudent: student
+            currentUser: student
         })
     }
 
@@ -277,7 +284,7 @@ export default class UserList extends React.Component {
     openSchedulePreferenceModal(student) {
         this.setState({
             schedulePreferenceModalOpen: true,
-            currentStudent: student
+            currentUser: student
         })
     }
 
@@ -288,11 +295,11 @@ export default class UserList extends React.Component {
     }
 
     profileUpdated(newProfile) {
-        let copy = Object.assign({}, this.state.currentStudent);
+        let copy = Object.assign({}, this.state.currentUser);
         copy.email = newProfile.email;
         copy.mobile = newProfile.mobile;
 
-        let newStudents = this.state.students.map(s => {
+        let newStudents = this.state.users.map(s => {
             if (s.user_id === copy.user_id) {
                 return copy;
             }
@@ -301,14 +308,31 @@ export default class UserList extends React.Component {
         })
 
         this.setState({
-            currentStudent: copy,
-            students: newStudents
+            currentUser: copy,
+            users: newStudents
         })
+    }
+
+    async userCreated(newUserId) {
+        let newUser = await ServiceProxy.proxyTo({
+            body: {
+                uri: `{buzzService}/api/v1/users/${newUserId}`,
+                method: 'GET'
+            }
+        })
+
+        let users = this.state.users;
+        users.unshift(newUser);
+
+        this.setState({
+            currentUser: newUser,
+            users: attachEvents.call(this, users)
+        });
     }
 
     openLevelModal(student) {
         this.setState({
-            currentStudent: student,
+            currentUser: student,
             levelModalOpen: true
         })
     }
@@ -320,15 +344,19 @@ export default class UserList extends React.Component {
     }
 
     onLevelUpdated(placementTestResult) {
-        let student = this.state.currentStudent;
+        let student = this.state.currentUser;
         student.level = placementTestResult.level;
-        let newStudents = this.state.students.map(s => {
+        let newStudents = this.state.users.map(s => {
             if (s.user_id === student.user_id) {
                 return student;
             }
 
             return s;
         });
-        this.setState({currentStudent: student, students: newStudents})
+        this.setState({currentUser: student, users: newStudents})
+    }
+
+    createNewUser() {
+        this.openProfile({});
     }
 }
