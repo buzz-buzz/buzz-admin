@@ -224,11 +224,19 @@ export default class UserList extends React.Component {
                         </Table.Row>
                     </Table.Footer>
                 </Table>
-                <ClassHours open={this.state.classHoursModalOpen} student={this.state.currentUser}
-                            classHoursUpdateCallback={this.classHoursUpdated}
-                            onCloseCallback={this.closeClassHoursModal}/>
-                <LevelModal open={this.state.levelModalOpen} user={this.state.currentUser}
-                            onCloseCallback={this.onCloseLevelModal} onLevelUpdated={this.onLevelUpdated}/>
+                {
+                    this.props['user-type'] === UserTypes.student &&
+
+                    <ClassHours open={this.state.classHoursModalOpen} student={this.state.currentUser}
+                                classHoursUpdateCallback={this.classHoursUpdated}
+                                onCloseCallback={this.closeClassHoursModal}/>
+                }
+                {
+                    this.props['user-type'] === UserTypes.student &&
+
+                    <LevelModal open={this.state.levelModalOpen} user={this.state.currentUser}
+                                onCloseCallback={this.onCloseLevelModal} onLevelUpdated={this.onLevelUpdated}/>
+                }
                 <Profile open={this.state.profileModalOpen} user={this.state.currentUser}
                          profileUpdateCallback={this.profileUpdated} onCloseCallback={this.closeProfileModal}
                          userCreatedCallback={this.userCreated}/>
@@ -295,21 +303,24 @@ export default class UserList extends React.Component {
     }
 
     profileUpdated(newProfile) {
-        let copy = Object.assign({}, this.state.currentUser);
-        copy.email = newProfile.email;
-        copy.mobile = newProfile.mobile;
+        let selectedUser = Object.assign({}, this.state.currentUser);
+        selectedUser.email = newProfile.email;
+        selectedUser.mobile = newProfile.mobile;
+        selectedUser.name = newProfile.name;
+        selectedUser.display_name = newProfile.display_name;
+        selectedUser.parent_name = newProfile.parent_name;
 
-        let newStudents = this.state.users.map(s => {
-            if (s.user_id === copy.user_id) {
-                return copy;
+        let newUsers = this.state.users.map(s => {
+            if (s.user_id === selectedUser.user_id) {
+                return selectedUser;
             }
 
             return s;
         })
 
         this.setState({
-            currentUser: copy,
-            users: newStudents
+            currentUser: selectedUser,
+            users: newUsers
         })
     }
 

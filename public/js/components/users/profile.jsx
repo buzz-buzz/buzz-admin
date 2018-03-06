@@ -10,6 +10,7 @@ export default class Profile extends React.Component {
             email: '',
             mobile: '',
             parentName: '',
+            name: '',
             user: {}
         };
 
@@ -36,7 +37,8 @@ export default class Profile extends React.Component {
             this.setState({
                 email: this.state.user.email || '',
                 mobile: this.state.user.mobile || '',
-                parentName: this.state.user.parent_name || ''
+                parentName: this.state.user.parent_name || '',
+                name: this.state.user ? this.state.user.name || this.state.user.display_name || '' : ''
             });
         })
     }
@@ -52,7 +54,9 @@ export default class Profile extends React.Component {
             let updatedUser = Object.assign({
                 mobile: this.state.mobile,
                 email: this.state.email,
-                parent_name: this.state.parentName
+                parent_name: this.state.parentName,
+                name: this.state.name,
+                display_name: this.state.name
             });
 
             let result = await ServiceProxy.proxyTo({
@@ -107,12 +111,11 @@ export default class Profile extends React.Component {
                 <Modal.Content>
                     <Image src={this.state.user.avatar} avatar/>
                     <span>{this.state.user.display_name}</span>
-                    <Form error={this.state.error} loading={this.state.loading} onSubmit={this.updateProfile}>
+                    <Form error={this.state.error} loading={this.state.loading} onSubmit={() => this.updateProfile()}>
                         <Message error header="出错了" content={this.state.message}/>
                         <Form.Group>
-                            <Form.Input placeholder="微信昵称" name="wechat_name" value={this.state.user.wechat_name || ''}
-                                        label="微信昵称" readOnly/>
-
+                            <Form.Input placeholder="用户名称" name="name" value={this.state.name}
+                                        onChange={this.handleChange} label="用户名称"/>
                             <Form.Input placeholder="父母名称" name="parentName" value={this.state.parentName}
                                         onChange={this.handleChange}
                                         label="父母名称"/>
@@ -140,6 +143,9 @@ export default class Profile extends React.Component {
                                         label="兴趣爱好" readOnly/>
                         </Form.Group>
                         <Form.Group>
+                            <Form.Input placeholder="微信昵称" name="wechat_name" value={this.state.user.wechat_name || ''}
+                                        label="微信昵称" readOnly/>
+
                             <Form.Input placeholder="Facebook 名称" name="facebookName"
                                         value={this.state.user.facebook_name || ''} label="Facebook 名称"/>
                         </Form.Group>
