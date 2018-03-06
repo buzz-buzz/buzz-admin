@@ -9,6 +9,7 @@ export default class Profile extends React.Component {
         this.state = {
             email: '',
             mobile: '',
+            parentName: '',
             user: {}
         };
 
@@ -33,7 +34,8 @@ export default class Profile extends React.Component {
         }, () => {
             this.setState({
                 email: this.state.user.email || '',
-                mobile: this.state.user.mobile || ''
+                mobile: this.state.user.mobile || '',
+                parentName: this.state.user.parent_name || ''
             });
         })
     }
@@ -46,7 +48,11 @@ export default class Profile extends React.Component {
         try {
             this.setState({loading: true});
 
-            let updatedUser = Object.assign(this.state.user, {mobile: this.state.mobile, email: this.state.email});
+            let updatedUser = Object.assign(this.state.user, {
+                mobile: this.state.mobile,
+                email: this.state.email,
+                parent_name: this.state.parentName
+            });
 
             let result = await ServiceProxy.proxyTo({
                 body: {
@@ -56,9 +62,8 @@ export default class Profile extends React.Component {
                 }
             })
 
-            console.log(result);
-
             this.props.profileUpdateCallback(result);
+            this.setState({error: false});
         } catch (error) {
             this.setState({error: true, message: JSON.stringify(error.result)});
         } finally {
@@ -68,7 +73,7 @@ export default class Profile extends React.Component {
 
     render() {
         return (
-            <Modal open={this.props.open} closeOnEscape={true} closeOnRootNodeClick={true} onClose={this.close}>
+            <Modal open={this.props.open} closeOnEscape={true} closeOnRootNodeClick={false} onClose={this.close}>
                 <Header content="用户资料"></Header>
                 <Modal.Content>
                     <Image src={this.state.user.avatar} avatar/>
@@ -100,7 +105,15 @@ export default class Profile extends React.Component {
                                         label="兴趣爱好" readOnly/>
                         </Form.Group>
                         <Form.Group>
+                            <Form.Input placeholder="父母名称" name="parentName" value={this.state.parentName}
+                                        onChange={this.handleChange}
+                                        label="父母名称"/>
+                            <Form.Input placeholder="Facebook 名称" name="facebookName"
+                                        value={this.state.user.facebook_name || ''} label="Facebook 名称"/>
+                        </Form.Group>
+                        <Form.Group>
                             <Form.Button content="修改" type="submit"/>
+                            <Form.Button content="取消" type="button" onClick={this.close}/>
                         </Form.Group>
                     </Form>
                 </Modal.Content>

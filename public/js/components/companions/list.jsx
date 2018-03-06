@@ -1,5 +1,7 @@
 import * as React from "react";
-import {Button, Container} from "semantic-ui-react";
+import {Container} from "semantic-ui-react";
+import UserList from "../users/list";
+import {UserTypes} from "../users/config";
 
 export default class CompanionList extends React.Component {
     constructor(props) {
@@ -11,7 +13,7 @@ export default class CompanionList extends React.Component {
     render() {
         return (
             <Container>
-                <Button>Hello</Button>
+                <UserList user-type={UserTypes.companion} match={this.props.match}></UserList>
             </Container>
         )
     }

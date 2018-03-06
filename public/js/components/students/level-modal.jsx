@@ -89,7 +89,7 @@ export default class LevelModal extends React.Component {
     render() {
         const {level} = this.state;
         return (
-            <Modal open={this.props.open} closeOnEscape={true} closeOnRootNodeClick={true} onClose={this.close}>
+            <Modal open={this.props.open} closeOnEscape={true} closeOnRootNodeClick={false} onClose={this.close}>
                 <Header content="能力评级"></Header>
                 <Modal.Content>
                     <p>当前评级：{this.state.level}</p>
@@ -101,6 +101,7 @@ export default class LevelModal extends React.Component {
                         <Form.Group>
                             <Form.Input placeholder="等级" name="level" value={level} onChange={this.handleChange}/>
                             <Form.Button content="保存" type="button" onClick={this.saveLevel}/>
+                            <Form.Button className="right floated" content="取消" type="button" onClick={this.close}/>
                         </Form.Group>
                     </Form>
                 </Modal.Content>

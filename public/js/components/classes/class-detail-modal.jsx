@@ -18,7 +18,8 @@ export default class ClassDetail extends React.Component {
             availableStudents: [],
             availableCompanions: [],
             error: false,
-            companion: 0
+            companion: 0,
+            dirty: false
         }
 
         this.close = this.close.bind(this);
@@ -29,14 +30,21 @@ export default class ClassDetail extends React.Component {
     }
 
     close() {
-        this.props.onClose();
+        if (this.state.dirty) {
+            if (window.confirm('有改动未保存，确认关闭吗？')) {
+                this.setState({dirty: false}, this.props.onClose);
+            }
+        } else {
+            this.props.onClose();
+        }
     }
 
     handleChange(event, {name, value}) {
+        console.log('change = ', event, name, value);
         if (name === 'companion') {
             this.setState({companions: [value]})
         }
-        this.setState({[name]: value});
+        this.setState({[name]: value, dirty: true});
     }
 
     componentWillReceiveProps(nextProps) {
@@ -101,7 +109,8 @@ export default class ClassDetail extends React.Component {
             json.class_id = result.class_id;
             this.setState({
                 class_id: result.class_id,
-                error: false
+                error: false,
+                dirty: false
             })
 
             this.props.onClassSaved(json);
@@ -122,10 +131,10 @@ export default class ClassDetail extends React.Component {
 
     render() {
         return (
-            <Modal open={this.props.open} onClose={this.close}>
+            <Modal open={this.props.open} onClose={this.close} closeOnDimmerClick={false}>
                 <Header>班级详情</Header>
                 <Modal.Content>
-                    <Form loading={this.state.loading} error={this.state.error}>
+                    <Form loading={this.state.loading} error={this.state.error} unstackable={true}>
                         <Message error content={this.state.message} header="出错啦"></Message>
                         <Form.Group widths="equal">
                             <Form.Input label="课程名称" placeholder="课程名称" value={this.state.className} name="className"
@@ -179,6 +188,7 @@ export default class ClassDetail extends React.Component {
                                 :
                                 <Button onClick={this.saveClass}>创建</Button>
                             }
+                            <Button onClick={this.close} className="right floated" type="button">关闭</Button>
                         </Form.Group>
                     </Form>
                 </Modal.Content>

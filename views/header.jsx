@@ -13,7 +13,7 @@ export default class Header extends React.Component {
             <Menu>
                 <Menu.Item name="students" active={(activeItem || '').startsWith('/students')}
                            href="/students">Students</Menu.Item>
-                <Menu.Item name="/companion" active={(activeItem || '').startsWith('/companion')} href="/companion">Companions</Menu.Item>
+                <Menu.Item name="/companions" active={(activeItem || '').startsWith('/companions')} href="/companions">Companions</Menu.Item>
                 <Menu.Item name="classes" active={activeItem === '/classes'} href="/classes">Classes</Menu.Item>
             </Menu>
         )

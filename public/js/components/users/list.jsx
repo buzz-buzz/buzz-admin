@@ -5,21 +5,30 @@ import Profile from "./profile";
 import SchedulePreference from "./schedule-preference";
 import BigCalendar from 'react-big-calendar'
 import moment from 'moment'
+import {UserTypes} from "./config";
+import ClassHours from "../students/class-hours";
+import LevelModal from "../students/level-modal";
 
 BigCalendar.setLocalizer(BigCalendar.momentLocalizer(moment))
 
-function attachEvents(students) {
+function attachEvents(users) {
     let self = this;
-    return students.map(s => {
-        s.events = [];
+    return users.map(user => {
+        user.events = [];
+
+        let uri = `{buzzService}/api/v1/student-class-schedule/${user.user_id}`;
+
+        if (this.props['user-type'] === UserTypes.companion) {
+            uri = `{buzzService}/api/v1/companion-class-schedule/${user.user_id}`;
+        }
 
         ServiceProxy.proxyTo({
             body: {
-                uri: `{buzzService}/api/v1/student-class-schedule/${s.user_id}`,
+                uri: uri,
                 method: 'GET'
             }
         }).then((events) => {
-            s.events = events.map(e => {
+            user.events = events.map(e => {
                 e.start_time = new Date(e.start_time);
                 e.end_time = new Date(e.end_time);
                 return e;
@@ -28,11 +37,11 @@ function attachEvents(students) {
             self.forceUpdate();
         });
 
-        return s;
+        return user;
     })
 }
 
-export default class UserList extends React.Component() {
+export default class UserList extends React.Component {
 
     constructor(props) {
         super(props);
@@ -83,7 +92,7 @@ export default class UserList extends React.Component() {
         this.setState({loading: true});
         let students = await ServiceProxy.proxyTo({
             body: {
-                uri: '{buzzService}/api/v1/users?role=s'
+                uri: `{buzzService}/api/v1/users?role=${this.props['user-type']}`
             }
         });
 
@@ -103,7 +112,7 @@ export default class UserList extends React.Component() {
         let students = await
             ServiceProxy.proxyTo({
                 body: {
-                    uri: '{buzzService}/api/v1/users?role=s',
+                    uri: `{buzzService}/api/v1/users?role=${this.props['user-type']}`,
                     qs: this.state.searchParams
                 }
             });
@@ -141,18 +150,7 @@ export default class UserList extends React.Component() {
                     </Form.Group>
                 </Form>
                 <Table celled>
-                    <Table.Header>
-                        <Table.Row>
-                            <Table.HeaderCell>微信头像</Table.HeaderCell>
-                            <Table.HeaderCell>微信昵称</Table.HeaderCell>
-                            <Table.HeaderCell>用户名称</Table.HeaderCell>
-                            <Table.HeaderCell>手机号</Table.HeaderCell>
-                            <Table.HeaderCell>邮箱</Table.HeaderCell>
-                            <Table.HeaderCell>课时数</Table.HeaderCell>
-                            <Table.HeaderCell>能力评级</Table.HeaderCell>
-                            <Table.HeaderCell>课程安排</Table.HeaderCell>
-                        </Table.Row>
-                    </Table.Header>
+                    {this.renderTableHeader()}
                     <Table.Body>
                         {
                             this.state.students.map((student, i) =>
@@ -165,7 +163,7 @@ export default class UserList extends React.Component() {
                                         {student.wechat_name}
                                     </Table.Cell>
                                     <Table.Cell onClick={() => this.openProfile(student)}>
-                                        {student.display_name}
+                                        {student.display_name || student.name || student.facebook_name}
                                     </Table.Cell>
                                     <Table.Cell onClick={() => this.openProfile(student)}>
                                         {student.mobile}
@@ -173,13 +171,19 @@ export default class UserList extends React.Component() {
                                     <Table.Cell onClick={() => this.openProfile(student)}>
                                         {student.email}
                                     </Table.Cell>
-                                    <Table.Cell onClick={() => this.openClassHours(student)}
-                                                style={{cursor: 'pointer'}}>
-                                        {student.class_hours || 0}
-                                    </Table.Cell>
-                                    <Table.Cell onClick={() => this.openLevelModal(student)}>
-                                        {student.level}
-                                    </Table.Cell>
+                                    {
+                                        this.props['user-type'] === UserTypes.student &&
+                                        <Table.Cell onClick={() => this.openClassHours(student)}
+                                                    style={{cursor: 'pointer'}}>
+                                            {student.class_hours || 0}
+                                        </Table.Cell>
+                                    }
+                                    {
+                                        this.props['user-type'] === UserTypes.student &&
+                                        <Table.Cell onClick={() => this.openLevelModal(student)}>
+                                            {student.level}
+                                        </Table.Cell>
+                                    }
                                     <Table.Cell onClick={() => this.openSchedulePreferenceModal(student)}
                                                 style={{height: '250px'}}>
                                         <BigCalendar
@@ -214,12 +218,38 @@ export default class UserList extends React.Component() {
                         </Table.Row>
                     </Table.Footer>
                 </Table>
+                <ClassHours open={this.state.classHoursModalOpen} student={this.state.currentStudent}
+                            classHoursUpdateCallback={this.classHoursUpdated}
+                            onCloseCallback={this.closeClassHoursModal}/>
+                <LevelModal open={this.state.levelModalOpen} user={this.state.currentStudent}
+                            onCloseCallback={this.onCloseLevelModal} onLevelUpdated={this.onLevelUpdated}/>
                 <Profile open={this.state.profileModalOpen} user={this.state.currentStudent}
                          profileUpdateCallback={this.profileUpdated} onCloseCallback={this.closeProfileModal}/>
                 <SchedulePreference open={this.state.schedulePreferenceModalOpen} user={this.state.currentStudent}
                                     onCloseCallback={this.closeSchedulePreferenceModal}/>
             </Container>
         )
+    }
+
+    renderTableHeader() {
+        return <Table.Header>
+            <Table.Row>
+                <Table.HeaderCell>头像</Table.HeaderCell>
+                <Table.HeaderCell>微信昵称</Table.HeaderCell>
+                <Table.HeaderCell>用户名称</Table.HeaderCell>
+                <Table.HeaderCell>手机号</Table.HeaderCell>
+                <Table.HeaderCell>邮箱</Table.HeaderCell>
+                {
+                    (this.props['user-type'] === UserTypes.student) &&
+                    <Table.HeaderCell>课时数</Table.HeaderCell>
+                }
+                {
+                    this.props['user-type'] === UserTypes.student &&
+                    <Table.HeaderCell>能力评级</Table.HeaderCell>
+                }
+                <Table.HeaderCell>课程安排</Table.HeaderCell>
+            </Table.Row>
+        </Table.Header>;
     }
 
     openClassHours(student) {
@@ -277,7 +307,6 @@ export default class UserList extends React.Component() {
     }
 
     openLevelModal(student) {
-        console.log('student = ', student);
         this.setState({
             currentStudent: student,
             levelModalOpen: true
