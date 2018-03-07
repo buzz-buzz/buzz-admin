@@ -27,10 +27,11 @@ export default class ClassList extends React.Component {
         })
 
         this.setState({
-            loading: false, classes: result.map(c => {
+            loading: false,
+            classes: result.map(c => {
                 let uniqueFilter = (value, index, self) => self.indexOf(value) === index;
-                c.companions = c.companions.split(',').filter(uniqueFilter);
-                c.users = c.users.split(',').filter(uniqueFilter);
+                c.companions = (c.companions || '').split(',').filter(uniqueFilter);
+                c.users = (c.users || '').split(',').filter(uniqueFilter);
                 return c;
             })
         })

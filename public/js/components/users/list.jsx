@@ -31,6 +31,12 @@ function attachEvents(users) {
             user.events = events.map(e => {
                 e.start_time = new Date(e.start_time);
                 e.end_time = new Date(e.end_time);
+
+                if (!e.title) {
+                    e.title = '[预约需求]';
+                } else {
+                    e.title = '[确认进班]' + e.title;
+                }
                 return e;
             }).filter(e => e.status !== 'cancelled')
 
@@ -115,7 +121,10 @@ export default class UserList extends React.Component {
             ServiceProxy.proxyTo({
                 body: {
                     uri: `{buzzService}/api/v1/users?role=${this.props['user-type']}`,
-                    qs: this.state.searchParams
+                    qs: Object.assign({}, this.state.searchParams, {
+                        start_time: this.state.searchParams.start_time ? new Date(this.state.searchParams.start_time) : new Date(1900, 1, 1),
+                        end_time: this.state.searchParams.end_time ? new Date(this.state.searchParams.end_time) : new Date(2100, 1, 1)
+                    })
                 }
             });
 
@@ -139,13 +148,21 @@ export default class UserList extends React.Component {
                         <Form.Field control={Input} label="微信昵称" name="wechat_name"
                                     value={this.state.searchParams.wechat_name}
                                     onChange={this.handleTextChange}></Form.Field>
-                        <Form.Field control={Input} label="用户名称" value={this.state.searchParams.display_name}
+                        <Form.Field control={Input} label="英文名" value={this.state.searchParams.display_name}
                                     name="display_name"
                                     onChange={this.handleTextChange}></Form.Field>
                         <Form.Field control={Input} label="手机号" value={this.state.searchParams.mobile}
                                     name="mobile" onChange={this.handleTextChange}></Form.Field>
                         <Form.Field control={Input} label="邮箱" value={this.state.email}
                                     name="email" onChange={this.handleTextChange}></Form.Field>
+                    </Form.Group>
+                    <Form.Group widths="equal">
+                        <Form.Field control={Input} label="开始时间" name="start_time"
+                                    value={this.state.searchParams.start_time}
+                                    onChange={this.handleTextChange} type="datetime-local"></Form.Field>
+                        <Form.Field control={Input} label="结束时间" name="end_time"
+                                    value={this.state.searchParams.end_time}
+                                    onChange={this.handleTextChange} type="datetime-local"></Form.Field>
                     </Form.Group>
                     <Form.Group>
                         <Button type="submit">查询</Button>
