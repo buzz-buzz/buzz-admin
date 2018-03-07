@@ -20,11 +20,18 @@ export default class Profile extends React.Component {
         this.close = this.close.bind(this);
         this.updateProfile = this.updateProfile.bind(this);
         this.createUser = this.createUser.bind(this);
+        this.handleSearchChange = this.handleSearchChange.bind(this);
     }
 
     handleChange(e, {name, value}) {
         this.setState({
             [name]: value
+        })
+    }
+
+    handleSearchChange(e, {search}) {
+        this.setState({
+            search: search
         })
     }
 
@@ -130,10 +137,13 @@ export default class Profile extends React.Component {
                                         onChange={this.handleChange} type="email" label="邮箱"/>
                         </Form.Group>
                         <Form.Group widths="equal">
-                            <label>国籍</label>
-                            <Dropdown selection multiple={false} search={true} name="country" options={Countries.list}
-                                      value={this.state.country} placeholder="国籍" onChange={this.handleChange}
-                                      onSearchChange={this.handleSearchChange}/>
+                            <Form.Field>
+                                <label>国籍</label>
+                                <Dropdown selection multiple={false} search={true} name="country"
+                                          options={Countries.list}
+                                          value={this.state.country} placeholder="国籍" onChange={this.handleChange}
+                                          onSearchChange={this.handleSearchChange}/>
+                            </Form.Field>
                             <Form.Input placeholder="所在城市" name="city" value={this.state.user.city || ''}
                                         label="所在城市" readOnly/>
                         </Form.Group>
