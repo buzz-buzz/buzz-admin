@@ -26,8 +26,12 @@ export default class EventDetail extends React.Component {
     }
 
     async componentWillReceiveProps(nextProps) {
+        let event = nextProps.event || {}
+        console.log('event = ', event);
+        event.start_time = new Date(event.start_time || null).toISOString().slice(0, -1);
+        event.end_time = new Date(event.end_time || null).toISOString().slice(0, -1);
         this.setState({
-            event: nextProps.event || {}
+            event
         });
     }
 
@@ -52,10 +56,10 @@ export default class EventDetail extends React.Component {
                         <Form.Group widths="equal">
                             <Form.Input fluid label="Start Time" placeholder="Start Time" name="start_time"
                                         value={this.state.event.start_time} onChange={this.handleTimeChange}
-                                        readOnly={this.state.event.saved !== false}/>
+                                        readOnly={this.state.event.saved !== false} type="datetime-local"/>
                             <Form.Input fluid label="End Time" placeholder="End Time" name="end_time"
                                         value={this.state.event.end_time} onChange={this.handleTimeChange}
-                                        readOnly={this.state.event.saved !== false}/>
+                                        readOnly={this.state.event.saved !== false} type="datetime-local"/>
                         </Form.Group>
                     </Form>
                 </Modal.Content>
@@ -79,12 +83,14 @@ export default class EventDetail extends React.Component {
                     uri: `{buzzService}/api/v1/student-class-schedule/${this.state.event.user_id}`,
                     method: 'PUT',
                     json: {
-                        start_time: this.state.event.start_time
+                        start_time: new Date(this.state.event.start_time)
                     }
                 }
             })
 
             let event = this.state.event;
+            event.start_time = new Date(event.start_time);
+            event.end_time = new Date(event.end_time);
             event.status = result.status;
             this.setState({
                 event: event
@@ -102,8 +108,8 @@ export default class EventDetail extends React.Component {
         this.setState({loading: true, error: false});
         try {
             let newEvent = {
-                start_time: this.state.event.start_time,
-                end_time: this.state.event.end_time,
+                start_time: new Date(this.state.event.start_time),
+                end_time: new Date(this.state.event.end_time),
                 user_id: this.state.event.user_id,
                 status: this.state.event.status
             };

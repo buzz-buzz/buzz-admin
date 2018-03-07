@@ -129,7 +129,10 @@ export default class SchedulePreference extends React.Component {
         console.log(event);
         this.setState({
             eventDetailModalOpen: true,
-            selectedEvent: event
+            selectedEvent: Object.assign({}, event, {
+                start_time: new Date(event.start_time),
+                end_time: new Date(event.end_time)
+            })
         })
     }
 
@@ -155,6 +158,12 @@ export default class SchedulePreference extends React.Component {
         let events = this.state.events;
         events.push(event);
 
-        this.setState({events, selectedEvent: event});
+        this.setState({
+            events,
+            selectedEvent: Object.assign({}, event, {
+                start_time: event.start_time.toISOString(),
+                end_time: event.end_time.toISOString()
+            })
+        });
     }
 };
