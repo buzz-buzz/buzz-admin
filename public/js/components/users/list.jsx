@@ -159,41 +159,48 @@ export default class UserList extends React.Component {
                     {this.renderTableHeader()}
                     <Table.Body>
                         {
-                            this.state.users.map((student, i) =>
-                                <Table.Row key={student.user_id} style={{cursor: 'pointer'}}>
-                                    <Table.Cell onClick={() => this.openProfile(student)}>
-                                        <Image src={student.avatar} avatar title={student.user_id}
-                                               alt={student.user_id}/>
+                            this.state.users.map((user, i) =>
+                                <Table.Row key={user.user_id} style={{cursor: 'pointer'}}>
+                                    <Table.Cell onClick={() => this.openProfile(user)}>
+                                        <Image src={user.avatar} avatar title={user.user_id}
+                                               alt={user.user_id}/>
                                     </Table.Cell>
-                                    <Table.Cell onClick={() => this.openProfile(student)}>
-                                        {student.wechat_name}
+                                    {
+                                        this.props['user-type'] === UserTypes.companion &&
+
+                                        <Table.Cell onClick={() => this.openProfile(user)}>
+                                            {user.country}
+                                        </Table.Cell>
+                                    }
+                                    <Table.Cell onClick={() => this.openProfile(user)}>
+                                        {user.wechat_name}
                                     </Table.Cell>
-                                    <Table.Cell onClick={() => this.openProfile(student)}>
-                                        {student.display_name || student.name || student.facebook_name}
+                                    <Table.Cell onClick={() => this.openProfile(user)}>
+                                        {user.display_name || user.name || user.facebook_name}
                                     </Table.Cell>
-                                    <Table.Cell onClick={() => this.openProfile(student)}>
-                                        {student.mobile}
+                                    <Table.Cell onClick={() => this.openProfile(user)}>
+                                        {user.mobile}
                                     </Table.Cell>
-                                    <Table.Cell onClick={() => this.openProfile(student)}>
-                                        {student.email}
+                                    <Table.Cell onClick={() => this.openProfile(user)}>
+                                        {user.email}
                                     </Table.Cell>
                                     {
                                         this.props['user-type'] === UserTypes.student &&
-                                        <Table.Cell onClick={() => this.openClassHours(student)}
+                                        <Table.Cell onClick={() => this.openClassHours(user)}
                                                     style={{cursor: 'pointer'}}>
-                                            {student.class_hours || 0}
+                                            {user.class_hours || 0}
                                         </Table.Cell>
                                     }
                                     {
                                         this.props['user-type'] === UserTypes.student &&
-                                        <Table.Cell onClick={() => this.openLevelModal(student)}>
-                                            {student.level}
+                                        <Table.Cell onClick={() => this.openLevelModal(user)}>
+                                            {user.level}
                                         </Table.Cell>
                                     }
-                                    <Table.Cell onClick={() => this.openSchedulePreferenceModal(student)}
+                                    <Table.Cell onClick={() => this.openSchedulePreferenceModal(user)}
                                                 style={{height: '250px'}}>
                                         <BigCalendar
-                                            events={student.events}
+                                            events={user.events}
                                             startAccessor='start_time'
                                             endAccessor='end_time'
                                             defaultDate={new Date()}
@@ -250,8 +257,12 @@ export default class UserList extends React.Component {
         return <Table.Header>
             <Table.Row>
                 <Table.HeaderCell>头像</Table.HeaderCell>
+                {
+                    this.props['user-type'] === UserTypes.companion &&
+                    <Table.HeaderCell>国籍</Table.HeaderCell>
+                }
                 <Table.HeaderCell>微信昵称</Table.HeaderCell>
-                <Table.HeaderCell>用户名称</Table.HeaderCell>
+                <Table.HeaderCell>(孩子)英文名</Table.HeaderCell>
                 <Table.HeaderCell>手机号</Table.HeaderCell>
                 <Table.HeaderCell>邮箱</Table.HeaderCell>
                 {
@@ -309,6 +320,7 @@ export default class UserList extends React.Component {
         selectedUser.name = newProfile.name;
         selectedUser.display_name = newProfile.display_name;
         selectedUser.parent_name = newProfile.parent_name;
+        selectedUser.country = newProfile.country;
 
         let newUsers = this.state.users.map(s => {
             if (s.user_id === selectedUser.user_id) {
@@ -318,6 +330,7 @@ export default class UserList extends React.Component {
             return s;
         })
 
+        console.log('selecteduser = ', selectedUser);
         this.setState({
             currentUser: selectedUser,
             users: newUsers

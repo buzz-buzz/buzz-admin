@@ -1,6 +1,7 @@
 import * as React from 'react';
-import {Form, Header, Image, Message, Modal} from "semantic-ui-react";
+import {Dropdown, Form, Header, Image, Message, Modal} from "semantic-ui-react";
 import ServiceProxy from "../../service-proxy";
+import * as Countries from "../../common/Countries";
 
 export default class Profile extends React.Component {
     constructor(props) {
@@ -11,6 +12,7 @@ export default class Profile extends React.Component {
             mobile: '',
             parentName: '',
             name: '',
+            country: '',
             user: {}
         };
 
@@ -38,7 +40,8 @@ export default class Profile extends React.Component {
                 email: this.state.user.email || '',
                 mobile: this.state.user.mobile || '',
                 parentName: this.state.user.parent_name || '',
-                name: this.state.user ? this.state.user.name || this.state.user.display_name || '' : ''
+                name: this.state.user ? this.state.user.name || this.state.user.display_name || '' : '',
+                country: this.state.user.country || '',
             });
         })
     }
@@ -51,13 +54,14 @@ export default class Profile extends React.Component {
         try {
             this.setState({loading: true});
 
-            let updatedUser = Object.assign({
+            let updatedUser = {
                 mobile: this.state.mobile,
                 email: this.state.email,
                 parent_name: this.state.parentName,
                 name: this.state.name,
-                display_name: this.state.name
-            });
+                display_name: this.state.name,
+                country: this.state.country
+            };
 
             let result = await ServiceProxy.proxyTo({
                 body: {
@@ -114,8 +118,8 @@ export default class Profile extends React.Component {
                     <Form error={this.state.error} loading={this.state.loading} onSubmit={() => this.updateProfile()}>
                         <Message error header="出错了" content={this.state.message}/>
                         <Form.Group>
-                            <Form.Input placeholder="用户名称" name="name" value={this.state.name}
-                                        onChange={this.handleChange} label="用户名称"/>
+                            <Form.Input placeholder="英文名" name="name" value={this.state.name}
+                                        onChange={this.handleChange} label="（孩子）英文名"/>
                             <Form.Input placeholder="父母名称" name="parentName" value={this.state.parentName}
                                         onChange={this.handleChange}
                                         label="父母名称"/>
@@ -124,6 +128,14 @@ export default class Profile extends React.Component {
                                         type="number" label="手机号"/>
                             <Form.Input placeholder="邮箱" name="email" value={this.state.email}
                                         onChange={this.handleChange} type="email" label="邮箱"/>
+                        </Form.Group>
+                        <Form.Group widths="equal">
+                            <label>国籍</label>
+                            <Dropdown selection multiple={false} search={true} name="country" options={Countries.list}
+                                      value={this.state.country} placeholder="国籍" onChange={this.handleChange}
+                                      onSearchChange={this.handleSearchChange}/>
+                            <Form.Input placeholder="所在城市" name="city" value={this.state.user.city || ''}
+                                        label="所在城市" readOnly/>
                         </Form.Group>
                         <Form.Group>
                             <Form.Input placeholder="性别" name="gender"
@@ -135,8 +147,6 @@ export default class Profile extends React.Component {
                                         readOnly/>
                             <Form.Input placeholder="年级" name="grade" value={this.state.user.grade || ''} label="年级"
                                         readOnly/>
-                            <Form.Input placeholder="所在城市" name="location" value={this.state.user.location || ''}
-                                        label="所在城市" readOnly/>
                         </Form.Group>
                         <Form.Group>
                             <Form.Input placeholder="兴趣爱好" name="interests" value={this.state.user.interests || ''}
@@ -155,7 +165,7 @@ export default class Profile extends React.Component {
                                     <Form.Button content="修改" type="submit"/> :
                                     <Form.Button content="创建" type="button" onClick={this.createUser}/>
                             }
-                            <Form.Button content="取消" type="button" onClick={this.close}/>
+                            <Form.Button content="关闭" type="button" onClick={this.close}/>
                         </Form.Group>
                     </Form>
                 </Modal.Content>
