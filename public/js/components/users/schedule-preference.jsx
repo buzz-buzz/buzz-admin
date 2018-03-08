@@ -143,14 +143,18 @@ export default class SchedulePreference extends React.Component {
     }
 
     eventCancelled(event) {
+        console.log('the event be cancelled = ', event);
         let events = this.state.events;
-        events.map(e => {
-            if (e.start_time === this.state.selectedEvent.start_time) {
+        events = events.map(e => {
+            if ((new Date(e.start_time).getTime() ) === (new Date(this.state.selectedEvent.start_time).getTime())) {
+                console.log('cancelling ', e, ' in UI');
                 e.status = event.status;
+                e.title = event.status;
             }
 
             return e;
-        });
+        }).filter(e => e.status !== 'cancelled');
+        console.log('cancelled events = ', events);
         this.setState({events: events})
     }
 

@@ -2,6 +2,18 @@ import * as React from "react";
 import {Button, Form, Header, Message, Modal} from "semantic-ui-react";
 import ServiceProxy from "../../service-proxy";
 
+function padZero(x) {
+    x = '' + x;
+    return '00'.substring(0, 2 - x.length) + x;
+}
+
+function toLocalDateTime(date) {
+    console.log('date xxx == ', date);
+    let ret = `${date.getFullYear()}-${padZero(date.getMonth() + 1)}-${padZero(date.getDate())}T${padZero(date.getHours())}:${padZero(date.getMinutes())}:${padZero(date.getSeconds())}`;
+    console.log('date = ', ret);
+    return ret;
+}
+
 function validateEvent(newEvent) {
     console.log('new Event = ', newEvent);
     newEvent.start_time = new Date(newEvent.start_time);
@@ -19,7 +31,7 @@ export default class EventDetail extends React.Component {
     constructor() {
         super();
 
-        this.state = {event: {}};
+        this.state = {event: {}, error: false};
         this.cancelEvent = this.cancelEvent.bind(this);
         this.saveEvent = this.saveEvent.bind(this);
         this.handleTimeChange = this.handleTimeChange.bind(this);
@@ -27,9 +39,8 @@ export default class EventDetail extends React.Component {
 
     async componentWillReceiveProps(nextProps) {
         let event = nextProps.event || {}
-        console.log('event = ', event);
-        event.start_time = new Date(event.start_time || null).toISOString().slice(0, -1);
-        event.end_time = new Date(event.end_time || null).toISOString().slice(0, -1);
+        event.start_time = toLocalDateTime(new Date(event.start_time || null));
+        event.end_time = toLocalDateTime(new Date(event.end_time || null));
         this.setState({
             event
         });
@@ -93,7 +104,9 @@ export default class EventDetail extends React.Component {
             event.end_time = new Date(event.end_time);
             event.status = result.status;
             this.setState({
-                event: event
+                event: event,
+                saved: false,
+                error: false
             });
 
             this.props.onEventCancelled(event);
