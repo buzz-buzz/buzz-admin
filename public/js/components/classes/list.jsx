@@ -114,6 +114,7 @@ export default class ClassList extends React.Component {
                         <Table.Row>
                             <Table.HeaderCell>课程名称</Table.HeaderCell>
                             <Table.HeaderCell>班级状态</Table.HeaderCell>
+                            <Table.HeaderCell>等级 </Table.HeaderCell>
                             <Table.HeaderCell>开课日期</Table.HeaderCell>
                             <Table.HeaderCell>开始时间</Table.HeaderCell>
                             <Table.HeaderCell>结束时间</Table.HeaderCell>
@@ -132,6 +133,9 @@ export default class ClassList extends React.Component {
                                     </Table.Cell>
                                     <Table.Cell>
                                         {c.status}
+                                    </Table.Cell>
+                                    <Table.Cell>
+                                        {c.level}
                                     </Table.Cell>
                                     <Table.Cell>
                                         {new Date(c.start_time).toLocaleDateString()}

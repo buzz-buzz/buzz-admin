@@ -19,7 +19,8 @@ export default class ClassDetail extends React.Component {
             availableCompanions: [],
             error: false,
             companion: 0,
-            dirty: false
+            dirty: false,
+            level: '',
         }
 
         this.close = this.close.bind(this);
@@ -72,7 +73,8 @@ export default class ClassDetail extends React.Component {
                 exercises: exercises,
                 remark: nextProps.class ? nextProps.class.remark : '',
                 class_id: nextProps.class ? nextProps.class.class_id : '',
-                companion: companions[0]
+                companion: companions[0],
+                level: nextProps.class ? nextProps.class.level : ''
             });
         }
     }
@@ -93,9 +95,9 @@ export default class ClassDetail extends React.Component {
                 room_url: this.state.classroomUrl,
                 remark: this.state.remark,
                 adviser_id: this.state.remark,
-                class_id: this.state.class_id
+                class_id: this.state.class_id,
+                level: this.state.level
             };
-            console.log(json);
             let result = await ServiceProxy.proxyTo({
                 body: {
                     uri: `{buzzService}/api/v1/class-schedule`,
@@ -125,7 +127,7 @@ export default class ClassDetail extends React.Component {
     }
 
     async componentWillMount() {
-        let availableStudents = await this.getOptions();
+        let availableStudents = await this.getAvailableStudents();
         let availableCompanions = await this.getAvailableCompanions();
         this.setState({availableStudents: availableStudents, availableCompanions: availableCompanions});
     }
@@ -139,6 +141,8 @@ export default class ClassDetail extends React.Component {
                         <Message error content={this.state.message} header="出错啦"></Message>
                         <Form.Group widths="equal">
                             <Form.Input label="课程名称" placeholder="课程名称" value={this.state.className} name="className"
+                                        onChange={this.handleChange}/>
+                            <Form.Input label="等级" placeholder="等级" value={this.state.level} name="level"
                                         onChange={this.handleChange}/>
                             <Form.Input label="教室链接" placeholder="教室链接" value={this.state.classroomUrl}
                                         name="classroomUrl" onChange={this.handleChange}/>
@@ -197,7 +201,7 @@ export default class ClassDetail extends React.Component {
         );
     }
 
-    async getOptions() {
+    async getAvailableStudents() {
         this.setState({loading: true});
         let students = await ServiceProxy.proxyTo({
             body: {
