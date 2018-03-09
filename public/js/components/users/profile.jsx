@@ -21,6 +21,7 @@ export default class Profile extends React.Component {
         this.updateProfile = this.updateProfile.bind(this);
         this.createUser = this.createUser.bind(this);
         this.handleSearchChange = this.handleSearchChange.bind(this);
+        this.deleteUser = this.deleteUser.bind(this);
     }
 
     handleChange(e, {name, value}) {
@@ -87,6 +88,36 @@ export default class Profile extends React.Component {
         }
     }
 
+    async deleteUser() {
+        let userId = window.prompt('这个操作不可恢复，一旦删除，与该用户相关的所有资料都将被永久删除。如果你确定要删除，请输入该用户的唯一 ID 号：')
+
+        if (String(userId) !== String(this.state.user.user_id)) {
+            window.alert('删除操作已取消')
+            return;
+        }
+
+        try {
+            this.setState({loading: true});
+
+            let result = await ServiceProxy.proxyTo({
+                body: {
+                    uri: `{buzzService}/api/v1/users/${this.state.user.user_id}`,
+                    method: 'DELETE',
+                },
+                accept: '*/*'
+            })
+
+            this.setState({error: false});
+            this.props.onUserDeleted(userId);
+
+            this.close();
+        } catch (error) {
+            this.setState({error: true, message: JSON.stringify(error.result || error)})
+        } finally {
+            this.setState({loading: false});
+        }
+    }
+
     async createUser() {
         try {
             this.setState({loading: true});
@@ -117,10 +148,12 @@ export default class Profile extends React.Component {
 
     render() {
         return (
-            <Modal open={this.props.open} closeOnEscape={true} closeOnRootNodeClick={false} onClose={this.close}>
+            <Modal open={this.props.open} closeOnEscape={true} closeOnRootNodeClick={false} onClose={this.close}
+                   closeIcon>
                 <Header content="用户资料"></Header>
                 <Modal.Content>
-                    <Image src={this.state.user.avatar} avatar/>
+                    <Image src={this.state.user.avatar} avatar alt={this.state.user.user_id}
+                           title={this.state.user.user_id}/>
                     <span>{this.state.user.display_name}</span>
                     <Form error={this.state.error} loading={this.state.loading} onSubmit={() => this.updateProfile()}>
                         <Message error header="出错了" content={this.state.message}/>
@@ -175,7 +208,7 @@ export default class Profile extends React.Component {
                                     <Form.Button content="修改" type="submit"/> :
                                     <Form.Button content="创建" type="button" onClick={this.createUser}/>
                             }
-                            <Form.Button content="关闭" type="button" onClick={this.close}/>
+                            <Form.Button content="删除" type="button" onClick={this.deleteUser}/>
                         </Form.Group>
                     </Form>
                 </Modal.Content>

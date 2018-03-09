@@ -76,6 +76,7 @@ export default class UserList extends React.Component {
         this.onCloseLevelModal = this.onCloseLevelModal.bind(this);
         this.createNewUser = this.createNewUser.bind(this);
         this.userCreated = this.userCreated.bind(this);
+        this.onUserDeleted = this.onUserDeleted.bind(this);
     }
 
     classHoursUpdated(newClassHours) {
@@ -263,7 +264,7 @@ export default class UserList extends React.Component {
                 }
                 <Profile open={this.state.profileModalOpen} user={this.state.currentUser}
                          profileUpdateCallback={this.profileUpdated} onCloseCallback={this.closeProfileModal}
-                         userCreatedCallback={this.userCreated}/>
+                         userCreatedCallback={this.userCreated} onUserDeleted={this.onUserDeleted}/>
                 <SchedulePreference open={this.state.schedulePreferenceModalOpen} user={this.state.currentUser}
                                     onCloseCallback={this.closeSchedulePreferenceModal}/>
             </Container>
@@ -369,6 +370,15 @@ export default class UserList extends React.Component {
             currentUser: newUser,
             users: attachEvents.call(this, users)
         });
+    }
+
+    onUserDeleted(userId) {
+        let users = this.state.users.filter(u => String(u.user_id) !== String(userId));
+
+        this.setState({
+            users: attachEvents.call(this, users),
+            currentUser: null
+        })
     }
 
     openLevelModal(student) {

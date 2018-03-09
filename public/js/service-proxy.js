@@ -49,12 +49,12 @@ export default {
                 credentials: 'include'
             }, options);
 
-            let res = (await checkStatus(await fetch(url, mergedOptions)));
+            let res = await checkStatus(await fetch(url, mergedOptions));
 
             if (mergedOptions.accept === 'application/json') {
-                return res.json();
+                return await res.json();
             } else {
-                return res.text();
+                return await res.text();
             }
         } catch (ex) {
             await handleError(ex);
