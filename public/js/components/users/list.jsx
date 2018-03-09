@@ -133,7 +133,7 @@ export default class UserList extends React.Component {
     }
 
     handleTextChange(event, {value, name}) {
-        let clonedSearchParams = Object.assign(this.state.searchParams);
+        let clonedSearchParams = this.state.searchParams;
         clonedSearchParams[name] = value;
 
         this.setState({

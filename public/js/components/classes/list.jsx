@@ -1,5 +1,5 @@
 import * as React from "react";
-import {Button, Container, Icon, Image, Menu, Segment, Table} from "semantic-ui-react";
+import {Button, Container, Form, Icon, Image, Input, Menu, Segment, Table} from "semantic-ui-react";
 import ServiceProxy from "../../service-proxy";
 import ClassDetail from "./class-detail-modal";
 
@@ -8,21 +8,42 @@ export default class ClassList extends React.Component {
         super();
 
         this.state = {
-            classes: []
+            classes: [],
+            loading: false,
+            searchParams: {
+                start_time: '',
+                end_time: ''
+            }
         };
 
         this.openClassDetail = this.openClassDetail.bind(this);
         this.onClassDetailClosed = this.onClassDetailClosed.bind(this);
         this.onClassSaved = this.onClassSaved.bind(this);
         this.openClassDetail = this.openClassDetail.bind(this);
+
+        this.handleChange = this.handleChange.bind(this);
+        this.searchClasses = this.searchClasses.bind(this);
     }
 
-    async componentDidMount() {
+    handleChange(event, {name, value}) {
+        let clonedSearchParams = this.state.searchParams;
+        clonedSearchParams[name] = value;
+
+        this.setState({
+            searchParams: clonedSearchParams
+        })
+    }
+
+    async searchClasses() {
         this.setState({loading: true})
         let result = await ServiceProxy.proxyTo({
             body: {
                 uri: '{buzzService}/api/v1/class-schedule',
-                method: 'GET'
+                method: 'GET',
+                qs: Object.assign({}, this.state.searchParams, {
+                    start_time: this.state.searchParams.start_time ? new Date(this.state.searchParams.start_time) : new Date(1900, 1, 1),
+                    end_time: this.state.searchParams.end_time ? new Date(this.state.searchParams.end_time) : new Date(2100, 1, 1)
+                })
             }
         })
 
@@ -31,10 +52,14 @@ export default class ClassList extends React.Component {
             classes: result.map(c => {
                 let uniqueFilter = (value, index, self) => self.indexOf(value) === index;
                 c.companions = (c.companions || '').split(',').filter(uniqueFilter);
-                c.users = (c.users || '').split(',').filter(uniqueFilter);
+                c.students = (c.students || '').split(',').filter(uniqueFilter);
                 return c;
             })
         })
+    }
+
+    async componentDidMount() {
+        await this.searchClasses();
     }
 
     openClassDetail(c) {
@@ -69,7 +94,20 @@ export default class ClassList extends React.Component {
         return (
             <Container>
                 <Segment loading={this.state.loading}>
-                    <Button onClick={() => this.openClassDetail()}>创建班级</Button>
+                    <Form onSubmit={this.searchClasses}>
+                        <Form.Group widths="equal">
+                            <Form.Field control={Input} label="开始时间" name="start_time"
+                                        value={this.state.searchParams.start_time} onChange={this.handleChange}
+                                        type="datetime-local"></Form.Field>
+                            <Form.Field control={Input} label="结束时间" name="end_time"
+                                        value={this.state.searchParams.end_time} onChange={this.handleChange}
+                                        type="datetime-local"></Form.Field>
+                        </Form.Group>
+                    </Form>
+                    <Form.Group>
+                        <Button type="submit" onClick={this.searchClasses}>查询</Button>
+                        <Button onClick={() => this.openClassDetail()} type="button">创建班级</Button>
+                    </Form.Group>
                 </Segment>
                 <Table celled>
                     <Table.Header>
@@ -112,8 +150,8 @@ export default class ClassList extends React.Component {
                                                                            src={`/avatar/${userId}`} key={userId}/>)}
                                     </Table.Cell>
                                     <Table.Cell onClick={(event) => event.stopPropagation()}>
-                                        {c.users.map(userId => <a href={`/students/${userId}`} target="_blank"
-                                                                  key={userId}>
+                                        {c.students.map(userId => <a href={`/students/${userId}`} target="_blank"
+                                                                     key={userId}>
                                             <Image avatar alt={userId} title={userId}
                                                    src={`/avatar/${userId}`}
                                                    key={userId}/></a>)}

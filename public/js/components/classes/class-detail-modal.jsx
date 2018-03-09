@@ -27,6 +27,7 @@ export default class ClassDetail extends React.Component {
         this.handleChange = this.handleChange.bind(this);
         this.handleSearchStudentChange = this.handleSearchStudentChange.bind(this);
         this.handleSearchCompanionChange = this.handleSearchCompanionChange.bind(this);
+        this.getAvailableCompanions = this.getAvailableCompanions.bind(this);
     }
 
     close() {
@@ -51,7 +52,7 @@ export default class ClassDetail extends React.Component {
         let exercises = nextProps.class ? nextProps.class.exercises : '';
         let startTime = nextProps.class ? nextProps.class.start_time : '';
         let endTime = nextProps.class ? nextProps.class.end_time : '';
-        let students = nextProps.class ? nextProps.class.users.map(userId => Number(userId)) : [];
+        let students = nextProps.class ? nextProps.class.students.map(userId => Number(userId)) : [];
         let companions = nextProps.class ? nextProps.class.companions.map(userId => Number(userId)) : [];
 
         try {
@@ -83,7 +84,7 @@ export default class ClassDetail extends React.Component {
         try {
             let json = {
                 companions: [this.state.companion],
-                students: this.state.users,
+                students: this.state.students,
                 start_time: new Date(this.state.startTime),
                 end_time: new Date(this.state.endTime),
                 status: 'opened',
@@ -125,7 +126,8 @@ export default class ClassDetail extends React.Component {
 
     async componentWillMount() {
         let availableStudents = await this.getOptions();
-        this.setState({availableStudents: availableStudents, availableCompanions: availableStudents});
+        let availableCompanions = await this.getAvailableCompanions();
+        this.setState({availableStudents: availableStudents, availableCompanions: availableCompanions});
     }
 
     render() {
@@ -163,7 +165,7 @@ export default class ClassDetail extends React.Component {
                                 <label>中国学生</label>
                                 <Dropdown selection multiple={true} search={true} name="students"
                                           options={this.state.availableStudents}
-                                          value={this.state.users}
+                                          value={this.state.students}
                                           placeholder="添加学生" onChange={this.handleChange}
                                           onSearchChange={this.handleSearchStudentChange} disabled={this.state.loading}
                                           loading={this.state.loading} label="中国学生"/>
@@ -219,5 +221,23 @@ export default class ClassDetail extends React.Component {
 
     handleSearchCompanionChange(e, {search}) {
         this.setState({searchCompanion: search});
+    }
+
+    async getAvailableCompanions() {
+        this.setState({loading: true});
+        let companions = await ServiceProxy.proxyTo({
+            body: {
+                uri: '{buzzService}/api/v1/users?role=c'
+            }
+        });
+
+        this.setState({loading: false});
+        return companions.map(s => {
+            return {
+                key: s.user_id,
+                text: s.display_name || s.name || s.wechat_name,
+                value: s.user_id
+            }
+        })
     }
 }
