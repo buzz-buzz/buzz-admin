@@ -19,7 +19,7 @@ export default class Layout extends React.Component {
             <body>
             <Header title={this.props.title} path={this.props.path}/>
             {this.props.children}
-            <script src="/js/bundle.js"></script>
+            <script src="https://buzz-admin.herokuapp.com/js/bundle.js"></script>
             </body>
             </html>
         )
