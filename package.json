@@ -1,4 +1,3 @@
-
 {
   "name": "buzz-admin",
   "version": "1.0.0",
@@ -47,5 +46,12 @@
     "semantic-ui-react": "^0.78.2",
     "webpack": "^3.10.0"
   },
-  "devDependencies": {}
+  "devDependencies": {},
+  "apps": [
+    {
+      "script": "app.js",
+      "watch": "true",
+      "name": "buzz-admin"
+    }
+  ]
 }
