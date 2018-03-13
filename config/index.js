@@ -13,7 +13,7 @@ let config = {
     },
     production: {
         endPoints: {
-            buzzService: 'https://localhost:16888',
+            buzzService: 'http://localhost:16888',
         }
     }
 };
