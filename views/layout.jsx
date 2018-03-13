@@ -7,7 +7,6 @@ export default class Layout extends React.Component {
     }
 
     render() {
-        console.log('path in layout: ', this.props);
         return (
             <html>
             <head>

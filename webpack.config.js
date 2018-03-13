@@ -1,4 +1,5 @@
 var path = require('path');
+var webpack = require('webpack');
 
 module.exports = {
     entry: './public/js/main.js',
@@ -6,7 +7,7 @@ module.exports = {
         path: path.resolve(__dirname, 'public/js'),
         filename: 'bundle.js'
     },
-    devtool: 'eval-source-map',
+    // devtool: 'eval-source-map',
     resolve: {
         extensions: ['.js', '.jsx']
     },
@@ -18,5 +19,24 @@ module.exports = {
                 presets: ["@babel/preset-env", "@babel/preset-react"]
             }
         }]
-    }
+    },
+    plugins: [
+        new webpack.NoErrorsPlugin(),
+        new webpack.DefinePlugin({'process.env.NODE_ENV': '"production"'}),
+        new webpack.optimize.OccurrenceOrderPlugin(),
+        new webpack.optimize.DedupePlugin(),
+        new webpack.optimize.UglifyJsPlugin({
+            compress: {
+                screw_ie8: true,
+                warnings: false
+            },
+            mangle: {
+                screw_ie8: true
+            },
+            output: {
+                comments: false,
+                screw_ie8: true
+            }
+        })
+    ]
 };
