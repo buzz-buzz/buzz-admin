@@ -185,7 +185,8 @@ export default class Profile extends React.Component {
                                         value={this.state.user.gender === 'm' ? '男' : (this.state.user.gender === 'f' ? '女' : '')}
                                         label="性别"
                                         readOnly/>
-                            <Form.Input placeholder="生日" name="birthday" value={this.state.user.birthday || ''}
+                            <Form.Input placeholder="生日" name="birthday"
+                                        value={new Date(this.state.user.date_of_birth).toLocaleDateString() || ''}
                                         label="生日"
                                         readOnly/>
                             <Form.Input placeholder="年级" name="grade" value={this.state.user.grade || ''} label="年级"
