@@ -63,7 +63,9 @@ router
             NODE_ENV: process.env.NODE_ENV
         });
     })
-    .get('/', clientPage)
+    .get('/', async ctx => {
+        ctx.redirect('/classes');
+    })
     .get('/students/:userId?', clientPage)
     .get('/companions/:userId?', clientPage)
     .get('/classes', clientPage)
