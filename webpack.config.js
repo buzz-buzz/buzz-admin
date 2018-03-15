@@ -21,10 +21,9 @@ module.exports = {
         }]
     },
     plugins: [
-        new webpack.NoErrorsPlugin(),
+        new webpack.NoEmitOnErrorsPlugin(),
         new webpack.DefinePlugin({'process.env.NODE_ENV': '"production"'}),
         new webpack.optimize.OccurrenceOrderPlugin(),
-        new webpack.optimize.DedupePlugin(),
         new webpack.optimize.UglifyJsPlugin({
             compress: {
                 screw_ie8: true,

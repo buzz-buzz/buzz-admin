@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {Form, Header, Message, Modal, TextArea} from "semantic-ui-react";
+import {Form, Header, Icon, Message, Modal, TextArea} from "semantic-ui-react";
 import ServiceProxy from "../../service-proxy";
 
 export default class LevelModal extends React.Component {
@@ -8,7 +8,8 @@ export default class LevelModal extends React.Component {
 
         this.state = {
             level: '',
-            levelDetail: '正在加载中……'
+            levelDetail: '',
+            jsonDetail: {}
         }
 
         this.handleChange = this.handleChange.bind(this);
@@ -45,8 +46,19 @@ export default class LevelModal extends React.Component {
 
                 console.log('result = ', result);
                 this.setState({levelDetail: result.detail});
-            } catch (error) {
 
+                if (result.detail) {
+                    this.setState({
+                        jsonDetail: JSON.parse(result.detail)
+                    })
+                } else {
+                    this.setState({
+                        jsonDetail: {}
+                    })
+                }
+
+            } catch (error) {
+                this.setState({error: true, message: JSON.stringify(error.result || error.message || error)});
             } finally {
                 this.setState({loading: false})
             }
@@ -93,11 +105,47 @@ export default class LevelModal extends React.Component {
                 <Header content="能力评级"></Header>
                 <Modal.Content>
                     <p>当前评级：{this.state.level}</p>
+
+                    <ol>
+                        {
+                            this.state.jsonDetail && this.state.jsonDetail.questions && this.state.jsonDetail.questions.map(q =>
+                                <li>
+                                    <h3>{q.title}</h3>
+                                    <ul>
+                                        {
+                                            q.items.map((item, i) =>
+                                                <li>
+                                                    {
+                                                        this.state.jsonDetail.answers[i].charCodeAt(0) + i - 'A'.charCodeAt(0) === 0 &&
+                                                        <Icon name="checkmark box"/>
+                                                    }
+                                                    {item}
+                                                </li>
+                                            )
+                                        }
+                                    </ul>
+                                </li>
+                            )
+                        }
+                        {
+                            this.state.jsonDetail.answers &&
+                            <li>
+                                <audio controls
+                                       src={this.state.jsonDetail.answers[this.state.jsonDetail.questions.length]}>
+                                </audio>
+                            </li>
+                        }
+                    </ol>
                     <Form error={this.state.error} loading={this.state.loading}>
                         <Message error header="出错了" content={this.state.message}/>
-                        <Form.Group>
-                            <TextArea autoHeight rows={3} value={this.state.levelDetail}></TextArea>
-                        </Form.Group>
+                        {
+                            !this.state.jsonDetail.questions &&
+
+                            <Form.Group>
+                                <TextArea autoHeight rows={3} value={this.state.levelDetail}
+                                          placeholder="答题详情"></TextArea>
+                            </Form.Group>
+                        }
                         <Form.Group>
                             <Form.Input placeholder="等级" name="level" value={level} onChange={this.handleChange}/>
                             <Form.Button content="保存" type="button" onClick={this.saveLevel}/>
