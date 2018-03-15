@@ -23,6 +23,29 @@ export default class ClassList extends React.Component {
 
         this.handleChange = this.handleChange.bind(this);
         this.searchClasses = this.searchClasses.bind(this);
+        this.updateStatus = this.updateStatus.bind(this);
+    }
+
+    async updateStatus() {
+        this.setState({loading: true});
+        try {
+            let result = await ServiceProxy.proxyTo({
+                body: {
+                    uri: `{buzzService}/api/v1/class-schedule`,
+                    method: 'PUT'
+                }
+            })
+            console.log('result = ', result);
+            this.setState({error: false});
+            await this.searchClasses();
+        } catch (error) {
+            this.setState({
+                error: true,
+                message: JSON.stringify(error.result || error.message || error)
+            })
+        } finally {
+            this.setState({loading: false})
+        }
     }
 
     handleChange(event, {name, value}) {
@@ -107,6 +130,7 @@ export default class ClassList extends React.Component {
                     <Form.Group>
                         <Button type="submit" onClick={this.searchClasses}>查询</Button>
                         <Button onClick={() => this.openClassDetail()} type="button">创建班级</Button>
+                        <Button onClick={this.updateStatus} type="button">批量更新班级结束状态</Button>
                     </Form.Group>
                 </Segment>
                 <Table celled>
