@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {Dropdown, Form, Header, Image, Message, Modal} from "semantic-ui-react";
+import {Dropdown, Form, Header, Image, Message, Modal, TextArea} from "semantic-ui-react";
 import ServiceProxy from "../../service-proxy";
 import * as Countries from "../../common/Countries";
 
@@ -13,6 +13,7 @@ export default class Profile extends React.Component {
             parentName: '',
             name: '',
             country: '',
+            remark: '',
             user: {}
         };
 
@@ -50,6 +51,7 @@ export default class Profile extends React.Component {
                 parentName: this.state.user.parent_name || '',
                 name: this.state.user ? this.state.user.name || this.state.user.display_name || '' : '',
                 country: this.state.user.country || '',
+                remark: this.state.user.remark || ''
             });
         })
     }
@@ -68,7 +70,8 @@ export default class Profile extends React.Component {
                 parent_name: this.state.parentName,
                 name: this.state.name,
                 display_name: this.state.name,
-                country: this.state.country
+                country: this.state.country,
+                remark: this.state.remark
             };
 
             let result = await ServiceProxy.proxyTo({
@@ -169,7 +172,7 @@ export default class Profile extends React.Component {
                             <Form.Input placeholder="邮箱" name="email" value={this.state.email}
                                         onChange={this.handleChange} type="email" label="邮箱"/>
                         </Form.Group>
-                        <Form.Group widths="equal">
+                        <Form.Group>
                             <Form.Field>
                                 <label>国籍</label>
                                 <Dropdown selection multiple={false} search={true} name="country"
@@ -179,8 +182,7 @@ export default class Profile extends React.Component {
                             </Form.Field>
                             <Form.Input placeholder="所在城市" name="city" value={this.state.user.city || ''}
                                         label="所在城市" readOnly/>
-                        </Form.Group>
-                        <Form.Group>
+
                             <Form.Input placeholder="性别" name="gender"
                                         value={this.state.user.gender === 'm' ? '男' : (this.state.user.gender === 'f' ? '女' : '')}
                                         label="性别"
@@ -192,7 +194,7 @@ export default class Profile extends React.Component {
                             <Form.Input placeholder="年级" name="grade" value={this.state.user.grade || ''} label="年级"
                                         readOnly/>
                         </Form.Group>
-                        <Form.Group>
+                        <Form.Group widths="equal">
                             <Form.Input placeholder="兴趣爱好" name="interests" value={this.state.user.interests || ''}
                                         label="兴趣爱好" readOnly/>
                         </Form.Group>
@@ -202,6 +204,13 @@ export default class Profile extends React.Component {
 
                             <Form.Input placeholder="Facebook 名称" name="facebookName"
                                         value={this.state.user.facebook_name || ''} label="Facebook 名称"/>
+                        </Form.Group>
+                        <Form.Group widths="equal">
+                            <Form.Field>
+                                <label>备注</label>
+                                <TextArea autoHeight placeholder="备注" rows={3} value={this.state.remark} name="remark"
+                                          onChange={this.handleChange}/>
+                            </Form.Field>
                         </Form.Group>
                         <Form.Group>
                             {
