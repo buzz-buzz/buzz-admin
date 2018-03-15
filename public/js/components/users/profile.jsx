@@ -14,6 +14,7 @@ export default class Profile extends React.Component {
             name: '',
             country: '',
             remark: '',
+            avatar: '',
             user: {}
         };
 
@@ -51,7 +52,8 @@ export default class Profile extends React.Component {
                 parentName: this.state.user.parent_name || '',
                 name: this.state.user ? this.state.user.name || this.state.user.display_name || '' : '',
                 country: this.state.user.country || '',
-                remark: this.state.user.remark || ''
+                remark: this.state.user.remark || '',
+                avatar: this.state.user.avatar || ''
             });
         })
     }
@@ -71,7 +73,8 @@ export default class Profile extends React.Component {
                 name: this.state.name,
                 display_name: this.state.name,
                 country: this.state.country,
-                remark: this.state.remark
+                remark: this.state.remark,
+                avatar: this.state.avatar
             };
 
             let result = await ServiceProxy.proxyTo({
@@ -155,7 +158,7 @@ export default class Profile extends React.Component {
                    closeIcon>
                 <Header content="用户资料"></Header>
                 <Modal.Content>
-                    <Image src={this.state.user.avatar} avatar alt={this.state.user.user_id}
+                    <Image src={this.state.avatar} avatar alt={this.state.user.user_id}
                            title={this.state.user.user_id}/>
                     <span>{this.state.user.display_name}</span>
                     <Form error={this.state.error} loading={this.state.loading} onSubmit={() => this.updateProfile()}>
@@ -172,6 +175,8 @@ export default class Profile extends React.Component {
                             <Form.Input placeholder="邮箱" name="email" value={this.state.email}
                                         onChange={this.handleChange} type="email" label="邮箱"/>
 
+                        </Form.Group>
+                        <Form.Group>
                             <Form.Field>
                                 <label>国籍</label>
                                 <Dropdown selection multiple={false} search={true} name="country"
@@ -179,8 +184,6 @@ export default class Profile extends React.Component {
                                           value={this.state.country} placeholder="国籍" onChange={this.handleChange}
                                           onSearchChange={this.handleSearchChange}/>
                             </Form.Field>
-                        </Form.Group>
-                        <Form.Group>
                             <Form.Input placeholder="所在城市" name="city" value={this.state.user.city || ''}
                                         label="所在城市" readOnly/>
 
@@ -189,22 +192,26 @@ export default class Profile extends React.Component {
                                         label="性别"
                                         readOnly/>
                             <Form.Input placeholder="生日" name="birthday"
-                                        value={new Date(this.state.user.date_of_birth).toLocaleDateString() || ''}
+                                        value={this.state.user && this.state.user.date_of_birth ? new Date(this.state.user.date_of_birth).toLocaleDateString() : '' || ''}
                                         label="生日"
-                                        readOnly/>
-                            <Form.Input placeholder="年级" name="grade" value={this.state.user.grade || ''} label="年级"
                                         readOnly/>
                         </Form.Group>
                         <Form.Group widths="equal">
+
+                            <Form.Input placeholder="年级" name="grade" value={this.state.user.grade || ''} label="年级"
+                                        width={4}
+                                        readOnly/>
                             <Form.Input placeholder="兴趣爱好" name="interests" value={this.state.user.interests || ''}
-                                        label="兴趣爱好" readOnly/>
+                                        label="兴趣爱好" readOnly width={12}/>
                         </Form.Group>
                         <Form.Group>
                             <Form.Input placeholder="微信昵称" name="wechat_name" value={this.state.user.wechat_name || ''}
-                                        label="微信昵称" readOnly/>
+                                        label="微信昵称" readOnly width={3}/>
 
                             <Form.Input placeholder="Facebook 名称" name="facebookName"
-                                        value={this.state.user.facebook_name || ''} label="Facebook 名称"/>
+                                        value={this.state.user.facebook_name || ''} label="Facebook 名称" width={3}/>
+                            <Form.Input placeholder="头像" name="avatar" value={this.state.avatar} label="头像 URL"
+                                        onChange={this.handleChange} width={10}/>
                         </Form.Group>
                         <Form.Group widths="equal">
                             <Form.Field>

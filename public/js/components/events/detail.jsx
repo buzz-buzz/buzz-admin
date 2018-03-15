@@ -1,18 +1,7 @@
 import * as React from "react";
 import {Button, Form, Header, Message, Modal} from "semantic-ui-react";
 import ServiceProxy from "../../service-proxy";
-
-function padZero(x) {
-    x = '' + x;
-    return '00'.substring(0, 2 - x.length) + x;
-}
-
-function toLocalDateTime(date) {
-    console.log('date xxx == ', date);
-    let ret = `${date.getFullYear()}-${padZero(date.getMonth() + 1)}-${padZero(date.getDate())}T${padZero(date.getHours())}:${padZero(date.getMinutes())}:${padZero(date.getSeconds())}`;
-    console.log('date = ', ret);
-    return ret;
-}
+import TimeHelper from "../../common/TimeHelper";
 
 function validateEvent(newEvent) {
     console.log('new Event = ', newEvent);
@@ -39,8 +28,8 @@ export default class EventDetail extends React.Component {
 
     async componentWillReceiveProps(nextProps) {
         let event = nextProps.event || {}
-        event.start_time = toLocalDateTime(new Date(event.start_time || null));
-        event.end_time = toLocalDateTime(new Date(event.end_time || null));
+        event.start_time = TimeHelper.toLocalDateTime(new Date(event.start_time || null));
+        event.end_time = TimeHelper.toLocalDateTime(new Date(event.end_time || null));
         this.setState({
             event
         });
