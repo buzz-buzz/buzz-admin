@@ -24,7 +24,7 @@ register({
 });
 
 app.use(bodyParser());
-app.use(staticCache('.'));
+// app.use(staticCache('.'));
 app.use(staticCache(assetspath));
 app.use(staticCache(nodeModules));
 
