@@ -318,16 +318,26 @@ export default class UserList extends React.Component {
         this.setState({profileModalOpen: false});
     }
 
-    openSchedulePreferenceModal(student) {
+    openSchedulePreferenceModal(user) {
         this.setState({
             schedulePreferenceModalOpen: true,
-            currentUser: student
+            currentUser: user
         })
     }
 
-    closeSchedulePreferenceModal() {
+    closeSchedulePreferenceModal(user) {
+        let users = this.state.users.map(u => {
+            if (u.user_id === user.user_id) {
+                return user;
+            }
+
+            return u;
+        });
+
         this.setState({
-            schedulePreferenceModalOpen: false
+            schedulePreferenceModalOpen: false,
+            currentUser: user,
+            users: users
         })
     }
 
@@ -348,7 +358,6 @@ export default class UserList extends React.Component {
             return s;
         })
 
-        console.log('selecteduser = ', selectedUser);
         this.setState({
             currentUser: selectedUser,
             users: newUsers

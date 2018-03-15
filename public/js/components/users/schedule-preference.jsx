@@ -80,7 +80,7 @@ export default class SchedulePreference extends React.Component {
     }
 
     close() {
-        this.props.onCloseCallback();
+        this.props.onCloseCallback(this.state.user);
     }
 
     render() {
@@ -143,7 +143,6 @@ export default class SchedulePreference extends React.Component {
     }
 
     eventCancelled(event) {
-        console.log('the event be cancelled = ', event);
         let events = this.state.events;
         events = events.map(e => {
             if ((new Date(e.start_time).getTime() ) === (new Date(this.state.selectedEvent.start_time).getTime())) {
@@ -154,20 +153,26 @@ export default class SchedulePreference extends React.Component {
 
             return e;
         }).filter(e => e.status !== 'cancelled');
-        console.log('cancelled events = ', events);
-        this.setState({events: events})
+
+        let user = this.state.user;
+        user.events = events;
+        this.setState({events: events, user: user})
     }
 
     eventSaved(event) {
         let events = this.state.events;
         events.push(event);
 
+        let user = this.state.user;
+        user.events = events;
+
         this.setState({
             events,
             selectedEvent: Object.assign({}, event, {
                 start_time: event.start_time.toISOString(),
                 end_time: event.end_time.toISOString()
-            })
+            }),
+            user: user
         });
     }
 };
