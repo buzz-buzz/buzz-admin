@@ -1,6 +1,7 @@
 import * as React from "react";
 import {Button, Dropdown, Form, Header, Message, Modal, TextArea} from "semantic-ui-react";
 import ServiceProxy from "../../service-proxy";
+import TimeHelper from "../../common/TimeHelper";
 
 export default class ClassDetail extends React.Component {
     constructor() {
@@ -21,6 +22,7 @@ export default class ClassDetail extends React.Component {
             companion: 0,
             dirty: false,
             level: '',
+            topic: ''
         }
 
         this.close = this.close.bind(this);
@@ -58,8 +60,8 @@ export default class ClassDetail extends React.Component {
 
         try {
             exercises = JSON.parse(exercises).join('\n');
-            startTime = new Date(startTime).toISOString().slice(0, -1);
-            endTime = new Date(endTime).toISOString().slice(0, -1);
+            startTime = TimeHelper.toLocalDateTime(new Date(startTime));
+            endTime = TimeHelper.toLocalDateTime(new Date(endTime));
         } catch (error) {
 
         } finally {
@@ -74,7 +76,8 @@ export default class ClassDetail extends React.Component {
                 remark: nextProps.class ? nextProps.class.remark : '',
                 class_id: nextProps.class ? nextProps.class.class_id : '',
                 companion: companions[0],
-                level: nextProps.class ? nextProps.class.level : ''
+                level: nextProps.class ? nextProps.class.level : '',
+                topic: nextProps.class ? nextProps.class.topic : ''
             });
         }
     }
@@ -96,7 +99,8 @@ export default class ClassDetail extends React.Component {
                 remark: this.state.remark,
                 adviser_id: this.state.remark,
                 class_id: this.state.class_id,
-                level: this.state.level
+                level: this.state.level,
+                topic: this.state.topic
             };
             let result = await ServiceProxy.proxyTo({
                 body: {
@@ -148,6 +152,8 @@ export default class ClassDetail extends React.Component {
                                         name="classroomUrl" onChange={this.handleChange}/>
                         </Form.Group>
                         <Form.Group widths="equal">
+                            <Form.Input label="话题" placeholder="话题" value={this.state.topic} name="topic"
+                                        onChange={this.handleChange}/>
                             <Form.Input label="开始时间" placeholder="开始时间" value={this.state.startTime}
                                         type="datetime-local" name="startTime" onChange={this.handleChange}/>
                             <Form.Input label="结束时间" placeholder="结束时间" value={this.state.endTime}

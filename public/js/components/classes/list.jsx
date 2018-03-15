@@ -76,7 +76,7 @@ export default class ClassList extends React.Component {
     onClassSaved(savedClass) {
         let classes = Object.assign([], this.state.classes);
         if (classes.map(c => c.class_id).indexOf(savedClass.class_id) < 0) {
-            classes.push(savedClass);
+            classes.unshift(savedClass);
         } else {
             classes = classes.map(c => {
                 if (c.class_id === savedClass.class_id) {

@@ -171,8 +171,7 @@ export default class Profile extends React.Component {
                                         type="number" label="手机号"/>
                             <Form.Input placeholder="邮箱" name="email" value={this.state.email}
                                         onChange={this.handleChange} type="email" label="邮箱"/>
-                        </Form.Group>
-                        <Form.Group>
+
                             <Form.Field>
                                 <label>国籍</label>
                                 <Dropdown selection multiple={false} search={true} name="country"
@@ -180,6 +179,8 @@ export default class Profile extends React.Component {
                                           value={this.state.country} placeholder="国籍" onChange={this.handleChange}
                                           onSearchChange={this.handleSearchChange}/>
                             </Form.Field>
+                        </Form.Group>
+                        <Form.Group>
                             <Form.Input placeholder="所在城市" name="city" value={this.state.user.city || ''}
                                         label="所在城市" readOnly/>
 
