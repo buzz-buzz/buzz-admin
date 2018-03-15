@@ -123,8 +123,8 @@ export default class UserList extends React.Component {
                 body: {
                     uri: `{buzzService}/api/v1/users?role=${this.props['user-type']}`,
                     qs: Object.assign({}, this.state.searchParams, {
-                        start_time: this.state.searchParams.start_time ? new Date(this.state.searchParams.start_time) : new Date(1900, 1, 1),
-                        end_time: this.state.searchParams.end_time ? new Date(this.state.searchParams.end_time) : new Date(2100, 1, 1)
+                        start_time: this.state.searchParams.start_time ? new Date(this.state.searchParams.start_time) : undefined,
+                        end_time: this.state.searchParams.end_time ? new Date(this.state.searchParams.end_time) : undefined
                     })
                 }
             });
