@@ -6,9 +6,14 @@ let config = {
             buzzService: 'https://buzz-corner-service.herokuapp.com',
         }
     },
-    production: {
+    qa: {
         endPoints: {
             buzzService: 'http://localhost:16888',
+        }
+    },
+    production: {
+        endPoints: {
+            buzzService: process.env.buzz_service_endpoints
         }
     }
 };
