@@ -28,9 +28,10 @@ function attachEvents(users) {
                 method: 'GET'
             }
         }).then((events) => {
+            console.log('events =', events);
             user.events = events.map(e => {
-                e.start_time = new Date(e.start_time);
-                e.end_time = new Date(e.end_time);
+                e.start_time = new Date(e.start_time || e.student_start_time);
+                e.end_time = new Date(e.end_time || e.student_end_time);
 
                 if (!e.title) {
                     e.title = '[预约需求]';
