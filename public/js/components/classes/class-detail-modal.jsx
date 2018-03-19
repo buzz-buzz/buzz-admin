@@ -220,7 +220,6 @@ export default class ClassDetail extends React.Component {
                             <Form.Input label="备注" placeholder="备注" value={this.state.remark} name="remark"
                                 onChange={this.handleChange} />
                         </Form.Group>
-                        <h1>{222 + this.state.topic + 33}</h1>
                         <Form.Group>
                             {this.state.class_id ?
                                 <Button onClick={this.saveClass} disabled={this.state.buttonState}>保存</Button>
