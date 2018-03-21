@@ -1,11 +1,11 @@
 import * as React from "react";
-import {Button, Dropdown, Form, Header, Message, Modal, TextArea} from "semantic-ui-react";
+import { Button, Dropdown, Form, Header, Message, Modal, TextArea } from "semantic-ui-react";
 import ServiceProxy from "../../service-proxy";
 import TimeHelper from "../../common/TimeHelper";
 
 export default class ClassDetail extends React.Component {
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
 
         this.state = {
             className: '',
@@ -22,7 +22,7 @@ export default class ClassDetail extends React.Component {
             companion: 0,
             dirty: false,
             level: '',
-            topic: ''
+            topic: '',
         }
 
         this.close = this.close.bind(this);
@@ -36,20 +36,39 @@ export default class ClassDetail extends React.Component {
     close() {
         if (this.state.dirty) {
             if (window.confirm('有改动未保存，确认关闭吗？')) {
-                this.setState({dirty: false}, this.props.onClose);
+                this.setState({ dirty: false }, this.props.onClose);
             }
         } else {
             this.props.onClose();
         }
     }
 
-    handleChange(event, {name, value}) {
+    handleChange(event, { name, value }) {
         if (name === 'companion') {
-            this.setState({companions: [value]})
+            this.setState({ companions: [value] })
         }
-        this.setState({[name]: value, dirty: true});
+        
+        this.setState({ [name]: value, dirty: true });
+        if (name === 'topic') {
+            var reg = /(^\s*)(\s*$)/;
+            console.log(reg.test(event.target.value));
+            if(reg.test(event.target.value)){
+                event.target.value = '';
+                this.setState({topic:'',buttonState:true});
+            }
+            else{
+                this.setState({topic:event.target.value,buttonState:false});
+            }
+            // console.log(event.target.value)
+            // console.log(this.state.topic)
+            // console.log(event.target.value===this.state.topic)
+            // console.log('------')
+            // console.log(this.state.topic==='')
+        }
     }
-
+    handleAsd(){
+        this.state.topic===''
+    }
     componentWillReceiveProps(nextProps) {
         console.log('next=', nextProps);
         let exercises = nextProps.class ? nextProps.class.exercises : '';
@@ -77,13 +96,18 @@ export default class ClassDetail extends React.Component {
                 class_id: nextProps.class ? nextProps.class.class_id : '',
                 companion: companions[0],
                 level: nextProps.class ? nextProps.class.level : '',
-                topic: nextProps.class ? nextProps.class.topic : ''
+                topic: nextProps.class ? nextProps.class.topic : '',
+                buttonState:nextProps.buttonState
             });
+            // console.log('nextProps')
+            // console.log(nextProps.buttonState)
+            // console.log('走了')
+            // console.log(this.state)
         }
     }
 
     async saveClass() {
-        this.setState({loading: true});
+        this.setState({ loading: true });
 
         console.log(this.state);
         try {
@@ -126,14 +150,14 @@ export default class ClassDetail extends React.Component {
                 message: JSON.stringify(error.result ? error.result : (error.message ? error.message : error))
             })
         } finally {
-            this.setState({loading: false});
+            this.setState({ loading: false });
         }
     }
 
     async componentWillMount() {
         let availableStudents = await this.getAvailableStudents();
         let availableCompanions = await this.getAvailableCompanions();
-        this.setState({availableStudents: availableStudents, availableCompanions: availableCompanions});
+        this.setState({ availableStudents: availableStudents, availableCompanions: availableCompanions });
     }
 
     render() {
@@ -145,59 +169,62 @@ export default class ClassDetail extends React.Component {
                         <Message error content={this.state.message} header="出错啦"></Message>
                         <Form.Group widths="equal">
                             <Form.Input label="课程名称" placeholder="课程名称" value={this.state.className} name="className"
-                                        onChange={this.handleChange}/>
+                                onChange={this.handleChange} />
                             <Form.Input label="等级" placeholder="等级" value={this.state.level} name="level"
-                                        onChange={this.handleChange}/>
+                                onChange={this.handleChange} />
                             <Form.Input label="教室链接" placeholder="教室链接" value={this.state.classroomUrl}
-                                        name="classroomUrl" onChange={this.handleChange}/>
+                                name="classroomUrl" onChange={this.handleChange} />
                         </Form.Group>
                         <Form.Group widths="equal">
-                            <Form.Input label="话题" placeholder="话题" value={this.state.topic} name="topic"
-                                        onChange={this.handleChange}/>
+                            <Form.Field required>
+                                <label>话题</label>
+                                <Form.Input placeholder="话题" value={this.state.topic} name="topic"
+                                    onChange={this.handleChange} />
+                            </Form.Field>
                             <Form.Input label="开始时间" placeholder="开始时间" value={this.state.startTime}
-                                        type="datetime-local" name="startTime" onChange={this.handleChange}/>
+                                type="datetime-local" name="startTime" onChange={this.handleChange} />
                             <Form.Input label="结束时间" placeholder="结束时间" value={this.state.endTime}
-                                        type="datetime-local" name="endTime" onChange={this.handleChange}/>
+                                type="datetime-local" name="endTime" onChange={this.handleChange} />
                         </Form.Group>
                         <Form.Group widths="equal">
                             <Form.Field>
                                 <label>外籍伙伴</label>
                                 <Dropdown selection multiple={false}
-                                          search={true} name="companion"
-                                          options={this.state.availableCompanions}
-                                          value={this.state.companion}
-                                          placeholder="设置伙伴" onChange={this.handleChange}
-                                          onSearchChange={this.handleSearchCompanionChange}
-                                          disabled={this.state.loading}
-                                          loading={this.state.loading} label="外籍伙伴"/>
+                                    search={true} name="companion"
+                                    options={this.state.availableCompanions}
+                                    value={this.state.companion}
+                                    placeholder="设置伙伴" onChange={this.handleChange}
+                                    onSearchChange={this.handleSearchCompanionChange}
+                                    disabled={this.state.loading}
+                                    loading={this.state.loading} label="外籍伙伴" />
                             </Form.Field>
                             <Form.Field>
                                 <label>中国学生</label>
                                 <Dropdown selection multiple={true} search={true} name="students"
-                                          options={this.state.availableStudents}
-                                          value={this.state.students}
-                                          placeholder="添加学生" onChange={this.handleChange}
-                                          onSearchChange={this.handleSearchStudentChange} disabled={this.state.loading}
-                                          loading={this.state.loading} label="中国学生"/>
+                                    options={this.state.availableStudents}
+                                    value={this.state.students}
+                                    placeholder="添加学生" onChange={this.handleChange}
+                                    onSearchChange={this.handleSearchStudentChange} disabled={this.state.loading}
+                                    loading={this.state.loading} label="中国学生" />
                             </Form.Field>
                         </Form.Group>
                         <Form.Group widths="equal">
                             <Form.Field>
                                 <label>练习音频链接</label>
                                 <TextArea autoHeight placeholder="练习音频链接，一行一个" rows="3"
-                                          value={this.state.exercises} name="exercises"
-                                          onChange={this.handleChange} label="练习音频链接"></TextArea>
+                                    value={this.state.exercises} name="exercises"
+                                    onChange={this.handleChange} label="练习音频链接"></TextArea>
                             </Form.Field>
                         </Form.Group>
                         <Form.Group>
                             <Form.Input label="备注" placeholder="备注" value={this.state.remark} name="remark"
-                                        onChange={this.handleChange}/>
+                                onChange={this.handleChange} />
                         </Form.Group>
                         <Form.Group>
                             {this.state.class_id ?
-                                <Button onClick={this.saveClass}>保存</Button>
+                                <Button onClick={this.saveClass} disabled={this.state.buttonState}>保存</Button>
                                 :
-                                <Button onClick={this.saveClass}>创建</Button>
+                                <Button onClick={this.saveClass} disabled={this.state.buttonState}>创建</Button>
                             }
                             <Button onClick={this.close} className="right floated" type="button">关闭</Button>
                         </Form.Group>
@@ -208,14 +235,14 @@ export default class ClassDetail extends React.Component {
     }
 
     async getAvailableStudents() {
-        this.setState({loading: true});
+        this.setState({ loading: true });
         let students = await ServiceProxy.proxyTo({
             body: {
                 uri: '{buzzService}/api/v1/users?role=s'
             }
         });
 
-        this.setState({loading: false});
+        this.setState({ loading: false });
         return students.map(s => {
             return {
                 key: s.user_id,
@@ -225,23 +252,23 @@ export default class ClassDetail extends React.Component {
         })
     }
 
-    handleSearchStudentChange(e, {search}) {
-        this.setState({searchStudent: search});
+    handleSearchStudentChange(e, { search }) {
+        this.setState({ searchStudent: search });
     }
 
-    handleSearchCompanionChange(e, {search}) {
-        this.setState({searchCompanion: search});
+    handleSearchCompanionChange(e, { search }) {
+        this.setState({ searchCompanion: search });
     }
 
     async getAvailableCompanions() {
-        this.setState({loading: true});
+        this.setState({ loading: true });
         let companions = await ServiceProxy.proxyTo({
             body: {
                 uri: '{buzzService}/api/v1/users?role=c'
             }
         });
 
-        this.setState({loading: false});
+        this.setState({ loading: false });
         return companions.map(s => {
             return {
                 key: s.user_id,
