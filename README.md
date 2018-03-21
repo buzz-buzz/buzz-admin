@@ -1,4 +1,4 @@
-Buzz-Admin
+Buzz-Admin: Buzzbuzz 管理后台
 =============
 
 Run locally:

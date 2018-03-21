@@ -139,6 +139,7 @@ export default class ClassList extends React.Component {
                 <Table celled>
                     <Table.Header>
                         <Table.Row>
+                            <Table.HeaderCell>课程 ID</Table.HeaderCell>
                             <Table.HeaderCell>课程名称</Table.HeaderCell>
                             <Table.HeaderCell>班级状态</Table.HeaderCell>
                             <Table.HeaderCell>等级 </Table.HeaderCell>
@@ -155,6 +156,9 @@ export default class ClassList extends React.Component {
                             this.state.classes.map((c, i) =>
                                 <Table.Row key={c.class_id} style={{ cursor: 'pointer' }}
                                     onClick={() => this.openClassDetail(c)}>
+                                    <Table.Cell>
+                                        {c.class_id}
+                                    </Table.Cell>
                                     <Table.Cell>
                                         {c.name}
                                     </Table.Cell>
