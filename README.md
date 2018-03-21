@@ -3,11 +3,12 @@ Buzz-Admin: Buzzbuzz 管理后台
 
 Run locally:
 -----
+启动服务器端：
 ```
 npm start
 ```
 
-when something changed in client side, run
+另启动一个命令，监听、编译并打包前端文件改动
 ```
 npm run build
 ```

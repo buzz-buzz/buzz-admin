@@ -6,7 +6,8 @@
   "scripts": {
     "start": "set BASIC_NAME=buzz&&set BASIC_PASS=buzz&&node app.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "set NODE_ENV=production&&.\\node_modules\\.bin\\webpack -p"
+    "build": "set NODE_ENV=production&&.\\node_modules\\.bin\\webpack -p --watch --progress",
+    "dev-server": "webpack-dev-server --port 3300 --hot --inline"
   },
   "repository": {
     "type": "git",
@@ -46,7 +47,10 @@
     "semantic-ui-react": "^0.78.2",
     "webpack": "^3.10.0"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "webpack-cli": "^2.0.12",
+    "webpack-dev-server": "^2.9.7"
+  },
   "apps": [
     {
       "script": "app.js",
