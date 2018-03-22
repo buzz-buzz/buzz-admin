@@ -6,7 +6,7 @@
   "scripts": {
     "start": "set BASIC_NAME=buzz&&set BASIC_PASS=buzz&&node app.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "set NODE_ENV=production&&.\\node_modules\\.bin\\webpack -p"
+    "build": "set NODE_ENV=production&&.\\node_modules\\.bin\\webpack -p --color --watch --progress"
   },
   "repository": {
     "type": "git",

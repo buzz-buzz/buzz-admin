@@ -2,6 +2,9 @@ import * as React from "react";
 import { Button, Dropdown, Form, Header, Message, Modal, TextArea } from "semantic-ui-react";
 import ServiceProxy from "../../service-proxy";
 import TimeHelper from "../../common/TimeHelper";
+import ClassEvaluation from './class-evaluation-modal';
+
+
 
 export default class ClassDetail extends React.Component {
     constructor(props) {
@@ -31,6 +34,9 @@ export default class ClassDetail extends React.Component {
         this.handleSearchStudentChange = this.handleSearchStudentChange.bind(this);
         this.handleSearchCompanionChange = this.handleSearchCompanionChange.bind(this);
         this.getAvailableCompanions = this.getAvailableCompanions.bind(this);
+
+        this.openClassEvaluation = this.openClassEvaluation.bind(this);
+        this.onClassEvaluationClosed = this.onClassEvaluationClosed.bind(this);
     }
 
     close() {
@@ -43,31 +49,25 @@ export default class ClassDetail extends React.Component {
         }
     }
 
+    
+
     handleChange(event, { name, value }) {
         if (name === 'companion') {
             this.setState({ companions: [value] })
         }
-        
+
         this.setState({ [name]: value, dirty: true });
         if (name === 'topic') {
             var reg = /(^\s*)(\s*$)/;
             console.log(reg.test(event.target.value));
-            if(reg.test(event.target.value)){
+            if (reg.test(event.target.value)) {
                 event.target.value = '';
-                this.setState({topic:'',buttonState:true});
+                this.setState({ topic: '', buttonState: true });
             }
-            else{
-                this.setState({topic:event.target.value,buttonState:false});
+            else {
+                this.setState({ topic: event.target.value, buttonState: false });
             }
-            // console.log(event.target.value)
-            // console.log(this.state.topic)
-            // console.log(event.target.value===this.state.topic)
-            // console.log('------')
-            // console.log(this.state.topic==='')
         }
-    }
-    handleAsd(){
-        this.state.topic===''
     }
     componentWillReceiveProps(nextProps) {
         console.log('next=', nextProps);
@@ -97,13 +97,21 @@ export default class ClassDetail extends React.Component {
                 companion: companions[0],
                 level: nextProps.class ? nextProps.class.level : '',
                 topic: nextProps.class ? nextProps.class.topic : '',
-                buttonState:nextProps.buttonState
+                buttonState: nextProps.buttonState
             });
-            // console.log('nextProps')
-            // console.log(nextProps.buttonState)
-            // console.log('走了')
-            // console.log(this.state)
         }
+    }
+
+    openClassEvaluation() {
+        //console.log(this.state)
+        this.setState({
+            evaluationOpen: true,
+            currentEvaluation: this.state,
+        })
+    }
+
+    onClassEvaluationClosed() {
+        this.setState({ evaluationOpen: false })
     }
 
     async saveClass() {
@@ -164,7 +172,7 @@ export default class ClassDetail extends React.Component {
         return (
             <Modal open={this.props.open} onClose={this.close} closeOnDimmerClick={false}>
                 <Header>班级详情</Header>
-                <Modal.Content>
+                <Modal.Content scrolling>
                     <Form loading={this.state.loading} error={this.state.error} unstackable={true}>
                         <Message error content={this.state.message} header="出错啦"></Message>
                         <Form.Group widths="equal">
@@ -219,6 +227,16 @@ export default class ClassDetail extends React.Component {
                         <Form.Group>
                             <Form.Input label="备注" placeholder="备注" value={this.state.remark} name="remark"
                                 onChange={this.handleChange} />
+                        </Form.Group>
+                        <Form.Group>
+
+
+                            {this.state.class_id && <Button onClick={this.openClassEvaluation}>课后评价</Button>}
+                            
+                            <ClassEvaluation open={this.state.evaluationOpen} onClose={this.onClassEvaluationClosed} evaluation={this.state.currentEvaluation}/>
+
+
+
                         </Form.Group>
                         <Form.Group>
                             {this.state.class_id ?
