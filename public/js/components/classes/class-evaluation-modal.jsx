@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Button, Modal, Table, Rating, Header, Segment, Image } from 'semantic-ui-react'
+import {Button, Image, Modal, Rating, Segment, Table} from 'semantic-ui-react'
 import ServiceProxy from "../../service-proxy";
 
 export default class ClassEvaluation extends React.Component {
@@ -7,18 +7,20 @@ export default class ClassEvaluation extends React.Component {
         super(props);
 
         this.state = {
-            loading: false,
-            classes: [],
+            loading: true,
+            feedbacks: [],
         }
 
         this.close = this.close.bind(this);
         this.searchClassesEvaluation = this.searchClassesEvaluation.bind(this);
     }
-    componentWillReceiveProps(nextProps) {
-        this.setState({ loading: true })
-        console.log('hi=', nextProps);
-        if (nextProps.open) {
-            this.searchClassesEvaluation();
+
+    async componentDidMount() {
+    }
+
+    async componentWillReceiveProps(nextProps) {
+        if (nextProps.classInfo && nextProps.classInfo.class_id) {
+            await this.searchClassesEvaluation();
         }
     }
 
@@ -26,21 +28,21 @@ export default class ClassEvaluation extends React.Component {
 
         let result = await ServiceProxy.proxyTo({
             body: {
-                uri: '{buzzService}/api/v1/class-feedback/71/291/evaluate/11',
+                uri: `{buzzService}/api/v1/class-feedback/admin-list/${this.props.classInfo.class_id}`,
                 method: 'GET',
             }
         })
 
-        console.log(result)
         this.setState({
             loading: false,
-            classes: result,
+            feedbacks: result.filter(f => f.class_id)
         })
     }
 
     close() {
         this.props.onClose();
     }
+
     render() {
         return (
             <Modal
@@ -66,33 +68,33 @@ export default class ClassEvaluation extends React.Component {
 
                             <Table.Body>
                                 {
-                                    this.state.classes.map((c, i) =>
+                                    this.state.feedbacks.map((c, i) =>
                                         <Table.Row key={c.class_id}>
                                             <Table.Cell>
                                                 {
                                                     <Image avatar alt={c.from_user_id}
-                                                        title={c.from_user_id}
-                                                        src={`/avatar/${c.from_user_id}`}
-                                                        key={c.from_user_id} />
+                                                           title={c.from_user_id}
+                                                           src={`/avatar/${c.from_user_id}`}
+                                                           key={c.from_user_id}/>
                                                 }
                                             </Table.Cell>
                                             <Table.Cell>
                                                 {
                                                     <Image avatar alt={c.to_user_id}
-                                                        title={c.to_user_id}
-                                                        src={`/avatar/${c.to_user_id}`}
-                                                        key={c.to_user_id} />
+                                                           title={c.to_user_id}
+                                                           src={`/avatar/${c.to_user_id}`}
+                                                           key={c.to_user_id}/>
                                                 }
                                             </Table.Cell>
                                             <Table.Cell>
-                                                <Rating disabled icon='star' defaultRating={c.score} maxRating={5} />
+                                                <Rating disabled icon='star' defaultRating={c.score} maxRating={5}/>
                                             </Table.Cell>
                                             <Table.Cell>
                                                 {c.comment}
                                             </Table.Cell>
                                             <Table.Cell>
-                                                Creatine
-                                        </Table.Cell>
+                                                {c.feedback_time}
+                                            </Table.Cell>
                                         </Table.Row>
                                     )
                                 }
@@ -103,7 +105,7 @@ export default class ClassEvaluation extends React.Component {
                     </Segment>
                 </Modal.Content>
                 <Modal.Actions>
-                    <Button content='关闭' onClick={this.close} />
+                    <Button content='关闭' onClick={this.close}/>
                 </Modal.Actions>
             </Modal>
         )
