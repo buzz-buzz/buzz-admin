@@ -120,7 +120,7 @@ export default class ClassDetail extends React.Component {
         try {
             let json = {
                 companions: [this.state.companion],
-                students: this.state.students,
+                students: this.state.students.filter(s => Number(s) > 0),
                 start_time: new Date(this.state.startTime),
                 end_time: new Date(this.state.endTime),
                 status: 'opened',
