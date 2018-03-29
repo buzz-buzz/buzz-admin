@@ -131,7 +131,7 @@ export default class LevelModal extends React.Component {
                             this.state.jsonDetail.answers &&
                             <li>
                                 <audio controls
-                                       src={this.state.jsonDetail.answers[this.state.jsonDetail.questions.length]}>
+                                       src={typeof this.state.jsonDetail.answers[this.state.jsonDetail.questions.length] === 'object' ? this.state.jsonDetail.answers[this.state.jsonDetail.questions.length].url : this.state.jsonDetail.answers[this.state.jsonDetail.questions.length]}>
                                 </audio>
                             </li>
                         }
