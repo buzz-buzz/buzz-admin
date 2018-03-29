@@ -133,6 +133,8 @@ export default class LevelModal extends React.Component {
                                 <audio controls
                                        src={typeof this.state.jsonDetail.answers[this.state.jsonDetail.questions.length] === 'object' ? this.state.jsonDetail.answers[this.state.jsonDetail.questions.length].url : this.state.jsonDetail.answers[this.state.jsonDetail.questions.length]}>
                                 </audio>
+                                <a href={typeof this.state.jsonDetail.answers[this.state.jsonDetail.questions.length] === 'object' ? this.state.jsonDetail.answers[this.state.jsonDetail.questions.length].url : this.state.jsonDetail.answers[this.state.jsonDetail.questions.length]}
+                                   target="_blank" rel="no-opener">原始音频文件</a>
                             </li>
                         }
                     </ol>
