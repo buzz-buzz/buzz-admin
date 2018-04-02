@@ -63,3 +63,5 @@ yarn.lock
 
 *.hot-update.js
 *.hot-update.json
+public/js/*.hot-update.js
+public/js/*.hot-update.json
