@@ -96,10 +96,11 @@ export default class SchedulePreference extends React.Component {
                             endAccessor='end_time'
                             defaultDate={new Date()}
                             defaultView={'week'}
+                            scrollToTime={new Date(1970, 1, 1, 6)}
+                            onSelectEvent={event => this.selectEvent(event)}
                             onSelectSlot={slotInfo =>
                                 this.selectSlot(slotInfo)
                             }
-                            onSelectEvent={event => this.selectEvent(event)}
                         />
                     </Segment>
                 </Modal.Content>

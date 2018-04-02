@@ -58,3 +58,5 @@ typings/
 .env
 
 .idea
+public/js/*.hot-update.js
+public/js/*.hot-update.json
