@@ -14,12 +14,12 @@ export default class Layout extends React.Component {
                 <title>{this.props.title}</title>
                 <link rel="stylesheet"
                       href="/css/semantic.min.css"></link>
-                <link rel="stylesheet" href={cdn("/css/react-big-calendar.css")}></link>
+                <link rel="stylesheet" href={cdn("/css/react-big-calendar.css", this.props.v)}></link>
             </head>
             <body>
             <Header title={this.props.title} path={this.props.path}/>
             {this.props.children}
-            <script src={cdn("/js/bundle.js")}></script>
+            <script src={cdn("/js/bundle.js", this.props.v)}></script>
             </body>
             </html>
         )

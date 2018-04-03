@@ -1,7 +1,7 @@
 let package = require('../package.json');
 
-module.exports = function (resource) {
-    let version = package.version.replace(/\./g, '-')
+module.exports = function (resource, v) {
+    let version = v || package.version.replace(/\./g, '-')
     if (process.env.NODE_ENV === 'production') {
         return `//cdn-admin.buzzbuzzenglish.com${resource}?v=${version}`
     }

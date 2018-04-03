@@ -55,6 +55,7 @@ let clientPage = async ctx => {
     console.log('state = ', ctx.state);
     ctx.render('index', Object.assign(ctx.state, {
         title: 'Home | Buzzbuzz admin',
+        v: new Date().getTime(),
     }));
 };
 router
