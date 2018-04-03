@@ -58,3 +58,8 @@ typings/
 .env
 
 .idea
+
+yarn.lock
+
+*.hot-update.js
+*.hot-update.json

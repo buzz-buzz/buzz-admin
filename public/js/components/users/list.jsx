@@ -350,8 +350,11 @@ export default class UserList extends React.Component {
         selectedUser.display_name = newProfile.display_name;
         selectedUser.parent_name = newProfile.parent_name;
         selectedUser.country = newProfile.country;
+        selectedUser.city = newProfile.city;
+        selectedUser.gender = newProfile.gender;
         selectedUser.remark = newProfile.remark;
         selectedUser.avatar = newProfile.avatar;
+        selectedUser.grade = newProfile.grade;
 
         let newUsers = this.state.users.map(s => {
             if (s.user_id === selectedUser.user_id) {

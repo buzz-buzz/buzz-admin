@@ -1,7 +1,11 @@
 import * as React from 'react';
+import _ from 'lodash';
 import {Dropdown, Form, Header, Image, Message, Modal, TextArea} from "semantic-ui-react";
 import ServiceProxy from "../../service-proxy";
 import * as Countries from "../../common/Countries";
+import Cities from "../../common/Cities";
+import Genders from "../../common/Genders";
+import Grades from "../../common/Grades";
 
 export default class Profile extends React.Component {
     constructor(props) {
@@ -13,8 +17,11 @@ export default class Profile extends React.Component {
             parentName: '',
             name: '',
             country: '',
+            city: '',
             remark: '',
             avatar: '',
+            gender: '',
+            grade: '',
             user: {}
         };
 
@@ -52,8 +59,11 @@ export default class Profile extends React.Component {
                 parentName: this.state.user.parent_name || '',
                 name: this.state.user ? this.state.user.name || this.state.user.display_name || '' : '',
                 country: this.state.user.country || '',
+                city: this.state.user.city || '',
                 remark: this.state.user.remark || '',
-                avatar: this.state.user.avatar || ''
+                avatar: this.state.user.avatar || '',
+                gender: this.state.user.gender || '',
+                grade: this.state.user.grade || '',
             });
         })
     }
@@ -73,8 +83,11 @@ export default class Profile extends React.Component {
                 name: this.state.name,
                 display_name: this.state.name,
                 country: this.state.country,
+                city: this.state.city,
+                gender: this.state.gender,
                 remark: this.state.remark,
-                avatar: this.state.avatar
+                avatar: this.state.avatar,
+                grade: this.state.grade,
             };
 
             let result = await ServiceProxy.proxyTo({
@@ -184,13 +197,19 @@ export default class Profile extends React.Component {
                                           value={this.state.country} placeholder="国籍" onChange={this.handleChange}
                                           onSearchChange={this.handleSearchChange}/>
                             </Form.Field>
-                            <Form.Input placeholder="所在城市" name="city" value={this.state.user.city || ''}
-                                        label="所在城市" readOnly/>
+                            <Form.Field>
+                                <label>所在城市</label>
+                                <Dropdown selection multiple={false} search={true} name="city"
+                                          options={Cities.list}
+                                          value={this.state.city} placeholder="所在城市" onChange={this.handleChange} onSearchChange={this.handleSearchChange}/>
+                            </Form.Field>
 
-                            <Form.Input placeholder="性别" name="gender"
-                                        value={this.state.user.gender === 'm' ? '男' : (this.state.user.gender === 'f' ? '女' : '')}
-                                        label="性别"
-                                        readOnly/>
+                            <Form.Field>
+                                <label>性别</label>
+                                <Dropdown selection multiple={false} search={true} name="gender"
+                                          options={Genders.list}
+                                          value={this.state.gender} placeholder="性别" onChange={this.handleChange} onSearchChange={this.handleSearchChange}/>
+                            </Form.Field>
                             <Form.Input placeholder="生日" name="birthday"
                                         value={this.state.user && this.state.user.date_of_birth ? new Date(this.state.user.date_of_birth).toLocaleDateString() : '' || ''}
                                         label="生日"
@@ -198,9 +217,12 @@ export default class Profile extends React.Component {
                         </Form.Group>
                         <Form.Group widths="equal">
 
-                            <Form.Input placeholder="年级" name="grade" value={this.state.user.grade || ''} label="年级"
-                                        width={4}
-                                        readOnly/>
+                          <Form.Field>
+                              <label>年级</label>
+                              <Dropdown selection multiple={false} search={true} name="grade"
+                                        options={Grades.list}
+                                        value={this.state.grade} placeholder="年级" onChange={this.handleChange} onSearchChange={this.handleSearchChange}/>
+                          </Form.Field>
                             <Form.Input placeholder="兴趣爱好" name="interests" value={this.state.user.interests || ''}
                                         label="兴趣爱好" readOnly width={12}/>
                         </Form.Group>

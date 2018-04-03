@@ -1,7 +1,7 @@
 var path = require('path');
 var webpack = require('webpack');
 
-module.exports = {
+const config = {
     entry: './public/js/main.js',
     output: {
         path: path.resolve(__dirname, 'public/js'),
@@ -24,19 +24,24 @@ module.exports = {
         new webpack.NoEmitOnErrorsPlugin(),
         new webpack.DefinePlugin({'process.env.NODE_ENV': '"production"'}),
         new webpack.optimize.OccurrenceOrderPlugin(),
-        new webpack.optimize.UglifyJsPlugin({
-            compress: {
-                screw_ie8: true,
-                warnings: false
-            },
-            mangle: {
-                screw_ie8: true
-            },
-            output: {
-                comments: false,
-                screw_ie8: true
-            }
-        }),
-        new webpack.HotModuleReplacementPlugin()
+        new webpack.HotModuleReplacementPlugin(),
     ]
 };
+
+if (process.env.NODE_ENV === 'production') {
+  config.plugins.push(new webpack.optimize.UglifyJsPlugin({
+      compress: {
+          screw_ie8: true,
+          warnings: false
+      },
+      mangle: {
+          screw_ie8: true
+      },
+      output: {
+          comments: false,
+          screw_ie8: true
+      }
+  }))
+}
+
+module.exports = config
