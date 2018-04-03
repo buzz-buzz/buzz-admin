@@ -49,7 +49,6 @@ export default class Profile extends React.Component {
     }
 
     componentDidMount() {
-
     }
 
     componentWillReceiveProps(nextProps) {

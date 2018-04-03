@@ -24,7 +24,6 @@ export default class LevelModal extends React.Component {
     }
 
     componentDidMount() {
-
     }
 
     async componentWillReceiveProps(nextProps) {
@@ -98,6 +97,10 @@ export default class LevelModal extends React.Component {
         this.props.onCloseCallback();
     }
 
+    m3u8(url) {
+      window.open(`/m3u8/index.html?url=${encodeURIComponent(url)}`)
+    }
+
     render() {
         const {level} = this.state;
         return (
@@ -135,6 +138,7 @@ export default class LevelModal extends React.Component {
                                 </audio>
                                 <a href={typeof this.state.jsonDetail.answers[this.state.jsonDetail.questions.length] === 'object' ? this.state.jsonDetail.answers[this.state.jsonDetail.questions.length].url : this.state.jsonDetail.answers[this.state.jsonDetail.questions.length]}
                                    target="_blank" rel="no-opener">原始音频文件</a>
+                                <button onClick={m3u8(typeof this.state.jsonDetail.answers[this.state.jsonDetail.questions.length] === 'object' ? this.state.jsonDetail.answers[this.state.jsonDetail.questions.length].url : this.state.jsonDetail.answers[this.state.jsonDetail.questions.length])}>外链播放</button>
                             </li>
                         }
                     </ol>

@@ -25,7 +25,6 @@ export default class ClassHours extends React.Component {
     }
 
     componentDidMount() {
-
     }
 
     componentWillReceiveProps(nextProps) {
