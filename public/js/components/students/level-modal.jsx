@@ -14,6 +14,7 @@ export default class LevelModal extends React.Component {
 
         this.handleChange = this.handleChange.bind(this);
         this.close = this.close.bind(this);
+        this.m3u8 = this.m3u8.bind(this);
         this.saveLevel = this.saveLevel.bind(this);
     }
 
@@ -138,7 +139,7 @@ export default class LevelModal extends React.Component {
                                 </audio>
                                 <a href={typeof this.state.jsonDetail.answers[this.state.jsonDetail.questions.length] === 'object' ? this.state.jsonDetail.answers[this.state.jsonDetail.questions.length].url : this.state.jsonDetail.answers[this.state.jsonDetail.questions.length]}
                                    target="_blank" rel="no-opener">原始音频文件</a>
-                                <button onClick={m3u8(typeof this.state.jsonDetail.answers[this.state.jsonDetail.questions.length] === 'object' ? this.state.jsonDetail.answers[this.state.jsonDetail.questions.length].url : this.state.jsonDetail.answers[this.state.jsonDetail.questions.length])}>外链播放</button>
+                                <button onClick={this.m3u8(typeof this.state.jsonDetail.answers[this.state.jsonDetail.questions.length] === 'object' ? this.state.jsonDetail.answers[this.state.jsonDetail.questions.length].url : this.state.jsonDetail.answers[this.state.jsonDetail.questions.length])}>外链播放</button>
                             </li>
                         }
                     </ol>
