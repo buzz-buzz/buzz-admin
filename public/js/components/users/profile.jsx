@@ -6,6 +6,7 @@ import * as Countries from "../../common/Countries";
 import Cities from "../../common/Cities";
 import Genders from "../../common/Genders";
 import Grades from "../../common/Grades";
+import TimeHelper from "../../common/TimeHelper";
 
 export default class Profile extends React.Component {
     constructor(props) {
@@ -22,6 +23,7 @@ export default class Profile extends React.Component {
             avatar: '',
             gender: '',
             grade: '',
+            date_of_birth: '',
             user: {}
         };
 
@@ -64,6 +66,7 @@ export default class Profile extends React.Component {
                 avatar: this.state.user.avatar || '',
                 gender: this.state.user.gender || '',
                 grade: this.state.user.grade || '',
+                date_of_birth: this.state.user.date_of_birth && TimeHelper.toLocalDateTime(new Date(this.state.user.date_of_birth)),
             });
         })
     }
@@ -88,6 +91,7 @@ export default class Profile extends React.Component {
                 remark: this.state.remark,
                 avatar: this.state.avatar,
                 grade: this.state.grade,
+                date_of_birth: this.state.date_of_birth && new Date(this.state.date_of_birth),
             };
 
             let result = await ServiceProxy.proxyTo({
@@ -197,12 +201,20 @@ export default class Profile extends React.Component {
                                           value={this.state.country} placeholder="国籍" onChange={this.handleChange}
                                           onSearchChange={this.handleSearchChange}/>
                             </Form.Field>
-                            <Form.Field>
-                                <label>所在城市</label>
-                                <Dropdown selection multiple={false} search={true} name="city"
-                                          options={Cities.list}
-                                          value={this.state.city} placeholder="所在城市" onChange={this.handleChange} onSearchChange={this.handleSearchChange}/>
-                            </Form.Field>
+                            {
+                                this.state.user.role === 's' ? (
+                                  <Form.Field>
+                                      <label>所在城市</label>
+                                      <Dropdown selection multiple={false} search={true} name="city"
+                                                options={Cities.list}
+                                                value={this.state.city} placeholder="所在城市" onChange={this.handleChange} onSearchChange={this.handleSearchChange}/>
+                                  </Form.Field>
+
+                                    ) : (
+                                      <Form.Input placeholder="所在城市" name="city" value={this.state.city} label="所在城市"
+                                        onChange={this.handleChange}/>
+                                    )
+                            }
 
                             <Form.Field>
                                 <label>性别</label>
@@ -210,10 +222,8 @@ export default class Profile extends React.Component {
                                           options={Genders.list}
                                           value={this.state.gender} placeholder="性别" onChange={this.handleChange} onSearchChange={this.handleSearchChange}/>
                             </Form.Field>
-                            <Form.Input placeholder="生日" name="birthday"
-                                        value={this.state.user && this.state.user.date_of_birth ? new Date(this.state.user.date_of_birth).toLocaleDateString() : '' || ''}
-                                        label="生日"
-                                        readOnly/>
+                            <Form.Input label="生日" placeholder="生日" value={this.state.date_of_birth}
+                                        type="datetime-local" name="date_of_birth" onChange={this.handleChange}/>
                         </Form.Group>
                         <Form.Group widths="equal">
 
