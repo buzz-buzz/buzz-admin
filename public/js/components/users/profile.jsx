@@ -24,6 +24,7 @@ export default class Profile extends React.Component {
             gender: '',
             grade: '',
             date_of_birth: '',
+            school_name: '',
             user: {}
         };
 
@@ -66,6 +67,7 @@ export default class Profile extends React.Component {
                 avatar: this.state.user.avatar || '',
                 gender: this.state.user.gender || '',
                 grade: this.state.user.grade || '',
+                school_name: this.state.user.school_name || '',
                 date_of_birth: this.state.user.date_of_birth && TimeHelper.toLocalDateTime(new Date(this.state.user.date_of_birth)),
             });
         })
@@ -91,6 +93,7 @@ export default class Profile extends React.Component {
                 remark: this.state.remark,
                 avatar: this.state.avatar,
                 grade: this.state.grade,
+                school_name: this.state.school_name,
                 date_of_birth: this.state.date_of_birth && new Date(this.state.date_of_birth),
             };
 
@@ -226,7 +229,7 @@ export default class Profile extends React.Component {
                                         type="datetime-local" name="date_of_birth" onChange={this.handleChange}/>
                         </Form.Group>
                         <Form.Group widths="equal">
-
+                          <Form.Input label="学校名称" placeholder="学校名称" value={this.state.school_name} name="school_name" onChange={this.handleChange}/>
                           <Form.Field>
                               <label>年级</label>
                               <Dropdown selection multiple={false} search={true} name="grade"
