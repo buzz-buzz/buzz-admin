@@ -11,9 +11,10 @@ const config = require('./config');
 const oldRequest = require('request');
 const bodyParser = require('koa-bodyparser');
 const request = require('request-promise-native');
+const cors = require('koa-cors');
 
 let viewpath = path.join(__dirname, 'views');
-let assetspath = path.join(__dirname, 'public');
+let assetPath = path.join(__dirname, 'public');
 let nodeModules = path.join(__dirname, 'node_modules');
 
 koaReactView(app, {views: viewpath});
@@ -23,9 +24,12 @@ register({
     extensions: ['.jsx']
 });
 
+app.use(cors({
+    origin: '*'
+}));
 app.use(bodyParser());
 // app.use(staticCache('.'));
-app.use(staticCache(assetspath));
+app.use(staticCache(assetPath));
 app.use(staticCache(nodeModules));
 
 app.use(async (ctx, next) => {
