@@ -7,6 +7,7 @@ import BigCalendar from 'react-big-calendar'
 import moment from 'moment'
 import {UserTypes} from "./config";
 import ClassHours from "../students/class-hours";
+import Integral from "../students/integral";
 import LevelModal from "../students/level-modal";
 
 BigCalendar.setLocalizer(BigCalendar.momentLocalizer(moment))
@@ -69,6 +70,9 @@ export default class UserList extends React.Component {
         this.openClassHours = this.openClassHours.bind(this);
         this.closeClassHoursModal = this.closeClassHoursModal.bind(this);
         this.classHoursUpdated = this.classHoursUpdated.bind(this);
+        this.openIntegral = this.openIntegral.bind(this);
+        this.closeIntegralModal = this.closeIntegralModal.bind(this);
+        this.integralUpdated = this.integralUpdated.bind(this);
         this.closeProfileModal = this.closeProfileModal.bind(this);
         this.profileUpdated = this.profileUpdated.bind(this);
         this.closeSchedulePreferenceModal = this.closeSchedulePreferenceModal.bind(this);
@@ -83,6 +87,23 @@ export default class UserList extends React.Component {
     classHoursUpdated(newClassHours) {
         let copy = Object.assign({}, this.state.currentUser);
         copy.class_hours = newClassHours;
+
+        let newStudents = this.state.users.map(s => {
+            if (s.user_id === copy.user_id) {
+                return copy;
+            }
+
+            return s;
+        })
+
+        this.setState({
+            currentUser: copy,
+            users: newStudents
+        })
+    }
+    integralUpdated(newIntegral) {
+        let copy = Object.assign({}, this.state.currentUser);
+        copy.integral = newIntegral;
 
         let newStudents = this.state.users.map(s => {
             if (s.user_id === copy.user_id) {
@@ -212,6 +233,13 @@ export default class UserList extends React.Component {
                                     }
                                     {
                                         this.props['user-type'] === UserTypes.student &&
+                                        <Table.Cell onClick={() => this.openIntegral(user)}
+                                                    style={{cursor: 'pointer'}}>
+                                            {user.integral || 0}
+                                        </Table.Cell>
+                                    }
+                                    {
+                                        this.props['user-type'] === UserTypes.student &&
                                         <Table.Cell onClick={() => this.openLevelModal(user)}>
                                             {user.level}
                                         </Table.Cell>
@@ -260,6 +288,13 @@ export default class UserList extends React.Component {
                 {
                     this.props['user-type'] === UserTypes.student &&
 
+                    <Integral open={this.state.integralModalOpen} student={this.state.currentUser}
+                                integralUpdateCallback={this.integralUpdated}
+                                onCloseCallback={this.closeIntegralModal}/>
+                }
+                {
+                    this.props['user-type'] === UserTypes.student &&
+
                     <LevelModal open={this.state.levelModalOpen} user={this.state.currentUser}
                                 onCloseCallback={this.onCloseLevelModal} onLevelUpdated={this.onLevelUpdated}/>
                 }
@@ -289,6 +324,10 @@ export default class UserList extends React.Component {
                     <Table.HeaderCell>课时数</Table.HeaderCell>
                 }
                 {
+                    (this.props['user-type'] === UserTypes.student) &&
+                    <Table.HeaderCell>积分</Table.HeaderCell>
+                }
+                {
                     this.props['user-type'] === UserTypes.student &&
                     <Table.HeaderCell>能力评级</Table.HeaderCell>
                 }
@@ -306,6 +345,16 @@ export default class UserList extends React.Component {
 
     closeClassHoursModal() {
         this.setState({classHoursModalOpen: false})
+    }
+    openIntegral(student) {
+        this.setState({
+            integralModalOpen: true,
+            currentUser: student
+        });
+    }
+
+    closeIntegralModal() {
+        this.setState({integralModalOpen: false})
     }
 
     openProfile(student) {
