@@ -55,11 +55,13 @@ app.use(async (ctx, next) => {
     await next();
 });
 
+const version = new Date().getTime()
+
 let clientPage = async ctx => {
     console.log('state = ', ctx.state);
     ctx.render('index', Object.assign(ctx.state, {
         title: 'Home | Buzzbuzz admin',
-        v: new Date().getTime(),
+        v: version,
     }));
 };
 router
