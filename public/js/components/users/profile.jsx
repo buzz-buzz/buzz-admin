@@ -6,6 +6,7 @@ import * as Countries from "../../common/Countries";
 import Cities from "../../common/Cities";
 import Genders from "../../common/Genders";
 import Grades from "../../common/Grades";
+import Timezones from "../../common/Timezones";
 import TimeHelper from "../../common/TimeHelper";
 
 export default class Profile extends React.Component {
@@ -25,6 +26,7 @@ export default class Profile extends React.Component {
             grade: '',
             date_of_birth: '',
             school_name: '',
+            time_zone: '',
             user: {}
         };
 
@@ -67,6 +69,7 @@ export default class Profile extends React.Component {
                 gender: this.state.user.gender || '',
                 grade: this.state.user.grade || '',
                 school_name: this.state.user.school_name || '',
+                time_zone: this.state.user.time_zone || '',
                 date_of_birth: this.state.user.date_of_birth && TimeHelper.toLocalDateTime(new Date(this.state.user.date_of_birth)),
             });
         })
@@ -93,6 +96,7 @@ export default class Profile extends React.Component {
                 avatar: this.state.avatar,
                 grade: this.state.grade,
                 school_name: this.state.school_name,
+                time_zone: this.state.time_zone,
                 date_of_birth: this.state.date_of_birth && new Date(this.state.date_of_birth),
             };
 
@@ -195,7 +199,7 @@ export default class Profile extends React.Component {
                                         onChange={this.handleChange} type="email" label="邮箱"/>
 
                         </Form.Group>
-                        <Form.Group>
+                        <Form.Group widths="equal">
                             <Form.Field>
                                 <label>国籍</label>
                                 <Dropdown selection multiple={false} search={true} name="country"
@@ -217,7 +221,19 @@ export default class Profile extends React.Component {
                                         onChange={this.handleChange}/>
                                     )
                             }
+                            {
+                                this.state.user.role === 'c' && (
+                                  <Form.Field>
+                                      <label>时区</label>
+                                      <Dropdown selection multiple={false} search={true} name="time_zone"
+                                                options={Timezones.list}
+                                                value={this.state.time_zone} placeholder="时区" onChange={this.handleChange} onSearchChange={this.handleSearchChange}/>
+                                  </Form.Field>
 
+                                    )
+                            }
+                          </Form.Group>
+                          <Form.Group widths="equal">
                             <Form.Field>
                                 <label>性别</label>
                                 <Dropdown selection multiple={false} search={true} name="gender"

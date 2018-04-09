@@ -405,6 +405,7 @@ export default class UserList extends React.Component {
         selectedUser.avatar = newProfile.avatar;
         selectedUser.grade = newProfile.grade;
         selectedUser.school_name = newProfile.school_name;
+        selectedUser.time_zone = newProfile.time_zone;
         selectedUser.date_of_birth = newProfile.date_of_birth;
 
         let newUsers = this.state.users.map(s => {
