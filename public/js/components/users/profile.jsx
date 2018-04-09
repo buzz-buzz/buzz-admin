@@ -222,7 +222,7 @@ export default class Profile extends React.Component {
                                     )
                             }
                             {
-                                this.state.user.role === 'c' && (
+                                this.state.user.role !== 's' && (
                                   <Form.Field>
                                       <label>时区</label>
                                       <Dropdown selection multiple={false} search={true} name="time_zone"
