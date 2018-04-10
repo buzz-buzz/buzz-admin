@@ -7,6 +7,7 @@
     "start": "cross-env BASIC_NAME=buzz BASIC_PASS=buzz node app.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "cross-env NODE_ENV=production webpack -p --color --watch --progress",
+    "build-dev": "cross-env NODE_ENV=development webpack -p --color --watch --progress",
     "dev-server": "webpack-dev-server --port 3300 --hot --inline"
   },
   "repository": {

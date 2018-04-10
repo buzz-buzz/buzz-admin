@@ -120,6 +120,7 @@ export default class SchedulePreference extends React.Component {
                 end_time: slotInfo.end,
                 saved: false,
                 user_id: this.state.user.user_id,
+                time_zone: this.state.user.time_zone,
                 status: 'booking',
                 title: 'booking'
             }

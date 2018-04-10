@@ -1,3 +1,5 @@
+import moment from 'moment-timezone'
+
 function padZero(x) {
     x = '' + x;
     return '00'.substring(0, 2 - x.length) + x;
@@ -8,5 +10,12 @@ function toLocalDateTime(date) {
 }
 
 export default {
-    toLocalDateTime: toLocalDateTime
+    toLocalDateTime: toLocalDateTime,
+    tzShift(dateTime, oldTz, newTz){
+      // console.log({dateTime, oldTz, newTz})
+      return moment.tz(dateTime, oldTz).tz(newTz)
+    },
+    momentLocalDateTime(m) {
+      return m.format('YYYY-MM-DDTHH:mm:ss')
+    },
 }

@@ -3,7 +3,7 @@
 let config = {
     development: {
         endPoints: {
-            buzzService: 'https://buzz-corner-service.herokuapp.com',
+            buzzService: process.env.buzz_service_endpoints || 'https://buzz-corner-service.herokuapp.com',
         }
     },
     qa: {
