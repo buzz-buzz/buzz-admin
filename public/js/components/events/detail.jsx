@@ -186,11 +186,12 @@ export default class EventDetail extends React.Component {
     }
 
     async cancelEvent() {
+        console.log('cancelEvent', this.state.event)
         this.setState({loading: true, error: false});
         try {
             let result = await ServiceProxy.proxyTo({
                 body: {
-                    uri: `{buzzService}/api/v1/student-class-schedule/${this.state.event.user_id}`,
+                    uri: `{buzzService}/api/v1/${this.state.event.role==='s' ? 'student' : 'companion'}-class-schedule/${this.state.event.user_id}`,
                     method: 'PUT',
                     json: {
                         start_time: new Date(this.state.event.start_time)
@@ -217,6 +218,7 @@ export default class EventDetail extends React.Component {
     }
 
     async saveEvent() {
+        console.log('saveEvent', this.state.event)
         this.setState({loading: true, error: false});
         try {
             let newEvent = {
@@ -224,13 +226,12 @@ export default class EventDetail extends React.Component {
                 end_time: new Date(this.state.event.end_time),
                 user_id: this.state.event.user_id,
                 status: this.state.event.status
-            };
+            }
 
             validateEvent(newEvent);
-
             await ServiceProxy.proxyTo({
                 body: {
-                    uri: `{buzzService}/api/v1/student-class-schedule/${this.state.event.user_id}`,
+                    uri: `{buzzService}/api/v1/${this.state.event.role==='s' ? 'student' : 'companion'}-class-schedule/${this.state.event.user_id}`,
                     method: 'POST',
                     json: [newEvent]
                 }
@@ -238,10 +239,11 @@ export default class EventDetail extends React.Component {
 
             newEvent.title = newEvent.status;
             newEvent.saved = true;
+            const e = _.assign({}, this.state.event, newEvent)
             this.setState({
-                event: newEvent
+                event: e,
             });
-            this.props.onEventSaved(newEvent);
+            this.props.onEventSaved(e);
         } catch (error) {
             this.setState({error: true, message: JSON.stringify(error.result || error.message || error)});
         } finally {
