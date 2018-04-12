@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<!-- saved from url=(0043)http://ofh8zet7t.bkt.clouddn.com/index.html -->
+<html lang="en" class="gr__ofh8zet7t_bkt_clouddn_com"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><style class="vjs-styles-defaults">
+      .video-js {
+        width: 300px;
+        height: 150px;
+      }
+
+      .vjs-fluid {
+        padding-top: 56.25%
+      }
+    </style>
+
+
+        <title>VOD Player Demo</title>
+        <meta name="description" content="VOD player demo">
+        <meta name="author" content="George Sun">
+
+        <link rel="stylesheet" href="./fenixplayer.min.css"><style></style>
+
+        <style>
+            * {
+                box-sizing: border-box;
+            }
+
+            body {
+                background: #2F3033;
+            }
+
+            .user-inputs {
+                position: relative;
+                margin: 16px 0;
+                width: 800px;
+                height: 40px;
+            }
+            #input-hls-url {
+                position: absolute;
+                width: 800px;
+                height: 40px;
+                border: none;
+                background: #212224;
+                color: #FFF;
+                padding-left: 10px;
+                padding-right: 100px;
+            }
+
+            #play-hls-video {
+                width: 80px;
+                height: 30px;
+                position: absolute;
+                top: 5px;
+                right: 10px;
+                border-radius: 4px;
+                background: #1989FA;
+                font-size: 16px;
+                border: none;
+            }
+
+            .video-wrapper {
+                display: flex;
+                align-items: center;
+            }
+            #demo-video {
+                background: #000;
+            }
+
+            .player-initial-size {
+                width: 800px;
+                height: 600px;
+            }
+        </style>
+
+        <!--[if lt IE 9]>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv.js"></script>
+        <![endif]-->
+    <style></style></head>
+
+    <body data-gr-c-s-loaded="true" class="vsc-initialized">
+        <div class="user-inputs">
+            <input id="input-hls-url" placeholder="输入 HLS URL" value="">
+            <button id="play-hls-video">播放</button>
+        </div>
+        <div class="video-wrapper"><div class="vsc-controller" data-vscid="3j075yx3o"></div>
+            <video id="demo-video" class="video-js vjs-big-play-centered player-initial-size vsc-initialized" data-vscid="3j075yx3o"></video>
+        </div>
+        <script src="./zepto-1.2.0.min.js"></script>
+        <script src="./fenixplayer.min.js"></script>
+        <script>
+            let source = decodeURIComponent(location.search.replace('?url=', ''))
+            if (source) {
+              $("#input-hls-url").val(source)
+            }
+            // Dispose video instance first
+            $(document).ready(function() {
+                $("#input-hls-url").keyup(function(event){
+                    if(event.keyCode == 13){
+                        $("#play-hls-video").click();
+                    }
+                });
+
+                $("#demo-video").bind("loadedmetadata", function () {
+                    window.videoWidth = this.videoWidth;
+                    window.videoHeight = this.videoHeight;
+
+                    $('#demo-video').removeClass('player-initial-size');
+                });
+
+                $("#play-hls-video").click(function(e) {
+                    const input = $("#input-hls-url").val()
+                    if (input) {
+                      source = input;
+                    }
+                    if (!source) {
+                        alert("请指定 HLS 播放源。");
+                    } else {
+                        var player = new FenixPlayer('demo-video', {
+                            engineOrder : ['html5'],
+                            autoplay    : false,
+                            preload     : "auto",
+                            controls    : true,
+                            poster      : 'https://player.qiniucc.com/qiniu-620x205.png',
+                            width       : window.videoWidth,
+                            height      : window.videoHeight,
+                            file        : source,
+                            type        : "hls"
+                        });
+                        player.play();
+                    }
+                });
+            });
+        </script>
+
+
+</body><div style="display: block; opacity: 1;"></div></html>

@@ -24,7 +24,6 @@ export default class LevelModal extends React.Component {
     }
 
     componentDidMount() {
-
     }
 
     async componentWillReceiveProps(nextProps) {
@@ -131,8 +130,12 @@ export default class LevelModal extends React.Component {
                             this.state.jsonDetail.answers &&
                             <li>
                                 <audio controls
-                                       src={this.state.jsonDetail.answers[this.state.jsonDetail.questions.length]}>
+                                       src={typeof this.state.jsonDetail.answers[this.state.jsonDetail.questions.length] === 'object' ? this.state.jsonDetail.answers[this.state.jsonDetail.questions.length].url : this.state.jsonDetail.answers[this.state.jsonDetail.questions.length]}>
                                 </audio>
+                                <a href={typeof this.state.jsonDetail.answers[this.state.jsonDetail.questions.length] === 'object' ? this.state.jsonDetail.answers[this.state.jsonDetail.questions.length].url : this.state.jsonDetail.answers[this.state.jsonDetail.questions.length]}
+                                   target="_blank" rel="no-opener">原始音频文件</a>
+                                <a href={`/m3u8/index.html?url=${encodeURIComponent(typeof this.state.jsonDetail.answers[this.state.jsonDetail.questions.length] === 'object' ? this.state.jsonDetail.answers[this.state.jsonDetail.questions.length].url : this.state.jsonDetail.answers[this.state.jsonDetail.questions.length])}`}
+                                   target="_blank" rel="no-opener">在线播放</a>
                             </li>
                         }
                     </ol>

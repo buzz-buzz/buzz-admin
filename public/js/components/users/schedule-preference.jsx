@@ -120,6 +120,8 @@ export default class SchedulePreference extends React.Component {
                 end_time: slotInfo.end,
                 saved: false,
                 user_id: this.state.user.user_id,
+                time_zone: this.state.user.time_zone,
+                role: this.state.user.role,
                 status: 'booking',
                 title: 'booking'
             }
@@ -131,6 +133,8 @@ export default class SchedulePreference extends React.Component {
         this.setState({
             eventDetailModalOpen: true,
             selectedEvent: Object.assign({}, event, {
+                time_zone: this.state.user.time_zone,
+                role: this.state.user.role,
                 start_time: new Date(event.start_time),
                 end_time: new Date(event.end_time)
             })
@@ -170,6 +174,8 @@ export default class SchedulePreference extends React.Component {
         this.setState({
             events,
             selectedEvent: Object.assign({}, event, {
+                time_zone: this.state.user.time_zone,
+                role: this.state.user.role,
                 start_time: event.start_time.toISOString(),
                 end_time: event.end_time.toISOString()
             }),

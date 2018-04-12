@@ -29,7 +29,7 @@ export default class ClassHours extends React.Component {
 
     componentWillReceiveProps(nextProps) {
         this.setState({
-            classHours: nextProps.student ? (nextProps.student.class_hours || 0) : 0,
+            integral: nextProps.student ? (nextProps.student.integral || 0) : 0,
             userId: nextProps.student ? nextProps.student.user_id : 0
         })
     }
@@ -39,20 +39,20 @@ export default class ClassHours extends React.Component {
             this.setState({loading: true, error: false});
             let result = await ServiceProxy.proxyTo({
                 body: {
-                    uri: `{buzzService}/api/v1/user-balance/${this.state.userId}`,
+                    uri: `{buzzService}/api/v1/user-balance/integral/${this.state.userId}`,
                     method: 'PUT',
                     json: {
-                        class_hours: this.state.charge
+                        integral: this.state.charge
                     }
                 }
             });
 
             console.log('result = ', result);
             this.setState({
-                classHours: result.class_hours
+                integral: result.integral
             })
 
-            this.props.classHoursUpdateCallback(result.class_hours);
+            this.props.integralUpdateCallback(result.integral);
         } catch (error) {
             console.log('charge error = ', error);
             this.setState({
@@ -69,19 +69,19 @@ export default class ClassHours extends React.Component {
             this.setState({loading: true, error: false});
             let result = await ServiceProxy.proxyTo({
                 body: {
-                    uri: `{buzzService}/api/v1/user-balance/${this.state.userId}`,
+                    uri: `{buzzService}/api/v1/user-balance/integral/${this.state.userId}`,
                     method: 'DELETE',
                     json: {
-                        class_hours: this.state.consume
+                        integral: this.state.consume
                     }
                 }
             });
 
             console.log('consume result = ', result);
             this.setState({
-                classHours: result.class_hours
+                integral: result.integral
             })
-            this.props.classHoursUpdateCallback(result.class_hours);
+            this.props.integralUpdateCallback(result.integral);
         } catch (error) {
             console.log('error = ', error);
             this.setState({
@@ -101,20 +101,20 @@ export default class ClassHours extends React.Component {
         const {charge, consume} = this.state;
         return (
             <Modal open={this.props.open} closeOnEscape={true} closeOnRootNodeClick={true} onClose={this.close}>
-                <Header content="课时明细"></Header>
+                <Header content="积分明细"></Header>
                 <Modal.Content>
-                    <p>当前余额：{this.state.classHours}</p>
+                    <p>当前积分：{this.state.integral}</p>
                     <Form error={this.state.error} loading={this.state.loading}>
                         <Message error header="出错了" content={this.state.message}/>
                         <Form.Group>
-                            <Form.Input placeholder="课时数" name="charge" value={charge} onChange={this.handleChange}
+                            <Form.Input placeholder="积分" name="charge" value={charge} onChange={this.handleChange}
                                         type="number"/>
-                            <Form.Button content="充值" type="button" onClick={this.charge}/>
+                            <Form.Button content="增加" type="button" onClick={this.charge}/>
                         </Form.Group>
                         <Form.Group>
-                            <Form.Input placeholder="课时数" name="consume" value={consume} onChange={this.handleChange}
+                            <Form.Input placeholder="积分" name="consume" value={consume} onChange={this.handleChange}
                                         type="number"/>
-                            <Form.Button content="消费" type="button" onClick={this.consume}/>
+                            <Form.Button content="扣除" type="button" onClick={this.consume}/>
                         </Form.Group>
                     </Form>
                     <p>Here you can check class hour details (Under development)</p>
