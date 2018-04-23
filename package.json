@@ -60,7 +60,9 @@
     {
       "script": "app.js",
       "watch": "true",
-      "name": "buzz-admin"
+      "name": "buzz-admin",
+      "instances": "max",
+      "exec_mode": "cluster"
     }
   ]
 }
