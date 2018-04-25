@@ -3,7 +3,7 @@
 let config = {
     development: {
         endPoints: {
-            buzzService: process.env.buzz_service_endpoints || 'https://buzz-corner-service.herokuapp.com',
+            buzzService: `${process.env.cors}127.0.0.1:16888`,
         }
     },
     qa: {

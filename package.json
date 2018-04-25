@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "concurrently \"npm run server\" \"npm run build\"",
+    "start": "concurrently \"npm run server\" \"npm run build-dev\"",
     "server": "cross-env BASIC_NAME=buzz BASIC_PASS=buzz nodemon app.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "cross-env NODE_ENV=production webpack -p --color --watch --progress",
@@ -72,7 +72,8 @@
     "ignore": [
       "node_modules/*",
       "public/*",
-      "test/*"
+      "test/*",
+      "webpack.config.js"
     ],
     "delay": "2500"
   }

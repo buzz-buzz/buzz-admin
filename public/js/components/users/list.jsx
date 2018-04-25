@@ -9,6 +9,7 @@ import {UserTypes} from "./config";
 import ClassHours from "../students/class-hours";
 import Integral from "../students/integral";
 import LevelModal from "../students/level-modal";
+import BookingTable from "./booking-table";
 
 BigCalendar.setLocalizer(BigCalendar.momentLocalizer(moment))
 
@@ -101,6 +102,7 @@ export default class UserList extends React.Component {
             users: newStudents
         })
     }
+
     integralUpdated(newIntegral) {
         let copy = Object.assign({}, this.state.currentUser);
         copy.integral = newIntegral;
@@ -244,15 +246,8 @@ export default class UserList extends React.Component {
                                             {user.level}
                                         </Table.Cell>
                                     }
-                                    <Table.Cell onClick={() => this.openSchedulePreferenceModal(user)}
-                                                style={{height: '250px'}}>
-                                        <BigCalendar
-                                            events={user.events}
-                                            startAccessor='start_time'
-                                            endAccessor='end_time'
-                                            defaultDate={new Date()}
-                                            defaultView="agenda"
-                                        />
+                                    <Table.Cell onClick={() => this.openSchedulePreferenceModal(user)}>
+                                        <BookingTable events={user.events} defaultDate={new Date()}></BookingTable>
                                     </Table.Cell>
                                 </Table.Row>
                             )
@@ -289,8 +284,8 @@ export default class UserList extends React.Component {
                     this.props['user-type'] === UserTypes.student &&
 
                     <Integral open={this.state.integralModalOpen} student={this.state.currentUser}
-                                integralUpdateCallback={this.integralUpdated}
-                                onCloseCallback={this.closeIntegralModal}/>
+                              integralUpdateCallback={this.integralUpdated}
+                              onCloseCallback={this.closeIntegralModal}/>
                 }
                 {
                     this.props['user-type'] === UserTypes.student &&
@@ -331,7 +326,7 @@ export default class UserList extends React.Component {
                     this.props['user-type'] === UserTypes.student &&
                     <Table.HeaderCell>能力评级</Table.HeaderCell>
                 }
-                <Table.HeaderCell>预约需求</Table.HeaderCell>
+                <Table.HeaderCell>预约/排课</Table.HeaderCell>
             </Table.Row>
         </Table.Header>;
     }
@@ -346,6 +341,7 @@ export default class UserList extends React.Component {
     closeClassHoursModal() {
         this.setState({classHoursModalOpen: false})
     }
+
     openIntegral(student) {
         this.setState({
             integralModalOpen: true,

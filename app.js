@@ -92,8 +92,6 @@ router
             ;
         }
 
-        console.log('proxing with ...', ctx.request.body);
-
         ctx.body = await oldRequest(ctx.request.body);
     })
 ;
