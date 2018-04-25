@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "cross-env BASIC_NAME=buzz BASIC_PASS=buzz node app.js",
+    "start": "concurrently \"npm run server\" \"npm run build\"",
+    "server": "cross-env BASIC_NAME=buzz BASIC_PASS=buzz nodemon app.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "cross-env NODE_ENV=production webpack -p --color --watch --progress",
     "build-dev": "cross-env NODE_ENV=development webpack -p --color --watch --progress",
@@ -52,7 +53,9 @@
     "webpack": "^3.10.0"
   },
   "devDependencies": {
+    "concurrently": "^3.5.1",
     "cross-env": "^5.1.4",
+    "nodemon": "^1.17.3",
     "webpack-cli": "^2.0.12",
     "webpack-dev-server": "^2.9.7"
   },
@@ -64,5 +67,13 @@
       "instances": "max",
       "exec_mode": "cluster"
     }
-  ]
+  ],
+  "nodemonConfig": {
+    "ignore": [
+      "node_modules/*",
+      "public/*",
+      "test/*"
+    ],
+    "delay": "2500"
+  }
 }

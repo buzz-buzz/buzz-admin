@@ -12,6 +12,7 @@ const oldRequest = require('request');
 const bodyParser = require('koa-bodyparser');
 const request = require('request-promise-native');
 const cors = require('koa-cors');
+const pkg = require('./package.json');
 
 let viewpath = path.join(__dirname, 'views');
 let assetPath = path.join(__dirname, 'public');
@@ -67,7 +68,8 @@ let clientPage = async ctx => {
 router
     .get('/ping', async ctx => {
         ctx.body = Object.assign(ctx.state, {
-            NODE_ENV: process.env.NODE_ENV
+            NODE_ENV: process.env.NODE_ENV,
+            version: pkg.version
         });
     })
     .get('/', async ctx => {
