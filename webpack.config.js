@@ -18,14 +18,25 @@ const config = {
             query: {
                 presets: ["@babel/preset-env", "@babel/preset-react"]
             }
-        }]
+        }],
+        // noParse: /jquery|lodash/,
     },
     plugins: [
+        new webpack.DefinePlugin({
+            'process.env.NODE_ENV': JSON.stringify('development')
+        }),
+
         // new webpack.NoEmitOnErrorsPlugin(),
         // new webpack.DefinePlugin({'process.env.NODE_ENV': '"production"'}),
         // new webpack.optimize.OccurrenceOrderPlugin(),
         // new webpack.HotModuleReplacementPlugin(),
-    ]
+    ],
+    performance: {
+        hints: false,
+    },
+    externals: {
+        React: 'react'
+    }
 };
 
 if (process.env.NODE_ENV === 'production') {

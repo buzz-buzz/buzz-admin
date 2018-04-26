@@ -10,41 +10,52 @@ import ClassHours from "../students/class-hours";
 import Integral from "../students/integral";
 import LevelModal from "../students/level-modal";
 import BookingTable from "./booking-table";
+import Router from 'koa-router';
 
 BigCalendar.setLocalizer(BigCalendar.momentLocalizer(moment))
 
 function attachEvents(users) {
     let self = this;
-    return users.map(user => {
-        user.events = [];
 
-        let uri = `{buzzService}/api/v1/student-class-schedule/${user.user_id}`;
+    let userIdArray = users.map(u => u.user_id);
 
-        if (this.props['user-type'] === UserTypes.companion) {
-            uri = `{buzzService}/api/v1/companion-class-schedule/${user.user_id}`;
+    let bookings = ServiceProxy.proxyTo({
+        body: {
+            uri: Router.url(`{buzzService}/api/v1/bookings/batch`, {users: userIdArray}),
+            method: 'GET'
         }
+    })
 
-        ServiceProxy.proxyTo({
-            body: {
-                uri: uri,
-                method: 'GET'
-            }
-        }).then((events) => {
-            console.log('events =', events);
-            user.events = events.map(e => {
-                e.start_time = new Date(e.start_time || e.student_start_time);
-                e.end_time = new Date(e.end_time || e.student_end_time);
-
-                if (!e.title) {
-                    e.title = '[预约需求]';
-                } else {
-                    e.title = '[确认进班]' + e.title;
-                }
-                return e;
-            }).filter(e => e.status !== 'cancelled')
-
-            self.forceUpdate();
-        });
+    return users.map(user => {
+        // user.events = [];
+        //
+        // let uri = `{buzzService}/api/v1/student-class-schedule/${user.user_id}`;
+        //
+        // if (this.props['user-type'] === UserTypes.companion) {
+        //     uri = `{buzzService}/api/v1/companion-class-schedule/${user.user_id}`;
+        // }
+        //
+        // ServiceProxy.proxyTo({
+        //     body: {
+        //         uri: uri,
+        //         method: 'GET'
+        //     }
+        // }).then((events) => {
+        //     console.log('events =', events);
+        //     user.events = events.map(e => {
+        //         e.start_time = new Date(e.start_time || e.student_start_time);
+        //         e.end_time = new Date(e.end_time || e.student_end_time);
+        //
+        //         if (!e.title) {
+        //             e.title = '[预约需求]';
+        //         } else {
+        //             e.title = '[确认进班]' + e.title;
+        //         }
+        //         return e;
+        //     }).filter(e => e.status !== 'cancelled')
+        //
+        //     self.forceUpdate();
+        // });
 
         return user;
     })
@@ -121,7 +132,7 @@ export default class UserList extends React.Component {
         })
     }
 
-    async componentDidMount() {
+    async componentWillMount() {
         this.setState({loading: true});
         let users = await ServiceProxy.proxyTo({
             body: {

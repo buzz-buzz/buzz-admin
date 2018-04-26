@@ -8,7 +8,7 @@
     "server": "cross-env BASIC_NAME=buzz BASIC_PASS=buzz nodemon app.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "cross-env NODE_ENV=production webpack -p --color --watch --progress",
-    "build-dev": "cross-env NODE_ENV=development webpack -p --color --watch --progress",
+    "build-dev": "cross-env NODE_ENV=development webpack --color --watch",
     "dev-server": "webpack-dev-server --port 3300 --hot --inline"
   },
   "repository": {
@@ -56,6 +56,7 @@
     "concurrently": "^3.5.1",
     "cross-env": "^5.1.4",
     "nodemon": "^1.17.3",
+    "paths": "^0.1.1",
     "webpack-cli": "^2.0.12",
     "webpack-dev-server": "^2.9.7"
   },

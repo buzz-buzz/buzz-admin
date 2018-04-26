@@ -7,13 +7,13 @@ export default class BookingTable extends React.Component {
             <Table>
                 <Table.Header>
                     <Table.Row>
-                        <Table.HeaderCell>预约({this.props.events.length})</Table.HeaderCell>
+                        <Table.HeaderCell>预约</Table.HeaderCell>
                         <Table.HeaderCell>开始日期</Table.HeaderCell>
                     </Table.Row>
                 </Table.Header>
                 <Table.Body>
                     {
-                        this.props.events.map(evt => {
+                        (this.props.events || []).map(evt => {
                             return (
                                 <Table.Row>
                                     <Table.Cell>yyy</Table.Cell>
