@@ -10,55 +10,35 @@ import ClassHours from "../students/class-hours";
 import Integral from "../students/integral";
 import LevelModal from "../students/level-modal";
 import BookingTable from "./booking-table";
-import Router from 'koa-router';
+import queryString from 'query-string';
 
 BigCalendar.setLocalizer(BigCalendar.momentLocalizer(moment))
 
-function attachEvents(users) {
+async function attachEvents(users) {
     let self = this;
 
     let userIdArray = users.map(u => u.user_id);
 
-    let bookings = ServiceProxy.proxyTo({
+    let bookings = await ServiceProxy.proxyTo({
         body: {
-            uri: Router.url(`{buzzService}/api/v1/bookings/batch`, {users: userIdArray}),
+            uri: `{buzzService}/api/v1/bookings/batch?${queryString.stringify({users: userIdArray})}`,
             method: 'GET'
         }
-    })
+    });
 
     return users.map(user => {
-        // user.events = [];
-        //
-        // let uri = `{buzzService}/api/v1/student-class-schedule/${user.user_id}`;
-        //
-        // if (this.props['user-type'] === UserTypes.companion) {
-        //     uri = `{buzzService}/api/v1/companion-class-schedule/${user.user_id}`;
-        // }
-        //
-        // ServiceProxy.proxyTo({
-        //     body: {
-        //         uri: uri,
-        //         method: 'GET'
-        //     }
-        // }).then((events) => {
-        //     console.log('events =', events);
-        //     user.events = events.map(e => {
-        //         e.start_time = new Date(e.start_time || e.student_start_time);
-        //         e.end_time = new Date(e.end_time || e.student_end_time);
-        //
-        //         if (!e.title) {
-        //             e.title = '[预约需求]';
-        //         } else {
-        //             e.title = '[确认进班]' + e.title;
-        //         }
-        //         return e;
-        //     }).filter(e => e.status !== 'cancelled')
-        //
-        //     self.forceUpdate();
-        // });
+        user.events = [];
+
+        bookings.filter(b => b.user_id === user.user_id).map(b => {
+            b.start_time = new Date(b.start_time);
+            b.end_time = new Date(b.end_time);
+            user.events.push(b);
+
+            return b;
+        });
 
         return user;
-    })
+    });
 }
 
 export default class UserList extends React.Component {
@@ -140,7 +120,7 @@ export default class UserList extends React.Component {
             }
         });
 
-        this.setState({loading: false, users: attachEvents.call(this, users)});
+        this.setState({loading: false, users: await attachEvents.call(this, users)});
 
         if (this.props.match.params.userId) {
             let theStudents = users.filter(s => s.user_id === Number(this.props.match.params.userId));
@@ -164,7 +144,7 @@ export default class UserList extends React.Component {
                 }
             });
 
-        this.setState({loading: false, users: attachEvents.call(this, students)});
+        this.setState({loading: false, users: await attachEvents.call(this, students)});
     }
 
     handleTextChange(event, {value, name}) {
@@ -442,15 +422,15 @@ export default class UserList extends React.Component {
 
         this.setState({
             currentUser: newUser,
-            users: attachEvents.call(this, users)
+            users: await attachEvents.call(this, users)
         });
     }
 
-    onUserDeleted(userId) {
+    async onUserDeleted(userId) {
         let users = this.state.users.filter(u => String(u.user_id) !== String(userId));
 
         this.setState({
-            users: attachEvents.call(this, users),
+            users: await attachEvents.call(this, users),
             currentUser: null
         })
     }

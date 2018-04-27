@@ -1,5 +1,6 @@
 import * as React from "react";
 import {Table} from "semantic-ui-react";
+import moment from "moment";
 
 export default class BookingTable extends React.Component {
     render() {
@@ -13,12 +14,30 @@ export default class BookingTable extends React.Component {
                 </Table.Header>
                 <Table.Body>
                     {
-                        (this.props.events || []).map(evt => {
+                        (this.props.events || []).map((evt, i) => {
                             return (
-                                <Table.Row>
-                                    <Table.Cell>yyy</Table.Cell>
+                                <Table.Row key={i}>
                                     <Table.Cell>
-                                        {evt.start_time.toISOString()}
+                                        <span style={{whiteSpace: 'nowrap'}}>
+                                        第周 {{
+                                            1: '一',
+                                            2: '二',
+                                            3: '三',
+                                            4: '四',
+                                            5: '五',
+                                            6: '六',
+                                            7: '日',
+                                            0: '日'
+                                        }[moment(evt.start_time).weekday()]}
+                                            &nbsp;&nbsp;
+                                            {moment(evt.start_time).format(moment.HTML5_FMT.TIME)}
+                                            -
+                                            {moment(evt.end_time).format(moment.HTML5_FMT.TIME)}
+                                        </span>
+                                    </Table.Cell>
+                                    <Table.Cell>
+                                        <span
+                                            style={{whiteSpace: 'nowrap'}}>{moment(evt.start_time).format(moment.HTML5_FMT.DATE)}</span>
                                     </Table.Cell>
                                 </Table.Row>
                             )
