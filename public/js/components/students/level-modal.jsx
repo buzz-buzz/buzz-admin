@@ -107,13 +107,13 @@ export default class LevelModal extends React.Component {
 
                     <ol>
                         {
-                            this.state.jsonDetail && this.state.jsonDetail.questions && this.state.jsonDetail.questions.map(q =>
-                                <li>
+                            this.state.jsonDetail && this.state.jsonDetail.questions && this.state.jsonDetail.questions.map((q, k) =>
+                                <li key={k}>
                                     <h3>{q.title}</h3>
                                     <ul>
                                         {
                                             q.items.map((item, i) =>
-                                                <li>
+                                                <li key={i}>
                                                     {
                                                         this.state.jsonDetail.answers[i].charCodeAt(0) + i - 'A'.charCodeAt(0) === 0 &&
                                                         <Icon name="checkmark box"/>
