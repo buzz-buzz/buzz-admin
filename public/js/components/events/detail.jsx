@@ -386,7 +386,7 @@ export default class EventDetail extends React.Component {
 
             newEvents.title = 'booking';
             newEvents.saved = true;
-            newEvents.batchId = batchId;
+            newEvents.batch_id = batchId;
             const e = _.assign({}, this.state.event, newEvents);
             this.setState({event: e});
             this.props.onEventSaved(e);

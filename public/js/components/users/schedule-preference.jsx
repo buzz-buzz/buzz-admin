@@ -171,7 +171,12 @@ export default class SchedulePreference extends React.Component {
 
     eventSaved(event) {
         let events = this.state.events;
-        events.push(event);
+        if (!event.batch_id) {
+            events.push(event);
+        } else {
+            events.push(event);
+            // TODO: add batch events
+        }
 
         let user = this.state.user;
         user.events = events;

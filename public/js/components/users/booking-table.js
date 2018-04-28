@@ -14,10 +14,28 @@ export default class BookingTable extends React.Component {
                 </Table.Header>
                 <Table.Body>
                     {
-                        (this.props.events || []).map((evt, i) => {
-                            return (
-                                <Table.Row key={i}>
-                                    <Table.Cell>
+                        (this.props.events || [])
+                            .sort((prev, next) => {
+                                if (prev.start_time > next.start_time) {
+                                    return 1;
+                                } else (prev.start_time < next.start_time)
+                                {
+                                    return -1;
+                                }
+
+                                return 0
+                            })
+                            .reduce((prev, next) => {
+                                if (!prev.filter(evt => evt.batch_id === next.batch_id).length) {
+                                    prev.push(next)
+                                }
+
+                                return prev;
+                            }, [])
+                            .map((evt, i) => {
+                                return (
+                                    <Table.Row key={i}>
+                                        <Table.Cell>
                                         <span style={{whiteSpace: 'nowrap'}}>
                                             {
                                                 evt.batch_id ?
@@ -40,14 +58,14 @@ export default class BookingTable extends React.Component {
                                             -
                                             {moment(evt.end_time).format(moment.HTML5_FMT.TIME)}
                                         </span>
-                                    </Table.Cell>
-                                    <Table.Cell>
+                                        </Table.Cell>
+                                        <Table.Cell>
                                         <span
                                             style={{whiteSpace: 'nowrap'}}>{moment(evt.start_time).format(moment.HTML5_FMT.DATE)}</span>
-                                    </Table.Cell>
-                                </Table.Row>
-                            )
-                        })
+                                        </Table.Cell>
+                                    </Table.Row>
+                                )
+                            })
                     }
                 </Table.Body>
             </Table>
