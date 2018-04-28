@@ -52,6 +52,8 @@ export default class EventDetail extends React.Component {
         let event = nextProps.event || {}
         event.start_time = TimeHelper.toLocalDateTime(new Date(event.start_time || null));
         event.end_time = TimeHelper.toLocalDateTime(new Date(event.end_time || null));
+        event.start_time_moment = moment(event.start_time, moment.HTML5_FMT.DATETIME_LOCAL);
+        event.end_time_moment = moment(event.end_time, moment.HTML5_FMT.DATETIME_LOCAL);
         const state = _.assign({error: false}, this.state, {event})
         if (event.time_zone) {
             state.companion_time_zone = event.time_zone
@@ -104,6 +106,7 @@ export default class EventDetail extends React.Component {
 
         datetime.year(date.year()).month(date.month()).date(date.date());
         e[attr] = datetime.format(moment.HTML5_FMT.DATETIME_LOCAL);
+        e[`${attr}_moment`] = datetime;
         this.setState({event: e});
     }
 
@@ -193,22 +196,24 @@ export default class EventDetail extends React.Component {
                                         </Form.Field>
                                         <Form.Field>
                                             <DatePicker
-                                                selected={moment(this.state.event.start_time, moment.HTML5_FMT.DATETIME_LOCAL)}
+                                                selected={this.state.event.start_time_moment}
                                                 onChange={datetime => this.handleTimePickerChange('start_time', datetime)}
                                                 showTimeSelect showTimeSelectOnly timeIntervals={30} dateFormat="HH:mm"
                                                 timeCaption="上课开始时间" placeholderText="上课开始时间" isClearable={false}
-                                                selectsStart disabled={this.state.event.saved}></DatePicker>
+                                                selectsStart disabled={this.state.event.saved}
+                                                timeFormat="HH:mm"></DatePicker>
                                         </Form.Field>
                                         <Form.Field>
                                             --
                                         </Form.Field>
                                         <Form.Field>
                                             <DatePicker
-                                                selected={moment(this.state.event.end_time, moment.HTML5_FMT.DATETIME_LOCAL)}
+                                                selected={this.state.event.end_time_moment}
                                                 onChange={datetime => this.handleTimePickerChange('end_time', datetime)}
                                                 showTimeSelect showTimeSelectOnly timeIntervals={30} dateFormat="HH:mm"
                                                 timeCaption="上课结束时间" placeholderText="上课结束时间" isClearable={false}
-                                                selectsEnd disabled={this.state.event.saved}></DatePicker>
+                                                selectsEnd disabled={this.state.event.saved}
+                                                timeFormat="HH:mm"></DatePicker>
                                         </Form.Field>
                                     </Form.Group>
                                     <Form.Group inline>
