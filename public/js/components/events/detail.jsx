@@ -312,8 +312,8 @@ export default class EventDetail extends React.Component {
             }
         ]
         return (
-            <Modal open={this.props.open} closeOnEscape={true} closeOnRootNodeClick={true}
-                   onClose={this.props.onClose}>
+            <Modal open={this.props.open} closeOnEscape={true} closeOnRootNodeClick={false}
+                   onClose={this.props.onClose} closeIcon>
                 <Header content={this.state.event.saved ? '事件明细' : '创建需求'}></Header>
                 <Segment basic>
                     <Tab panes={panes}/>

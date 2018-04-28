@@ -95,7 +95,8 @@ export default class SchedulePreference extends React.Component {
 
     render() {
         return (
-            <Modal open={this.props.open} closeOnEscape={true} closeOnRootNodeClick={true} onClose={this.close}>
+            <Modal open={this.props.open} closeOnEscape={true} closeOnRootNodeClick={false} onClose={this.close}
+                   closeIcon>
                 <Header content="课程安排"></Header>
                 <Modal.Content>
                     <Segment loading={this.state.loading} style={{height: '600px'}}>
