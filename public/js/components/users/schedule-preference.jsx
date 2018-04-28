@@ -7,6 +7,15 @@ import EventDetail from "../events/detail";
 
 BigCalendar.setLocalizer(BigCalendar.momentLocalizer(moment))
 
+
+function Event({event}) {
+    return (
+        (event.status === 'confirmed' || event.title === 'confirmed') ?
+            <div style={{position: 'absolute', width: '100%', height: '100%', backgroundColor: 'green'}}>Confirmed</div>
+            : ''
+    );
+}
+
 export default class SchedulePreference extends React.Component {
     constructor(props) {
         super(props);
@@ -37,6 +46,8 @@ export default class SchedulePreference extends React.Component {
                 this.setState({
                     events: nextProps.user.events.map(e => {
                         e.title = e.status;
+                        e.occurence = nextProps.user.class_hours;
+                        e.maxOccurence = nextProps.user.class_hours;
                         return e;
                     })
                 });
@@ -54,7 +65,6 @@ export default class SchedulePreference extends React.Component {
                         }
                     });
 
-                console.log(result);
                 this.setState({
                     events: result.map(e => {
                         e.start_time = new Date(e.start_time);
@@ -85,7 +95,8 @@ export default class SchedulePreference extends React.Component {
 
     render() {
         return (
-            <Modal open={this.props.open} closeOnEscape={true} closeOnRootNodeClick={true} onClose={this.close}>
+            <Modal open={this.props.open} closeOnEscape={true} closeOnRootNodeClick={false} onClose={this.close}
+                   closeIcon>
                 <Header content="课程安排"></Header>
                 <Modal.Content>
                     <Segment loading={this.state.loading} style={{height: '600px'}}>
@@ -95,12 +106,14 @@ export default class SchedulePreference extends React.Component {
                             startAccessor='start_time'
                             endAccessor='end_time'
                             defaultDate={new Date()}
-                            defaultView={'week'}
+                            defaultView={'month'}
                             scrollToTime={new Date(1970, 1, 1, 6)}
                             onSelectEvent={event => this.selectEvent(event)}
                             onSelectSlot={slotInfo =>
                                 this.selectSlot(slotInfo)
                             }
+                            views={['month', 'week']}
+                            components={{event: Event, month: {event: Event}}}
                         />
                     </Segment>
                 </Modal.Content>
@@ -123,7 +136,9 @@ export default class SchedulePreference extends React.Component {
                 time_zone: this.state.user.time_zone,
                 role: this.state.user.role,
                 status: 'booking',
-                title: 'booking'
+                title: 'booking',
+                occurence: this.state.user.class_hours || 0,
+                maxOccurence: this.state.user.class_hours || 0
             }
         })
     }
@@ -156,6 +171,11 @@ export default class SchedulePreference extends React.Component {
                 e.title = event.status;
             }
 
+            if (e.batch_id === event.batch_id) {
+                e.status = event.status;
+                e.title = event.status;
+            }
+
             return e;
         }).filter(e => e.status !== 'cancelled');
 
@@ -166,7 +186,12 @@ export default class SchedulePreference extends React.Component {
 
     eventSaved(event) {
         let events = this.state.events;
-        events.push(event);
+        if (!event.batch_id) {
+            events.push(event);
+        } else {
+            events.push(event);
+            // TODO: add batch events
+        }
 
         let user = this.state.user;
         user.events = events;

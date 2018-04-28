@@ -20,15 +20,14 @@ export default class ClassEvaluation extends React.Component {
 
     async componentWillReceiveProps(nextProps) {
         if (nextProps.classInfo && nextProps.classInfo.class_id) {
-            await this.searchClassesEvaluation();
+            await this.searchClassesEvaluation(nextProps.classInfo.class_id);
         }
     }
 
-    async searchClassesEvaluation() {
-
+    async searchClassesEvaluation(classId) {
         let result = await ServiceProxy.proxyTo({
             body: {
-                uri: `{buzzService}/api/v1/class-feedback/admin-list/${this.props.classInfo.class_id}`,
+                uri: `{buzzService}/api/v1/class-feedback/admin-list/${classId}`,
                 method: 'GET',
             }
         })
@@ -69,7 +68,7 @@ export default class ClassEvaluation extends React.Component {
                             <Table.Body>
                                 {
                                     this.state.feedbacks.map((c, i) =>
-                                        <Table.Row key={c.class_id}>
+                                        <Table.Row key={i}>
                                             <Table.Cell>
                                                 {
                                                     <Image avatar alt={c.from_user_id}

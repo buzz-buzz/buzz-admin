@@ -9,44 +9,38 @@ import {UserTypes} from "./config";
 import ClassHours from "../students/class-hours";
 import Integral from "../students/integral";
 import LevelModal from "../students/level-modal";
+import BookingTable from "./booking-table";
+import queryString from 'query-string';
 
 BigCalendar.setLocalizer(BigCalendar.momentLocalizer(moment))
 
-function attachEvents(users) {
+async function attachEvents(users) {
     let self = this;
+
+    let userIdArray = users.map(u => u.user_id);
+
+    let bookings = await ServiceProxy.proxyTo({
+        body: {
+            uri: `{buzzService}/api/v1/bookings/all?${queryString.stringify({users: userIdArray})}`,
+            method: 'GET'
+        }
+    });
+
+    bookings = bookings.filter(b => b.status !== 'cancelled' && b.status !== 'ended');
+
     return users.map(user => {
         user.events = [];
 
-        let uri = `{buzzService}/api/v1/student-class-schedule/${user.user_id}`;
+        bookings.filter(b => b.user_id === user.user_id).map(b => {
+            b.start_time = new Date(b.start_time);
+            b.end_time = new Date(b.end_time);
+            user.events.push(b);
 
-        if (this.props['user-type'] === UserTypes.companion) {
-            uri = `{buzzService}/api/v1/companion-class-schedule/${user.user_id}`;
-        }
-
-        ServiceProxy.proxyTo({
-            body: {
-                uri: uri,
-                method: 'GET'
-            }
-        }).then((events) => {
-            console.log('events =', events);
-            user.events = events.map(e => {
-                e.start_time = new Date(e.start_time || e.student_start_time);
-                e.end_time = new Date(e.end_time || e.student_end_time);
-
-                if (!e.title) {
-                    e.title = '[预约需求]';
-                } else {
-                    e.title = '[确认进班]' + e.title;
-                }
-                return e;
-            }).filter(e => e.status !== 'cancelled')
-
-            self.forceUpdate();
+            return b;
         });
 
         return user;
-    })
+    });
 }
 
 export default class UserList extends React.Component {
@@ -101,6 +95,7 @@ export default class UserList extends React.Component {
             users: newStudents
         })
     }
+
     integralUpdated(newIntegral) {
         let copy = Object.assign({}, this.state.currentUser);
         copy.integral = newIntegral;
@@ -119,7 +114,7 @@ export default class UserList extends React.Component {
         })
     }
 
-    async componentDidMount() {
+    async componentWillMount() {
         this.setState({loading: true});
         let users = await ServiceProxy.proxyTo({
             body: {
@@ -127,7 +122,7 @@ export default class UserList extends React.Component {
             }
         });
 
-        this.setState({loading: false, users: attachEvents.call(this, users)});
+        this.setState({loading: false, users: await attachEvents.call(this, users)});
 
         if (this.props.match.params.userId) {
             let theStudents = users.filter(s => s.user_id === Number(this.props.match.params.userId));
@@ -151,7 +146,7 @@ export default class UserList extends React.Component {
                 }
             });
 
-        this.setState({loading: false, users: attachEvents.call(this, students)});
+        this.setState({loading: false, users: await attachEvents.call(this, students)});
     }
 
     handleTextChange(event, {value, name}) {
@@ -224,13 +219,10 @@ export default class UserList extends React.Component {
                                     <Table.Cell onClick={() => this.openProfile(user)}>
                                         {user.email}
                                     </Table.Cell>
-                                    {
-                                        this.props['user-type'] === UserTypes.student &&
-                                        <Table.Cell onClick={() => this.openClassHours(user)}
-                                                    style={{cursor: 'pointer'}}>
-                                            {user.class_hours || 0}
-                                        </Table.Cell>
-                                    }
+                                    <Table.Cell onClick={() => this.openClassHours(user)}
+                                                style={{cursor: 'pointer'}}>
+                                        {user.class_hours || 0}
+                                    </Table.Cell>
                                     {
                                         this.props['user-type'] === UserTypes.student &&
                                         <Table.Cell onClick={() => this.openIntegral(user)}
@@ -244,15 +236,8 @@ export default class UserList extends React.Component {
                                             {user.level}
                                         </Table.Cell>
                                     }
-                                    <Table.Cell onClick={() => this.openSchedulePreferenceModal(user)}
-                                                style={{height: '250px'}}>
-                                        <BigCalendar
-                                            events={user.events}
-                                            startAccessor='start_time'
-                                            endAccessor='end_time'
-                                            defaultDate={new Date()}
-                                            defaultView="agenda"
-                                        />
+                                    <Table.Cell onClick={() => this.openSchedulePreferenceModal(user)}>
+                                        <BookingTable events={user.events} defaultDate={new Date()}></BookingTable>
                                     </Table.Cell>
                                 </Table.Row>
                             )
@@ -278,19 +263,15 @@ export default class UserList extends React.Component {
                         </Table.Row>
                     </Table.Footer>
                 </Table>
-                {
-                    this.props['user-type'] === UserTypes.student &&
-
-                    <ClassHours open={this.state.classHoursModalOpen} student={this.state.currentUser}
-                                classHoursUpdateCallback={this.classHoursUpdated}
-                                onCloseCallback={this.closeClassHoursModal}/>
-                }
+                <ClassHours open={this.state.classHoursModalOpen} student={this.state.currentUser}
+                            classHoursUpdateCallback={this.classHoursUpdated}
+                            onCloseCallback={this.closeClassHoursModal}/>
                 {
                     this.props['user-type'] === UserTypes.student &&
 
                     <Integral open={this.state.integralModalOpen} student={this.state.currentUser}
-                                integralUpdateCallback={this.integralUpdated}
-                                onCloseCallback={this.closeIntegralModal}/>
+                              integralUpdateCallback={this.integralUpdated}
+                              onCloseCallback={this.closeIntegralModal}/>
                 }
                 {
                     this.props['user-type'] === UserTypes.student &&
@@ -319,10 +300,7 @@ export default class UserList extends React.Component {
                 <Table.HeaderCell>(孩子)英文名</Table.HeaderCell>
                 <Table.HeaderCell>手机号</Table.HeaderCell>
                 <Table.HeaderCell>邮箱</Table.HeaderCell>
-                {
-                    (this.props['user-type'] === UserTypes.student) &&
-                    <Table.HeaderCell>课时数</Table.HeaderCell>
-                }
+                <Table.HeaderCell>课时数</Table.HeaderCell>
                 {
                     (this.props['user-type'] === UserTypes.student) &&
                     <Table.HeaderCell>积分</Table.HeaderCell>
@@ -331,7 +309,7 @@ export default class UserList extends React.Component {
                     this.props['user-type'] === UserTypes.student &&
                     <Table.HeaderCell>能力评级</Table.HeaderCell>
                 }
-                <Table.HeaderCell>预约需求</Table.HeaderCell>
+                <Table.HeaderCell>预约/排课</Table.HeaderCell>
             </Table.Row>
         </Table.Header>;
     }
@@ -346,6 +324,7 @@ export default class UserList extends React.Component {
     closeClassHoursModal() {
         this.setState({classHoursModalOpen: false})
     }
+
     openIntegral(student) {
         this.setState({
             integralModalOpen: true,
@@ -435,15 +414,15 @@ export default class UserList extends React.Component {
 
         this.setState({
             currentUser: newUser,
-            users: attachEvents.call(this, users)
+            users: await attachEvents.call(this, users)
         });
     }
 
-    onUserDeleted(userId) {
+    async onUserDeleted(userId) {
         let users = this.state.users.filter(u => String(u.user_id) !== String(userId));
 
         this.setState({
-            users: attachEvents.call(this, users),
+            users: await attachEvents.call(this, users),
             currentUser: null
         })
     }

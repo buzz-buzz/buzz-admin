@@ -137,7 +137,7 @@ export default class Profile extends React.Component {
             })
 
             this.setState({error: false});
-            this.props.onUserDeleted(userId);
+            await this.props.onUserDeleted(userId);
 
             this.close();
         } catch (error) {

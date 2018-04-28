@@ -1,0 +1,19 @@
+.react-datepicker__time-container {
+    min-width: 100px !important;
+}
+
+.react-datepicker__time-box {
+    min-width: 100px !important;
+}
+
+.react-datepicker__time-list {
+    padding: 0 !important;
+}
+
+.rbc-event {
+    position: relative !important;
+}
+
+.rbc-event-content {
+    position: absolute !important;
+}

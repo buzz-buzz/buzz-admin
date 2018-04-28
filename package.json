@@ -4,10 +4,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "cross-env BASIC_NAME=buzz BASIC_PASS=buzz node app.js",
+    "start": "concurrently \"npm run server\" \"npm run build-dev\"",
+    "server": "cross-env BASIC_NAME=buzz BASIC_PASS=buzz nodemon app.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "cross-env NODE_ENV=production webpack -p --color --watch --progress",
-    "build-dev": "cross-env NODE_ENV=development webpack -p --color --watch --progress",
+    "build-dev": "cross-env NODE_ENV=development webpack --color --watch",
     "dev-server": "webpack-dev-server --port 3300 --hot --inline"
   },
   "repository": {
@@ -41,8 +42,10 @@
     "lodash": "^4.17.5",
     "moment": "^2.20.1",
     "moment-timezone": "^0.5.14",
+    "query-string": "^6.0.0",
     "react": "^16.2.0",
     "react-big-calendar": "^0.19.0",
+    "react-datepicker": "^1.4.1",
     "react-dom": "^16.2.0",
     "react-router-dom": "^4.2.2",
     "request": "^2.83.0",
@@ -52,7 +55,10 @@
     "webpack": "^3.10.0"
   },
   "devDependencies": {
+    "concurrently": "^3.5.1",
     "cross-env": "^5.1.4",
+    "nodemon": "^1.17.3",
+    "paths": "^0.1.1",
     "webpack-cli": "^2.0.12",
     "webpack-dev-server": "^2.9.7"
   },
@@ -60,7 +66,18 @@
     {
       "script": "app.js",
       "watch": "true",
-      "name": "buzz-admin"
+      "name": "buzz-admin",
+      "instances": "max",
+      "exec_mode": "cluster"
     }
-  ]
+  ],
+  "nodemonConfig": {
+    "ignore": [
+      "node_modules/*",
+      "public/*",
+      "test/*",
+      "webpack.config.js"
+    ],
+    "delay": "2500"
+  }
 }

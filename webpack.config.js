@@ -18,30 +18,46 @@ const config = {
             query: {
                 presets: ["@babel/preset-env", "@babel/preset-react"]
             }
-        }]
+        }],
+        // noParse: /jquery|lodash/,
     },
     plugins: [
-        new webpack.NoEmitOnErrorsPlugin(),
-        new webpack.DefinePlugin({'process.env.NODE_ENV': '"production"'}),
-        new webpack.optimize.OccurrenceOrderPlugin(),
-        new webpack.HotModuleReplacementPlugin(),
-    ]
+        new webpack.DefinePlugin({
+            'process.env.NODE_ENV': JSON.stringify('development')
+        }),
+
+        // new webpack.NoEmitOnErrorsPlugin(),
+        // new webpack.DefinePlugin({'process.env.NODE_ENV': '"production"'}),
+        // new webpack.optimize.OccurrenceOrderPlugin(),
+        // new webpack.HotModuleReplacementPlugin(),
+    ],
+    performance: {
+        hints: false,
+    },
+    externals: {
+        React: 'react'
+    }
 };
 
 if (process.env.NODE_ENV === 'production') {
-  config.plugins.push(new webpack.optimize.UglifyJsPlugin({
-      compress: {
-          screw_ie8: true,
-          warnings: false
-      },
-      mangle: {
-          screw_ie8: true
-      },
-      output: {
-          comments: false,
-          screw_ie8: true
-      }
-  }))
+    config.plugins.push(new webpack.NoEmitOnErrorsPlugin())
+    config.plugins.push(new webpack.DefinePlugin({'process.env.NODE_ENV': '"production"'}))
+    config.plugins.push(new webpack.optimize.OccurrenceOrderPlugin())
+    config.plugins.push(new webpack.HotModuleReplacementPlugin())
+
+    config.plugins.push(new webpack.optimize.UglifyJsPlugin({
+        compress: {
+            screw_ie8: true,
+            warnings: false
+        },
+        mangle: {
+            screw_ie8: true
+        },
+        output: {
+            comments: false,
+            screw_ie8: true
+        }
+    }))
 }
 
 module.exports = config

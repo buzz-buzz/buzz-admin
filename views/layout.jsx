@@ -16,6 +16,9 @@ export default class Layout extends React.Component {
                       href="/css/semantic.min.css"></link>
                 <link rel="stylesheet"
                       href={cdn("/react-big-calendar/lib/css/react-big-calendar.css", this.props.v)}></link>
+                <link rel={"stylesheet"}
+                      href={cdn('/react-datepicker/dist/react-datepicker.min.css', this.props.v)}></link>
+                <link rel="stylesheet" href="/css/style.css"></link>
             </head>
             <body>
             <Header title={this.props.title} path={this.props.path}/>

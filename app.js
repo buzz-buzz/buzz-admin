@@ -12,6 +12,7 @@ const oldRequest = require('request');
 const bodyParser = require('koa-bodyparser');
 const request = require('request-promise-native');
 const cors = require('koa-cors');
+const pkg = require('./package.json');
 
 let viewpath = path.join(__dirname, 'views');
 let assetPath = path.join(__dirname, 'public');
@@ -58,16 +59,21 @@ app.use(async (ctx, next) => {
 const version = new Date().getTime()
 
 let clientPage = async ctx => {
-    console.log('state = ', ctx.state);
     ctx.render('index', Object.assign(ctx.state, {
         title: 'Home | Buzzbuzz admin',
         v: version,
+        config: {
+            endPoints: {
+                adminNeue: config.endPoints.adminNeue
+            }
+        }
     }));
 };
 router
     .get('/ping', async ctx => {
         ctx.body = Object.assign(ctx.state, {
-            NODE_ENV: process.env.NODE_ENV
+            NODE_ENV: process.env.NODE_ENV,
+            version: pkg.version
         });
     })
     .get('/', async ctx => {
@@ -78,7 +84,7 @@ router
     .get('/classes', clientPage)
 
     .get('/avatar/:userId', async ctx => {
-        let profile = await request(`${config.endPoints.buzzService}/api/v1/users/${ctx.params.userId}`);
+        let profile = await request(`${window.config.endPoints.buzzService}/api/v1/users/${ctx.params.userId}`);
 
         profile = JSON.parse(profile);
         ctx.body = await oldRequest(profile.avatar);
@@ -90,9 +96,10 @@ router
             ;
         }
 
-        console.log('proxing with ...', ctx.request.body);
-
         ctx.body = await oldRequest(ctx.request.body);
+    })
+    .get('/admin-neue/classDetail/:class_id', async ctx => {
+        ctx.redirect(`${config.endPoints.adminNeue}/classDetail/${ctx.params.class_id}`);
     })
 ;
 
