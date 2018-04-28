@@ -37,6 +37,8 @@ export default class SchedulePreference extends React.Component {
                 this.setState({
                     events: nextProps.user.events.map(e => {
                         e.title = e.status;
+                        e.occurence = nextProps.user.class_hours;
+                        e.maxOccurence = nextProps.user.class_hours;
                         return e;
                     })
                 });
@@ -54,7 +56,6 @@ export default class SchedulePreference extends React.Component {
                         }
                     });
 
-                console.log(result);
                 this.setState({
                     events: result.map(e => {
                         e.start_time = new Date(e.start_time);
@@ -123,7 +124,9 @@ export default class SchedulePreference extends React.Component {
                 time_zone: this.state.user.time_zone,
                 role: this.state.user.role,
                 status: 'booking',
-                title: 'booking'
+                title: 'booking',
+                occurence: this.state.user.class_hours,
+                maxOccurence: this.state.user.class_hours
             }
         })
     }

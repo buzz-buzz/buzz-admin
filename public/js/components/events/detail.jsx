@@ -3,7 +3,7 @@ import _ from "lodash";
 import moment from 'moment-timezone'
 import {
     Button, Form, Header, Message, Modal, Dropdown, Confirm, Tab, Container, Label,
-    Segment
+    Segment, Input
 } from "semantic-ui-react";
 import ServiceProxy from "../../service-proxy";
 import TimeHelper from "../../common/TimeHelper";
@@ -39,6 +39,7 @@ export default class EventDetail extends React.Component {
         this.handleTimeChange = this.handleTimeChange.bind(this);
         this.handleCompanionTimeChange = this.handleCompanionTimeChange.bind(this);
         this.handleChange = this.handleChange.bind(this);
+        this.handleEventChange = this.handleEventChange.bind(this);
         this.handleSearchChange = this.handleSearchChange.bind(this);
         this.handleCompanionTimeZoneChange = this.handleCompanionTimeZoneChange.bind(this);
         this.updateTime = this.updateTime.bind(this);
@@ -148,6 +149,12 @@ export default class EventDetail extends React.Component {
         })
     }
 
+    handleEventChange(e, {name, value}) {
+        let event = this.state.event;
+        event[name] = value;
+        this.setState(event);
+    }
+
     handleSearchChange(e, {search}) {
         this.setState({
             search: search
@@ -164,6 +171,10 @@ export default class EventDetail extends React.Component {
                             <Modal.Content>
                                 <Form loading={this.state.loading} error={this.state.error}>
                                     <Message error header="出错了" content={this.state.message}/>
+                                    <p>
+                                        <strong>Batch ID：</strong>
+                                        <span>{this.state.event.batch_id}</span>
+                                    </p>
                                     <Form.Group inline>
                                         <Form.Field>
                                             <Label>开始日期：</Label>
@@ -173,7 +184,7 @@ export default class EventDetail extends React.Component {
                                                 selected={moment(this.state.event.start_time, moment.HTML5_FMT.DATETIME_LOCAL)}
                                                 onChange={date => this.handleDateChange('start_time', date)}
                                                 dateFormat={"YYYY-MM-DD"} placeholderText="开始日期"
-                                                isClearable={false}></DatePicker>
+                                                isClearable={false} disabled={this.state.event.saved}></DatePicker>
                                         </Form.Field>
                                     </Form.Group>
                                     <Form.Group inline>
@@ -186,7 +197,7 @@ export default class EventDetail extends React.Component {
                                                 onChange={datetime => this.handleTimePickerChange('start_time', datetime)}
                                                 showTimeSelect showTimeSelectOnly timeIntervals={30} dateFormat="LT"
                                                 timeCaption="上课开始时间" placeholderText="上课开始时间" isClearable={false}
-                                                selectsStart></DatePicker>
+                                                selectsStart disabled={this.state.event.saved}></DatePicker>
                                         </Form.Field>
                                         <Form.Field>
                                             --
@@ -197,8 +208,18 @@ export default class EventDetail extends React.Component {
                                                 onChange={datetime => this.handleTimePickerChange('end_time', datetime)}
                                                 showTimeSelect showTimeSelectOnly timeIntervals={30} dateFormat="LT"
                                                 timeCaption="上课结束时间" placeholderText="上课结束时间" isClearable={false}
-                                                selectsEnd></DatePicker>
+                                                selectsEnd disabled={this.state.event.saved}></DatePicker>
                                         </Form.Field>
+                                    </Form.Group>
+                                    <Form.Group inline>
+                                        <Label>预订周数</Label>
+                                        <Input placeholder="预订周数"
+                                               name="occurence"
+                                               value={this.state.event.occurence}
+                                               onChange={this.handleEventChange}
+                                               readOnly={this.state.event.saved !== false}
+                                               type="number" min={1}
+                                               max={this.state.event.maxOccurence}></Input>
                                     </Form.Group>
                                 </Form>
                                 <div>
@@ -372,6 +393,7 @@ export default class EventDetail extends React.Component {
                 start_time: new Date(this.state.event.start_time),
                 end_time: new Date(this.state.event.end_time),
                 user_id: this.state.event.user_id,
+                n: this.state.event.occurence
             };
 
             validateEvent(newEvents);
