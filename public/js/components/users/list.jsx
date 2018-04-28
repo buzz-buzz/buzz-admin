@@ -21,7 +21,7 @@ async function attachEvents(users) {
 
     let bookings = await ServiceProxy.proxyTo({
         body: {
-            uri: `{buzzService}/api/v1/bookings/batch?${queryString.stringify({users: userIdArray})}`,
+            uri: `{buzzService}/api/v1/bookings/all?${queryString.stringify({users: userIdArray})}`,
             method: 'GET'
         }
     });

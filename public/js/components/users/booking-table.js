@@ -19,16 +19,22 @@ export default class BookingTable extends React.Component {
                                 <Table.Row key={i}>
                                     <Table.Cell>
                                         <span style={{whiteSpace: 'nowrap'}}>
-                                        第周 {{
-                                            1: '一',
-                                            2: '二',
-                                            3: '三',
-                                            4: '四',
-                                            5: '五',
-                                            6: '六',
-                                            7: '日',
-                                            0: '日'
-                                        }[moment(evt.start_time).weekday()]}
+                                            {
+                                                evt.batch_id ?
+                                                    <strong>每周 </strong>
+                                                    :
+                                                    <span>星期 </span>
+                                            }
+                                            <strong>{{
+                                                1: '一',
+                                                2: '二',
+                                                3: '三',
+                                                4: '四',
+                                                5: '五',
+                                                6: '六',
+                                                7: '日',
+                                                0: '日'
+                                            }[moment(evt.start_time).weekday()]}</strong>
                                             &nbsp;&nbsp;
                                             {moment(evt.start_time).format(moment.HTML5_FMT.TIME)}
                                             -

@@ -156,6 +156,11 @@ export default class SchedulePreference extends React.Component {
                 e.title = event.status;
             }
 
+            if (e.batch_id === event.batch_id) {
+                e.status = event.status;
+                e.title = event.status;
+            }
+
             return e;
         }).filter(e => e.status !== 'cancelled');
 

@@ -1,7 +1,10 @@
 import * as React from "react";
 import _ from "lodash";
 import moment from 'moment-timezone'
-import {Button, Form, Header, Message, Modal, Dropdown, Confirm, Tab, Container, Label} from "semantic-ui-react";
+import {
+    Button, Form, Header, Message, Modal, Dropdown, Confirm, Tab, Container, Label,
+    Segment
+} from "semantic-ui-react";
 import ServiceProxy from "../../service-proxy";
 import TimeHelper from "../../common/TimeHelper";
 import Timezones from "../../common/Timezones";
@@ -157,7 +160,7 @@ export default class EventDetail extends React.Component {
                 menuItem: '批量创建用户预约',
                 render: () => {
                     return (
-                        <div>
+                        <Container>
                             <Modal.Content>
                                 <Form loading={this.state.loading} error={this.state.error}>
                                     <Message error header="出错了" content={this.state.message}/>
@@ -203,13 +206,13 @@ export default class EventDetail extends React.Component {
                             </Modal.Content>
                             <Modal.Actions>
                                 {
-                                    !this.state.event.saved ?
+                                    this.state.event.saved === false ?
                                         <Button content="创建" onClick={this.batchSaveEvents}/>
                                         :
                                         <Button content="取消" onClick={this.batchCancelEvents}/>
                                 }
                             </Modal.Actions>
-                        </div>
+                        </Container>
                     )
                 }
             },
@@ -217,7 +220,7 @@ export default class EventDetail extends React.Component {
                 menuItem: '临时修改',
                 render: () => {
                     return (
-                        <div>
+                        <Container>
                             <Modal.Content>
                                 <Form loading={this.state.loading} error={this.state.error}>
                                     <Message error header="出错了" content={this.state.message}/>
@@ -282,7 +285,7 @@ export default class EventDetail extends React.Component {
                                         <Button content='保存' onClick={this.saveEvent}/>
                                 }
                             </Modal.Actions>
-                        </div>
+                        </Container>
                     )
                 }
             }
@@ -291,9 +294,9 @@ export default class EventDetail extends React.Component {
             <Modal open={this.props.open} closeOnEscape={true} closeOnRootNodeClick={true}
                    onClose={this.props.onClose}>
                 <Header content={this.state.event.saved ? '事件明细' : '创建需求'}></Header>
-                <Container>
+                <Segment basic>
                     <Tab panes={panes}/>
-                </Container>
+                </Segment>
             </Modal>
         )
     }
@@ -399,7 +402,7 @@ export default class EventDetail extends React.Component {
         try {
             await ServiceProxy.proxyTo({
                 body: {
-                    uri: `{buzzService}/api/v1/bookings/batch/${this.state.event.user_id}`,
+                    uri: `{buzzService}/api/v1/bookings/batch/${this.state.event.user_id}/${this.state.event.batch_id}`,
                     method: 'DELETE',
                     json: this.state.event
                 }
@@ -411,6 +414,7 @@ export default class EventDetail extends React.Component {
             this.setState({event: event})
 
             this.props.onEventCancelled(_.assign({
+                batch_id: event.batch_id,
                 start_time: new Date(event.start_time),
                 end_time: new Date(event.end_time),
             }, event));
