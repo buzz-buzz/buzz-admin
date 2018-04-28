@@ -195,7 +195,7 @@ export default class EventDetail extends React.Component {
                                             <DatePicker
                                                 selected={moment(this.state.event.start_time, moment.HTML5_FMT.DATETIME_LOCAL)}
                                                 onChange={datetime => this.handleTimePickerChange('start_time', datetime)}
-                                                showTimeSelect showTimeSelectOnly timeIntervals={30} dateFormat="LT"
+                                                showTimeSelect showTimeSelectOnly timeIntervals={30} dateFormat="HH:mm"
                                                 timeCaption="上课开始时间" placeholderText="上课开始时间" isClearable={false}
                                                 selectsStart disabled={this.state.event.saved}></DatePicker>
                                         </Form.Field>
@@ -206,7 +206,7 @@ export default class EventDetail extends React.Component {
                                             <DatePicker
                                                 selected={moment(this.state.event.end_time, moment.HTML5_FMT.DATETIME_LOCAL)}
                                                 onChange={datetime => this.handleTimePickerChange('end_time', datetime)}
-                                                showTimeSelect showTimeSelectOnly timeIntervals={30} dateFormat="LT"
+                                                showTimeSelect showTimeSelectOnly timeIntervals={30} dateFormat="HH:mm"
                                                 timeCaption="上课结束时间" placeholderText="上课结束时间" isClearable={false}
                                                 selectsEnd disabled={this.state.event.saved}></DatePicker>
                                         </Form.Field>
