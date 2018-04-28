@@ -1,7 +1,15 @@
 .react-datepicker__time-container {
-    min-width: 200px!important;
+    min-width: 200px !important;
 }
 
-.react-datepicker__time-box{
-    min-width: 150px!important;
+.react-datepicker__time-box {
+    min-width: 150px !important;
+}
+
+.rbc-event {
+    position: relative !important;
+}
+
+.rbc-event-content {
+    position: absolute !important;
 }

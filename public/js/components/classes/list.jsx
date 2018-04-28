@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Button, Container, Form, Icon, Image, Input, Menu, Segment, Table } from "semantic-ui-react";
+import {Button, Container, Form, Icon, Image, Input, Menu, Segment, Table} from "semantic-ui-react";
 import ServiceProxy from "../../service-proxy";
 import ClassDetail from "./class-detail-modal";
 
@@ -28,7 +28,7 @@ export default class ClassList extends React.Component {
     }
 
     async updateStatus() {
-        this.setState({ loading: true });
+        this.setState({loading: true});
         try {
             let result = await ServiceProxy.proxyTo({
                 body: {
@@ -37,7 +37,7 @@ export default class ClassList extends React.Component {
                 }
             })
             console.log('result = ', result);
-            this.setState({ error: false });
+            this.setState({error: false});
             await this.searchClasses();
         } catch (error) {
             this.setState({
@@ -45,11 +45,11 @@ export default class ClassList extends React.Component {
                 message: JSON.stringify(error.result || error.message || error)
             })
         } finally {
-            this.setState({ loading: false })
+            this.setState({loading: false})
         }
     }
 
-    handleChange(event, { name, value }) {
+    handleChange(event, {name, value}) {
         let clonedSearchParams = this.state.searchParams;
         clonedSearchParams[name] = value;
 
@@ -59,7 +59,7 @@ export default class ClassList extends React.Component {
     }
 
     async searchClasses() {
-        this.setState({ loading: true })
+        this.setState({loading: true})
         let result = await ServiceProxy.proxyTo({
             body: {
                 uri: '{buzzService}/api/v1/class-schedule',
@@ -96,7 +96,7 @@ export default class ClassList extends React.Component {
     }
 
     onClassDetailClosed() {
-        this.setState({ detailOpen: false })
+        this.setState({detailOpen: false})
     }
 
     onClassSaved(savedClass) {
@@ -113,7 +113,7 @@ export default class ClassList extends React.Component {
             })
         }
 
-        this.setState({ classes: classes, currentClass: savedClass });
+        this.setState({classes: classes, currentClass: savedClass});
     }
 
     render() {
@@ -123,16 +123,19 @@ export default class ClassList extends React.Component {
                     <Form onSubmit={this.searchClasses}>
                         <Form.Group widths="equal">
                             <Form.Field control={Input} label="开始时间" name="start_time"
-                                value={this.state.searchParams.start_time} onChange={this.handleChange}
-                                type="datetime-local"></Form.Field>
+                                        value={this.state.searchParams.start_time} onChange={this.handleChange}
+                                        type="datetime-local"></Form.Field>
                             <Form.Field control={Input} label="结束时间" name="end_time"
-                                value={this.state.searchParams.end_time} onChange={this.handleChange}
-                                type="datetime-local"></Form.Field>
+                                        value={this.state.searchParams.end_time} onChange={this.handleChange}
+                                        type="datetime-local"></Form.Field>
                         </Form.Group>
                     </Form>
                     <Form.Group>
                         <Button type="submit" onClick={this.searchClasses}>查询</Button>
                         <Button onClick={() => this.openClassDetail()} type="button">创建班级</Button>
+                        <a className="ui button green"
+                           href="http://buzzbuzz:isCool666@admin-neue.dev.buzzbuzzenglish.com/classDetail/create"
+                           target="_blank">创建班级（新）</a>
                         <Button onClick={this.updateStatus} type="button">批量更新班级结束状态</Button>
                     </Form.Group>
                 </Segment>
@@ -154,8 +157,8 @@ export default class ClassList extends React.Component {
                     <Table.Body>
                         {
                             this.state.classes.map((c, i) =>
-                                <Table.Row key={c.class_id} style={{ cursor: 'pointer' }}
-                                    onClick={() => this.openClassDetail(c)}>
+                                <Table.Row key={c.class_id} style={{cursor: 'pointer'}}
+                                           onClick={() => this.openClassDetail(c)}>
                                     <Table.Cell>
                                         {c.class_id}
                                     </Table.Cell>
@@ -182,25 +185,25 @@ export default class ClassList extends React.Component {
                                     </Table.Cell>
                                     <Table.Cell>
                                         {c.companions.map(userId => <Image avatar alt={userId} title={userId}
-                                            src={`/avatar/${userId}`} key={userId} />)}
+                                                                           src={`/avatar/${userId}`} key={userId}/>)}
                                     </Table.Cell>
                                     <Table.Cell onClick={(event) => event.stopPropagation()}>
                                         {c.students.map(userId => <a href={`/students/${userId}`} target="_blank"
-                                            key={userId}>
+                                                                     key={userId}>
                                             <Image avatar alt={userId} title={userId}
-                                                src={`/avatar/${userId}`}
-                                                key={userId} /></a>)}
+                                                   src={`/avatar/${userId}`}
+                                                   key={userId}/></a>)}
                                     </Table.Cell>
                                 </Table.Row>
                             )
                         }
                     </Table.Body>
-                    <Table.Footer style={{ display: 'none' }}>
+                    <Table.Footer style={{display: 'none'}}>
                         <Table.Row>
                             <Table.HeaderCell colSpan="6">
                                 <Menu floated="right" pagination>
                                     <Menu.Item as="a" icon>
-                                        <Icon name="left chevron" />
+                                        <Icon name="left chevron"/>
                                     </Menu.Item>
                                     <Menu.Item as="a">1</Menu.Item>
                                     <Menu.Item as="a">2</Menu.Item>
@@ -208,7 +211,7 @@ export default class ClassList extends React.Component {
                                     <Menu.Item as="a">4</Menu.Item>
                                     <Menu.Item as="a">5</Menu.Item>
                                     <Menu.Item as="a" icon>
-                                        <Icon name="right chevron" />
+                                        <Icon name="right chevron"/>
                                     </Menu.Item>
                                 </Menu>
                             </Table.HeaderCell>
@@ -216,7 +219,8 @@ export default class ClassList extends React.Component {
                     </Table.Footer>
                 </Table>
                 <ClassDetail open={this.state.detailOpen} onClose={this.onClassDetailClosed}
-                    onClassSaved={this.onClassSaved} class={this.state.currentClass} buttonState={this.state.buttonState}  ></ClassDetail>
+                             onClassSaved={this.onClassSaved} class={this.state.currentClass}
+                             buttonState={this.state.buttonState}></ClassDetail>
             </Container>
         );
     }

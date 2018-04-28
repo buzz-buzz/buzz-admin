@@ -7,6 +7,15 @@ import EventDetail from "../events/detail";
 
 BigCalendar.setLocalizer(BigCalendar.momentLocalizer(moment))
 
+
+function Event({event}) {
+    return (
+        (event.status === 'confirmed' || event.title === 'confirmed') ?
+            <div style={{position: 'absolute', width: '100%', height: '100%', backgroundColor: 'green'}}>Confirmed</div>
+            : ''
+    );
+}
+
 export default class SchedulePreference extends React.Component {
     constructor(props) {
         super(props);
@@ -102,6 +111,8 @@ export default class SchedulePreference extends React.Component {
                             onSelectSlot={slotInfo =>
                                 this.selectSlot(slotInfo)
                             }
+                            views={['month', 'week']}
+                            components={{event: Event, month: {event: Event}}}
                         />
                     </Segment>
                 </Modal.Content>
