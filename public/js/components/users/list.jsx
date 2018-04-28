@@ -26,6 +26,8 @@ async function attachEvents(users) {
         }
     });
 
+    bookings = bookings.filter(b => b.status !== 'cancelled');
+
     return users.map(user => {
         user.events = [];
 
