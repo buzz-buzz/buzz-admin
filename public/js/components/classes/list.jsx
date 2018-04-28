@@ -2,6 +2,7 @@ import * as React from "react";
 import {Button, Container, Form, Icon, Image, Input, Menu, Segment, Table} from "semantic-ui-react";
 import ServiceProxy from "../../service-proxy";
 import ClassDetail from "./class-detail-modal";
+import ClassEvaluation from "./class-evaluation-modal";
 
 export default class ClassList extends React.Component {
     constructor() {
@@ -24,7 +25,8 @@ export default class ClassList extends React.Component {
         this.handleChange = this.handleChange.bind(this);
         this.searchClasses = this.searchClasses.bind(this);
         this.updateStatus = this.updateStatus.bind(this);
-
+        this.openFeedback = this.openFeedback.bind(this);
+        this.onClassEvaluationClosed = this.onClassEvaluationClosed.bind(this);
     }
 
     async updateStatus() {
@@ -116,6 +118,17 @@ export default class ClassList extends React.Component {
         this.setState({classes: classes, currentClass: savedClass});
     }
 
+    openFeedback(c) {
+        this.setState({
+            evaluationOpen: true,
+            currentClass: c,
+        })
+    }
+
+    onClassEvaluationClosed() {
+        this.setState({evaluationOpen: false})
+    }
+
     render() {
         return (
             <Container>
@@ -152,6 +165,7 @@ export default class ClassList extends React.Component {
                             <Table.HeaderCell>教室（链接）</Table.HeaderCell>
                             <Table.HeaderCell>外籍伙伴</Table.HeaderCell>
                             <Table.HeaderCell>中方用户</Table.HeaderCell>
+                            <Table.HeaderCell>课后评价</Table.HeaderCell>
                         </Table.Row>
                     </Table.Header>
                     <Table.Body>
@@ -194,6 +208,12 @@ export default class ClassList extends React.Component {
                                                    src={`/avatar/${userId}`}
                                                    key={userId}/></a>)}
                                     </Table.Cell>
+                                    <Table.Cell onClick={(e) => {
+                                        this.openFeedback(c);
+                                        e.stopPropagation();
+                                    }}>
+                                        点击查看
+                                    </Table.Cell>
                                 </Table.Row>
                             )
                         }
@@ -221,6 +241,10 @@ export default class ClassList extends React.Component {
                 <ClassDetail open={this.state.detailOpen} onClose={this.onClassDetailClosed}
                              onClassSaved={this.onClassSaved} class={this.state.currentClass}
                              buttonState={this.state.buttonState}></ClassDetail>
+
+
+                <ClassEvaluation open={this.state.evaluationOpen} onClose={this.onClassEvaluationClosed}
+                                 evaluation={this.state.currentClass} classInfo={this.state.currentClass}/>
             </Container>
         );
     }
