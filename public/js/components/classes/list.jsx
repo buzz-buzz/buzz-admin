@@ -89,7 +89,6 @@ export default class ClassList extends React.Component {
     }
 
     openClassDetail(c) {
-        console.log(c)
         this.setState({
             detailOpen: true,
             currentClass: c,
@@ -165,7 +164,7 @@ export default class ClassList extends React.Component {
                             <Table.HeaderCell>教室（链接）</Table.HeaderCell>
                             <Table.HeaderCell>外籍伙伴</Table.HeaderCell>
                             <Table.HeaderCell>中方用户</Table.HeaderCell>
-                            <Table.HeaderCell>课后评价</Table.HeaderCell>
+                            <Table.HeaderCell>操作</Table.HeaderCell>
                         </Table.Row>
                     </Table.Header>
                     <Table.Body>
@@ -209,10 +208,16 @@ export default class ClassList extends React.Component {
                                                    key={userId}/></a>)}
                                     </Table.Cell>
                                     <Table.Cell onClick={(e) => {
-                                        this.openFeedback(c);
                                         e.stopPropagation();
                                     }}>
-                                        点击查看
+                                        <p>
+                                            <a className="ui green button" target="_blank"
+                                               href={`http://buzzbuzz:isCool666@admin-neue.dev.buzzbuzzenglish.com/classDetail/${c.class_id}`}
+                                               style={{whiteSpace: 'nowrap'}}>编辑详情</a>
+                                        </p>
+                                        <Button onClick={() => this.openFeedback(c)}>
+                                            <span style={{whiteSpace: 'nowrap'}}>查看评价</span>
+                                        </Button>
                                     </Table.Cell>
                                 </Table.Row>
                             )
