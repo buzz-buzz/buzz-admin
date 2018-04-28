@@ -146,7 +146,7 @@ export default class ClassList extends React.Component {
                         <Button type="submit" onClick={this.searchClasses}>查询</Button>
                         <Button onClick={() => this.openClassDetail()} type="button">创建班级</Button>
                         <a className="ui button green"
-                           href="http://buzzbuzz:isCool666@admin-neue.dev.buzzbuzzenglish.com/classDetail/create"
+                           href={`/admin-neue/classDetail/create`}
                            target="_blank">创建班级（新）</a>
                         <Button onClick={this.updateStatus} type="button">批量更新班级结束状态</Button>
                     </Form.Group>
@@ -212,7 +212,7 @@ export default class ClassList extends React.Component {
                                     }}>
                                         <p>
                                             <a className="ui green button" target="_blank"
-                                               href={`http://buzzbuzz:isCool666@admin-neue.dev.buzzbuzzenglish.com/classDetail/${c.class_id}`}
+                                               href={`/admin-neue/classDetail/${c.class_id}`}
                                                style={{whiteSpace: 'nowrap'}}>编辑详情</a>
                                         </p>
                                         <Button onClick={() => this.openFeedback(c)}>

@@ -4,16 +4,19 @@ let config = {
     development: {
         endPoints: {
             buzzService: `${process.env.cors}127.0.0.1:16888`,
+            adminNeue: `${process.env.admin_neue}`,
         }
     },
     qa: {
         endPoints: {
             buzzService: 'http://localhost:16888',
+            adminNeue: `${process.env.admin_neue}`,
         }
     },
     production: {
         endPoints: {
-            buzzService: process.env.buzz_service_endpoints
+            buzzService: process.env.buzz_service_endpoints,
+            adminNeue: `${process.env.admin_neue}`,
         }
     }
 };

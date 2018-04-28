@@ -59,10 +59,14 @@ app.use(async (ctx, next) => {
 const version = new Date().getTime()
 
 let clientPage = async ctx => {
-    console.log('state = ', ctx.state);
     ctx.render('index', Object.assign(ctx.state, {
         title: 'Home | Buzzbuzz admin',
         v: version,
+        config: {
+            endPoints: {
+                adminNeue: config.endPoints.adminNeue
+            }
+        }
     }));
 };
 router
@@ -80,7 +84,7 @@ router
     .get('/classes', clientPage)
 
     .get('/avatar/:userId', async ctx => {
-        let profile = await request(`${config.endPoints.buzzService}/api/v1/users/${ctx.params.userId}`);
+        let profile = await request(`${window.config.endPoints.buzzService}/api/v1/users/${ctx.params.userId}`);
 
         profile = JSON.parse(profile);
         ctx.body = await oldRequest(profile.avatar);
@@ -93,6 +97,9 @@ router
         }
 
         ctx.body = await oldRequest(ctx.request.body);
+    })
+    .get('/admin-neue/classDetail/:class_id', async ctx => {
+        ctx.redirect(`${config.endPoints.adminNeue}/classDetail/${ctx.params.class_id}`);
     })
 ;
 
