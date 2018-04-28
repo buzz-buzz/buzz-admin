@@ -219,13 +219,10 @@ export default class UserList extends React.Component {
                                     <Table.Cell onClick={() => this.openProfile(user)}>
                                         {user.email}
                                     </Table.Cell>
-                                    {
-                                        this.props['user-type'] === UserTypes.student &&
-                                        <Table.Cell onClick={() => this.openClassHours(user)}
-                                                    style={{cursor: 'pointer'}}>
-                                            {user.class_hours || 0}
-                                        </Table.Cell>
-                                    }
+                                    <Table.Cell onClick={() => this.openClassHours(user)}
+                                                style={{cursor: 'pointer'}}>
+                                        {user.class_hours || 0}
+                                    </Table.Cell>
                                     {
                                         this.props['user-type'] === UserTypes.student &&
                                         <Table.Cell onClick={() => this.openIntegral(user)}
@@ -266,13 +263,9 @@ export default class UserList extends React.Component {
                         </Table.Row>
                     </Table.Footer>
                 </Table>
-                {
-                    this.props['user-type'] === UserTypes.student &&
-
-                    <ClassHours open={this.state.classHoursModalOpen} student={this.state.currentUser}
-                                classHoursUpdateCallback={this.classHoursUpdated}
-                                onCloseCallback={this.closeClassHoursModal}/>
-                }
+                <ClassHours open={this.state.classHoursModalOpen} student={this.state.currentUser}
+                            classHoursUpdateCallback={this.classHoursUpdated}
+                            onCloseCallback={this.closeClassHoursModal}/>
                 {
                     this.props['user-type'] === UserTypes.student &&
 
@@ -307,10 +300,7 @@ export default class UserList extends React.Component {
                 <Table.HeaderCell>(孩子)英文名</Table.HeaderCell>
                 <Table.HeaderCell>手机号</Table.HeaderCell>
                 <Table.HeaderCell>邮箱</Table.HeaderCell>
-                {
-                    (this.props['user-type'] === UserTypes.student) &&
-                    <Table.HeaderCell>课时数</Table.HeaderCell>
-                }
+                <Table.HeaderCell>课时数</Table.HeaderCell>
                 {
                     (this.props['user-type'] === UserTypes.student) &&
                     <Table.HeaderCell>积分</Table.HeaderCell>

@@ -105,7 +105,7 @@ export default class SchedulePreference extends React.Component {
                             startAccessor='start_time'
                             endAccessor='end_time'
                             defaultDate={new Date()}
-                            defaultView={'week'}
+                            defaultView={'month'}
                             scrollToTime={new Date(1970, 1, 1, 6)}
                             onSelectEvent={event => this.selectEvent(event)}
                             onSelectSlot={slotInfo =>
@@ -136,8 +136,8 @@ export default class SchedulePreference extends React.Component {
                 role: this.state.user.role,
                 status: 'booking',
                 title: 'booking',
-                occurence: this.state.user.class_hours,
-                maxOccurence: this.state.user.class_hours
+                occurence: this.state.user.class_hours || 0,
+                maxOccurence: this.state.user.class_hours || 0
             }
         })
     }
