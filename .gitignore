@@ -66,3 +66,4 @@ yarn.lock
 public/js/*.hot-update.js
 public/js/*.hot-update.json
 .cache
+public/js/bundle.js
