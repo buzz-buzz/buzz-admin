@@ -403,7 +403,7 @@ export default class EventDetail extends React.Component {
 
             validateEvent(newEvents);
 
-            let batchId = await ServiceProxy.proxyTo({
+            let {batchId, bookings} = await ServiceProxy.proxyTo({
                 body: {
                     uri: `{buzzService}/api/v1/bookings/batch/${this.state.event.user_id}`,
                     method: 'POST',
@@ -416,7 +416,12 @@ export default class EventDetail extends React.Component {
             newEvents.batch_id = batchId;
             const e = _.assign({}, this.state.event, newEvents);
             this.setState({event: e});
-            this.props.onEventSaved(e);
+            this.props.onEventsSaved(bookings.map(b => {
+                b.start_time = new Date(b.start_time);
+                b.end_time = new Date(b.end_time);
+                b.saved = true;
+                return b;
+            }));
         } catch (error) {
             this.setState({error: true, message: JSON.stringify(error.result || error.message || error)});
         } finally {

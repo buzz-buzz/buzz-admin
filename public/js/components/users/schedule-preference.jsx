@@ -31,6 +31,7 @@ export default class SchedulePreference extends React.Component {
         this.closeEventDetailModal = this.closeEventDetailModal.bind(this);
         this.eventCancelled = this.eventCancelled.bind(this);
         this.eventSaved = this.eventSaved.bind(this);
+        this.eventsSaved = this.eventsSaved.bind(this);
     }
 
     async componentWillReceiveProps(nextProps) {
@@ -119,13 +120,12 @@ export default class SchedulePreference extends React.Component {
                 </Modal.Content>
                 <EventDetail open={this.state.eventDetailModalOpen} onClose={this.closeEventDetailModal}
                              event={this.state.selectedEvent} onEventCancelled={this.eventCancelled}
-                             onEventSaved={this.eventSaved}/>
+                             onEventSaved={this.eventSaved} onEventsSaved={this.eventsSaved}/>
             </Modal>
         );
     }
 
     selectSlot(slotInfo) {
-        console.log(slotInfo);
         this.setState({
             eventDetailModalOpen: true,
             selectedEvent: {
@@ -144,7 +144,6 @@ export default class SchedulePreference extends React.Component {
     }
 
     selectEvent(event) {
-        console.log(event);
         this.setState({
             eventDetailModalOpen: true,
             selectedEvent: Object.assign({}, event, {
@@ -186,12 +185,7 @@ export default class SchedulePreference extends React.Component {
 
     eventSaved(event) {
         let events = this.state.events;
-        if (!event.batch_id) {
-            events.push(event);
-        } else {
-            events.push(event);
-            // TODO: add batch events
-        }
+        events.push(event);
 
         let user = this.state.user;
         user.events = events;
@@ -206,5 +200,24 @@ export default class SchedulePreference extends React.Component {
             }),
             user: user
         });
+    }
+
+    eventsSaved(events) {
+        let originalEvents = this.state.events;
+        let newEvents = originalEvents.concat(events)
+
+        let user = this.state.user;
+        user.events = newEvents;
+
+        this.setState({
+            events: newEvents,
+            selectedEvent: Object.assign({}, events[0], {
+                time_zone: this.state.user.time_zone,
+                role: this.state.user.role,
+                start_time: events[0].start_time.toISOString(),
+                end_time: events[0].end_time.toISOString()
+            }),
+            user: user
+        })
     }
 };
