@@ -19,28 +19,32 @@ async function attachEvents(users) {
 
     let userIdArray = users.map(u => u.user_id);
 
-    let bookings = await ServiceProxy.proxyTo({
-        body: {
-            uri: `{buzzService}/api/v1/bookings/all?${queryString.stringify({users: userIdArray})}`,
-            method: 'GET'
-        }
-    });
-
-    bookings = bookings.filter(b => b.status !== 'cancelled' && b.status !== 'ended');
-
-    return users.map(user => {
-        user.events = [];
-
-        bookings.filter(b => b.user_id === user.user_id).map(b => {
-            b.start_time = new Date(b.start_time);
-            b.end_time = new Date(b.end_time);
-            user.events.push(b);
-
-            return b;
+    if(userIdArray && userIdArray.length){
+        let bookings = await ServiceProxy.proxyTo({
+            body: {
+                uri: `{buzzService}/api/v1/bookings/all?${queryString.stringify({users: userIdArray})}`,
+                method: 'GET'
+            }
         });
-
-        return user;
-    });
+    
+        bookings = bookings.filter(b => b.status !== 'cancelled' && b.status !== 'ended');
+    
+        return users.map(user => {
+            user.events = [];
+    
+            bookings.filter(b => b.user_id === user.user_id).map(b => {
+                b.start_time = new Date(b.start_time);
+                b.end_time = new Date(b.end_time);
+                user.events.push(b);
+    
+                return b;
+            });
+    
+            return user;
+        });
+    }else{
+        return [];
+    }
 }
 
 export default class UserList extends React.Component {
