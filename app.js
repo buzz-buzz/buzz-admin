@@ -96,7 +96,13 @@ router
             ;
         }
 
-        ctx.body = await oldRequest(ctx.request.body);
+        let auth = `Basic ${new Buffer(`${process.env.BASIC_NAME}:${process.env.BASIC_PASS}`).toString('base64')}`;
+
+        ctx.body = await oldRequest(Object.assign({
+            headers: {
+                "Authorization": auth
+            }
+        }, ctx.request.body));
     })
     .get('/admin-neue/classDetail/:class_id', async ctx => {
         ctx.redirect(`${config.endPoints.adminNeue}/classDetail/${ctx.params.class_id}`);
