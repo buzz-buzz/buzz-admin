@@ -96,12 +96,19 @@ router
             ;
         }
 
-        ctx.body = await oldRequest(Object.assign({
+        let auth = `Basic ${new Buffer(`${process.env.BASIC_NAME}:${process.env.BASIC_PASS}`).toString('base64')}`;
+
+        let options = {
             headers: {
-                // "Authorization": auth
                 'X-Requested-With': 'buzz-admin'
             }
-        }, ctx.request.body));
+        };
+
+        if (['qa', 'production'].indexOf(process.env.NODE_ENV) >= 0) {
+            options.headers["Authorization"] = auth;
+        }
+
+        ctx.body = await oldRequest(Object.assign(options, ctx.request.body));
     })
     .get('/admin-neue/classDetail/:class_id', async ctx => {
         ctx.redirect(`${config.endPoints.adminNeue}/classDetail/${ctx.params.class_id}`);
