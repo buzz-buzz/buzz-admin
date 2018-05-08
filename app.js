@@ -96,11 +96,10 @@ router
             ;
         }
 
-        let auth = `Basic ${new Buffer(`${process.env.BASIC_NAME}:${process.env.BASIC_PASS}`).toString('base64')}`;
-
         ctx.body = await oldRequest(Object.assign({
             headers: {
-                "Authorization": auth
+                // "Authorization": auth
+                'X-Requested-With': 'buzz-admin'
             }
         }, ctx.request.body));
     })
@@ -114,6 +113,7 @@ app
     .use(router.allowedMethods())
 ;
 
-app.listen(process.env.PORT || 16666, function () {
-    console.log('started!');
+let port = process.env.PORT || 16666;
+app.listen(port, function () {
+    console.log('started! at ', port);
 });
