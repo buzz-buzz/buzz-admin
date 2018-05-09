@@ -27,7 +27,8 @@ export default class Profile extends React.Component {
             date_of_birth: '',
             school_name: '',
             time_zone: '',
-            user: {}
+            user: {},
+            display_name: ''
         };
 
         this.handleChange = this.handleChange.bind(this);
@@ -71,6 +72,7 @@ export default class Profile extends React.Component {
                 school_name: this.state.user.school_name || '',
                 time_zone: this.state.user.time_zone || '',
                 date_of_birth: this.state.user.date_of_birth && TimeHelper.toLocalDateTime(new Date(this.state.user.date_of_birth)),
+                display_name: this.state.user.display_name || ''
             });
         })
     }
@@ -98,6 +100,7 @@ export default class Profile extends React.Component {
                 school_name: this.state.school_name,
                 time_zone: this.state.time_zone,
                 date_of_birth: this.state.date_of_birth && new Date(this.state.date_of_birth),
+                display_name: this.state.display_name
             };
 
             let result = await ServiceProxy.proxyTo({
@@ -197,7 +200,10 @@ export default class Profile extends React.Component {
                                         type="number" label="手机号"/>
                             <Form.Input placeholder="邮箱" name="email" value={this.state.email}
                                         onChange={this.handleChange} type="email" label="邮箱"/>
-
+                        </Form.Group>
+                        <Form.Group>
+                            <Form.Input placeholder="备注名称(eg: 小明宝妈)" name="display_name" value={this.state.display_name}
+                                            onChange={this.handleChange} label="备注名（内部使用，对用户不可见）"/>
                         </Form.Group>
                         <Form.Group widths="equal">
                             <Form.Field>

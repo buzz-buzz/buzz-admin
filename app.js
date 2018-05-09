@@ -96,7 +96,19 @@ router
             ;
         }
 
-        ctx.body = await oldRequest(ctx.request.body);
+        let auth = `Basic ${new Buffer(`${process.env.BASIC_NAME}:${process.env.BASIC_PASS}`).toString('base64')}`;
+
+        let options = {
+            headers: {
+                'X-Requested-With': 'buzz-admin'
+            }
+        };
+
+        if (['qa', 'production'].indexOf(process.env.NODE_ENV) >= 0) {
+            options.headers["Authorization"] = auth;
+        }
+
+        ctx.body = await oldRequest(Object.assign(options, ctx.request.body));
     })
     .get('/admin-neue/classDetail/:class_id', async ctx => {
         ctx.redirect(`${config.endPoints.adminNeue}/classDetail/${ctx.params.class_id}`);
@@ -108,6 +120,7 @@ app
     .use(router.allowedMethods())
 ;
 
-app.listen(process.env.PORT || 16666, function () {
-    console.log('started!');
+let port = process.env.PORT || 16666;
+app.listen(port, function () {
+    console.log('started! at ', port);
 });

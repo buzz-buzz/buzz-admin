@@ -19,28 +19,32 @@ async function attachEvents(users) {
 
     let userIdArray = users.map(u => u.user_id);
 
-    let bookings = await ServiceProxy.proxyTo({
-        body: {
-            uri: `{buzzService}/api/v1/bookings/all?${queryString.stringify({users: userIdArray})}`,
-            method: 'GET'
-        }
-    });
-
-    bookings = bookings.filter(b => b.status !== 'cancelled' && b.status !== 'ended');
-
-    return users.map(user => {
-        user.events = [];
-
-        bookings.filter(b => b.user_id === user.user_id).map(b => {
-            b.start_time = new Date(b.start_time);
-            b.end_time = new Date(b.end_time);
-            user.events.push(b);
-
-            return b;
+    if(userIdArray && userIdArray.length){
+        let bookings = await ServiceProxy.proxyTo({
+            body: {
+                uri: `{buzzService}/api/v1/bookings/all?${queryString.stringify({users: userIdArray})}`,
+                method: 'GET'
+            }
         });
-
-        return user;
-    });
+    
+        bookings = bookings.filter(b => b.status !== 'cancelled' && b.status !== 'ended');
+    
+        return users.map(user => {
+            user.events = [];
+    
+            bookings.filter(b => b.user_id === user.user_id).map(b => {
+                b.start_time = new Date(b.start_time);
+                b.end_time = new Date(b.end_time);
+                user.events.push(b);
+    
+                return b;
+            });
+    
+            return user;
+        });
+    }else{
+        return [];
+    }
 }
 
 export default class UserList extends React.Component {
@@ -166,7 +170,7 @@ export default class UserList extends React.Component {
                         <Form.Field control={Input} label="微信昵称" name="wechat_name"
                                     value={this.state.searchParams.wechat_name}
                                     onChange={this.handleTextChange}></Form.Field>
-                        <Form.Field control={Input} label="英文名" value={this.state.searchParams.display_name}
+                        <Form.Field control={Input} label="(孩子)英文名/备注名（内部可见）" value={this.state.searchParams.display_name}
                                     name="display_name"
                                     onChange={this.handleTextChange}></Form.Field>
                         <Form.Field control={Input} label="手机号" value={this.state.searchParams.mobile}
@@ -211,7 +215,10 @@ export default class UserList extends React.Component {
                                         {user.wechat_name}
                                     </Table.Cell>
                                     <Table.Cell onClick={() => this.openProfile(user)}>
-                                        {user.display_name || user.name || user.facebook_name}
+                                        {user.name || user.facebook_name}
+                                    </Table.Cell>
+                                    <Table.Cell onClick={() => this.openProfile(user)}>
+                                        {user.display_name}
                                     </Table.Cell>
                                     <Table.Cell onClick={() => this.openProfile(user)}>
                                         {user.mobile}
@@ -298,6 +305,7 @@ export default class UserList extends React.Component {
                 }
                 <Table.HeaderCell>微信昵称</Table.HeaderCell>
                 <Table.HeaderCell>(孩子)英文名</Table.HeaderCell>
+                <Table.HeaderCell>备注名（内部可见）</Table.HeaderCell>
                 <Table.HeaderCell>手机号</Table.HeaderCell>
                 <Table.HeaderCell>邮箱</Table.HeaderCell>
                 <Table.HeaderCell>课时数</Table.HeaderCell>
