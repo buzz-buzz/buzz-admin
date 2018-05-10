@@ -1,16 +1,16 @@
 import * as React from "react";
-import {Button, Container, Form, Icon, Image, Input, Menu, Table} from "semantic-ui-react";
+import {Button, Container, Form, Icon, Image, Input, Label, Menu, Table} from "semantic-ui-react";
 import ServiceProxy from "../../service-proxy";
 import Profile from "./profile";
 import SchedulePreference from "./schedule-preference";
 import BigCalendar from 'react-big-calendar'
 import moment from 'moment'
-import {UserTypes} from "./config";
 import ClassHours from "../students/class-hours";
 import Integral from "../students/integral";
 import LevelModal from "../students/level-modal";
 import BookingTable from "./booking-table";
 import queryString from 'query-string';
+import {MemberType} from "../../common/MemberType";
 
 BigCalendar.setLocalizer(BigCalendar.momentLocalizer(moment))
 
@@ -144,7 +144,9 @@ export default class UserList extends React.Component {
             ServiceProxy.proxyTo({
                 body: {
                     uri: `{buzzService}/api/v1/users?role=${this.props['user-type']}`,
-                    qs: Object.assign({}, this.state.searchParams, {
+                    qs: Object.assign({
+                        role: this.props['user-type']
+                    }, this.state.searchParams, {
                         start_time: this.state.searchParams.start_time ? new Date(this.state.searchParams.start_time) : undefined,
                         end_time: this.state.searchParams.end_time ? new Date(this.state.searchParams.end_time) : undefined
                     })
@@ -181,7 +183,7 @@ export default class UserList extends React.Component {
                                                alt={user.user_id}/>
                                     </Table.Cell>
                                     {
-                                        this.props['user-type'] === UserTypes.companion &&
+                                        this.props['user-type'] === MemberType.Companion &&
 
                                         <Table.Cell onClick={() => this.openProfile(user)}>
                                             {user.country}
@@ -207,14 +209,14 @@ export default class UserList extends React.Component {
                                         {user.class_hours || 0}
                                     </Table.Cell>
                                     {
-                                        this.props['user-type'] === UserTypes.student &&
+                                        this.props['user-type'] === MemberType.Student &&
                                         <Table.Cell onClick={() => this.openIntegral(user)}
                                                     style={{cursor: 'pointer'}}>
                                             {user.integral || 0}
                                         </Table.Cell>
                                     }
                                     {
-                                        this.props['user-type'] === UserTypes.student &&
+                                        this.props['user-type'] === MemberType.Student &&
                                         <Table.Cell onClick={() => this.openLevelModal(user)}>
                                             {user.level}
                                         </Table.Cell>
@@ -253,14 +255,14 @@ export default class UserList extends React.Component {
                             classHoursUpdateCallback={this.classHoursUpdated}
                             onCloseCallback={this.closeClassHoursModal}/>
                 {
-                    this.props['user-type'] === UserTypes.student &&
+                    this.props['user-type'] === MemberType.Student &&
 
                     <Integral open={this.state.integralModalOpen} student={this.state.currentUser}
                               integralUpdateCallback={this.integralUpdated}
                               onCloseCallback={this.closeIntegralModal}/>
                 }
                 {
-                    this.props['user-type'] === UserTypes.student &&
+                    this.props['user-type'] === MemberType.Student &&
 
                     <LevelModal open={this.state.levelModalOpen} user={this.state.currentUser}
                                 onCloseCallback={this.onCloseLevelModal} onLevelUpdated={this.onLevelUpdated}/>
@@ -288,10 +290,23 @@ export default class UserList extends React.Component {
                             name="mobile" onChange={this.handleTextChange}></Form.Field>
                 <Form.Field control={Input} label="邮箱" value={this.state.searchParams.email}
                             name="email" onChange={this.handleTextChange}></Form.Field>
-                <Form.Field control={Input} label="周上课频率" value={this.state.searchParams.weekly_schedule_requirements}
-                            name="weekly_schedule_requirements" onChange={this.handleTextChange}
-                            type="number"></Form.Field>
+                <Form.Field>
+                    <label>排课状态</label>
+                    <Form.Select options={[{
+                        key: 'all', text: '全部（不限）', value: ''
+                    }, {
+                        key: 'excess', text: '超额排课', value: 'excess'
+                    }, {
+                        key: 'no_need', text: '不可排课', value: 'no_need'
+                    }, {
+                        key: 'done', text: '排课完成', value: 'done'
+                    }, {
+                        key: 'need', text: '需排课', value: 'need'
+                    }]} placeholder="排课状态" value={this.state.searchParams.weekly_schedule_requirements}
+                                 name="weekly_schedule_requirements" onChange={this.handleTextChange}></Form.Select>
+                </Form.Field>
             </Form.Group>
+            <p>预约/排课时间段：</p>
             <Form.Group widths="equal">
                 <Form.Field control={Input} label="开始时间" name="start_time"
                             value={this.state.searchParams.start_time}
@@ -303,7 +318,7 @@ export default class UserList extends React.Component {
             <Form.Group>
                 <Button type="submit">查询</Button>
                 {
-                    this.props['user-type'] === UserTypes.companion &&
+                    this.props['user-type'] === MemberType.Companion &&
                     <Button thpe="button" onClick={this.createNewUser}>创建新用户</Button>
                 }
             </Form.Group>
@@ -317,7 +332,7 @@ export default class UserList extends React.Component {
                 <Table.HeaderCell>用户编号</Table.HeaderCell>
                 <Table.HeaderCell>头像</Table.HeaderCell>
                 {
-                    this.props['user-type'] === UserTypes.companion &&
+                    this.props['user-type'] === MemberType.Companion &&
                     <Table.HeaderCell>国籍</Table.HeaderCell>
                 }
                 <Table.HeaderCell>微信昵称</Table.HeaderCell>
@@ -327,14 +342,19 @@ export default class UserList extends React.Component {
                 <Table.HeaderCell>邮箱</Table.HeaderCell>
                 <Table.HeaderCell>课时数</Table.HeaderCell>
                 {
-                    (this.props['user-type'] === UserTypes.student) &&
+                    (this.props['user-type'] === MemberType.Student) &&
                     <Table.HeaderCell>积分</Table.HeaderCell>
                 }
                 {
-                    this.props['user-type'] === UserTypes.student &&
+                    this.props['user-type'] === MemberType.Student &&
                     <Table.HeaderCell>能力评级</Table.HeaderCell>
                 }
-                <Table.HeaderCell>周上课频率</Table.HeaderCell>
+                {
+                    this.props['user-type'] === MemberType.Student && <Table.HeaderCell>每周学习次数</Table.HeaderCell>
+                }
+                {
+                    this.props['user-type'] === MemberType.Companion && <Table.HeaderCell>每周教学次数</Table.HeaderCell>
+                }
                 <Table.HeaderCell>预约/排课</Table.HeaderCell>
             </Table.Row>
         </Table.Header>;

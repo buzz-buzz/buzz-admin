@@ -1,6 +1,6 @@
 import * as React from "react";
 import UserList from "../users/list";
-import {UserTypes} from "../users/config";
+import {MemberType} from "../../common/MemberType";
 
 export default class StudentList extends React.Component {
     constructor(props) {
@@ -12,7 +12,7 @@ export default class StudentList extends React.Component {
 
     render() {
         return (
-            <UserList user-type={UserTypes.student} match={this.props.match}/>
+            <UserList user-type={MemberType.Student} match={this.props.match}/>
         )
     }
 }
