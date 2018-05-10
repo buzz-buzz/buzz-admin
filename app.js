@@ -84,7 +84,11 @@ router
     .get('/classes', clientPage)
 
     .get('/avatar/:userId', async ctx => {
-        let profile = await request(`${window.config.endPoints.buzzService}/api/v1/users/${ctx.params.userId}`);
+        let profile = await request(`${config.endPoints.buzzService}/api/v1/users/${ctx.params.userId}`, {
+            headers: {
+                'X-Requested-With': 'buzz-admin'
+            }
+        });
 
         profile = JSON.parse(profile);
         ctx.body = await oldRequest(profile.avatar);
