@@ -8,6 +8,7 @@ import Genders from "../../common/Genders";
 import Grades from "../../common/Grades";
 import Timezones from "../../common/Timezones";
 import TimeHelper from "../../common/TimeHelper";
+import {MemberType, MemberTypeChinese} from "../../common/MemberType";
 
 export default class Profile extends React.Component {
     constructor(props) {
@@ -37,6 +38,7 @@ export default class Profile extends React.Component {
         this.createUser = this.createUser.bind(this);
         this.handleSearchChange = this.handleSearchChange.bind(this);
         this.deleteUser = this.deleteUser.bind(this);
+        this.changeRole = this.changeRole.bind(this);
     }
 
     handleChange(e, {name, value}) {
@@ -72,7 +74,8 @@ export default class Profile extends React.Component {
                 school_name: this.state.user.school_name || '',
                 time_zone: this.state.user.time_zone || '',
                 date_of_birth: this.state.user.date_of_birth && TimeHelper.toLocalDateTime(new Date(this.state.user.date_of_birth)),
-                display_name: this.state.user.display_name || ''
+                display_name: this.state.user.display_name || '',
+                theOtherRole: Profile.theOtherRole(this.state.user.role)
             });
         })
     }
@@ -81,27 +84,24 @@ export default class Profile extends React.Component {
         this.props.onCloseCallback();
     }
 
-    async updateProfile(userId = this.state.user.user_id) {
+    async updateProfile(userId = this.state.user.user_id, updatedUser = {
+        mobile: this.state.mobile,
+        email: this.state.email,
+        parent_name: this.state.parentName,
+        name: this.state.name,
+        country: this.state.country,
+        city: this.state.city,
+        gender: this.state.gender,
+        remark: this.state.remark,
+        avatar: this.state.avatar,
+        grade: this.state.grade,
+        school_name: this.state.school_name,
+        time_zone: this.state.time_zone,
+        date_of_birth: this.state.date_of_birth && new Date(this.state.date_of_birth),
+        display_name: this.state.display_name
+    }) {
         try {
             this.setState({loading: true});
-
-            let updatedUser = {
-                mobile: this.state.mobile,
-                email: this.state.email,
-                parent_name: this.state.parentName,
-                name: this.state.name,
-                display_name: this.state.name,
-                country: this.state.country,
-                city: this.state.city,
-                gender: this.state.gender,
-                remark: this.state.remark,
-                avatar: this.state.avatar,
-                grade: this.state.grade,
-                school_name: this.state.school_name,
-                time_zone: this.state.time_zone,
-                date_of_birth: this.state.date_of_birth && new Date(this.state.date_of_birth),
-                display_name: this.state.display_name
-            };
 
             let result = await ServiceProxy.proxyTo({
                 body: {
@@ -125,7 +125,7 @@ export default class Profile extends React.Component {
 
         if (String(userId) !== String(this.state.user.user_id)) {
             window.alert('删除操作已取消')
-            return;
+            return
         }
 
         try {
@@ -150,6 +150,26 @@ export default class Profile extends React.Component {
         }
     }
 
+    async changeRole() {
+        let newRole = this.state.theOtherRole
+        let confirmed = window.confirm(`确认要将该用户（${this.state.display_name || this.state.name}）从 ${MemberTypeChinese[this.state.user.role]} 切换成 ${MemberTypeChinese[newRole]} 吗？`
+        )
+
+        if (!confirmed) {
+            window.alert('切换角色操作已取消')
+            return
+        }
+
+        await this.updateProfile(this.state.user.user_id, {
+            role: newRole
+        })
+
+        window.location.href = `${{
+            [MemberType.Student]: '/students',
+            [MemberType.Companion]: '/companions'
+        }[newRole]}/${this.state.user.user_id}`
+    }
+
     async createUser() {
         try {
             this.setState({loading: true});
@@ -161,7 +181,9 @@ export default class Profile extends React.Component {
 
             let userId = await ServiceProxy.proxyTo({
                 body: {
-                    uri: `{buzzService}/api/v1/users/`,
+                    uri:
+                        `{buzzService}/api/v1/users/`
+                    ,
                     json: newUser,
                     method: 'POST'
                 }
@@ -203,7 +225,7 @@ export default class Profile extends React.Component {
                         </Form.Group>
                         <Form.Group>
                             <Form.Input placeholder="备注名称(eg: 小明宝妈)" name="display_name" value={this.state.display_name}
-                                            onChange={this.handleChange} label="备注名（内部使用，对用户不可见）"/>
+                                        onChange={this.handleChange} label="备注名（内部使用，对用户不可见）"/>
                         </Form.Group>
                         <Form.Group widths="equal">
                             <Form.Field>
@@ -215,48 +237,55 @@ export default class Profile extends React.Component {
                             </Form.Field>
                             {
                                 this.state.user.role === 's' ? (
-                                  <Form.Field>
-                                      <label>所在城市</label>
-                                      <Dropdown selection multiple={false} search={true} name="city"
-                                                options={Cities.list}
-                                                value={this.state.city} placeholder="所在城市" onChange={this.handleChange} onSearchChange={this.handleSearchChange}/>
-                                  </Form.Field>
+                                    <Form.Field>
+                                        <label>所在城市</label>
+                                        <Dropdown selection multiple={false} search={true} name="city"
+                                                  options={Cities.list}
+                                                  value={this.state.city} placeholder="所在城市"
+                                                  onChange={this.handleChange}
+                                                  onSearchChange={this.handleSearchChange}/>
+                                    </Form.Field>
 
-                                    ) : (
-                                      <Form.Input placeholder="所在城市" name="city" value={this.state.city} label="所在城市"
-                                        onChange={this.handleChange}/>
-                                    )
+                                ) : (
+                                    <Form.Input placeholder="所在城市" name="city" value={this.state.city} label="所在城市"
+                                                onChange={this.handleChange}/>
+                                )
                             }
                             {
                                 this.state.user.role !== 's' && (
-                                  <Form.Field>
-                                      <label>时区</label>
-                                      <Dropdown selection multiple={false} search={true} name="time_zone"
-                                                options={Timezones.list}
-                                                value={this.state.time_zone} placeholder="时区" onChange={this.handleChange} onSearchChange={this.handleSearchChange}/>
-                                  </Form.Field>
+                                    <Form.Field>
+                                        <label>时区</label>
+                                        <Dropdown selection multiple={false} search={true} name="time_zone"
+                                                  options={Timezones.list}
+                                                  value={this.state.time_zone} placeholder="时区"
+                                                  onChange={this.handleChange}
+                                                  onSearchChange={this.handleSearchChange}/>
+                                    </Form.Field>
 
-                                    )
+                                )
                             }
-                          </Form.Group>
-                          <Form.Group widths="equal">
+                        </Form.Group>
+                        <Form.Group widths="equal">
                             <Form.Field>
                                 <label>性别</label>
                                 <Dropdown selection multiple={false} search={true} name="gender"
                                           options={Genders.list}
-                                          value={this.state.gender} placeholder="性别" onChange={this.handleChange} onSearchChange={this.handleSearchChange}/>
+                                          value={this.state.gender} placeholder="性别" onChange={this.handleChange}
+                                          onSearchChange={this.handleSearchChange}/>
                             </Form.Field>
                             <Form.Input label="生日" placeholder="生日" value={this.state.date_of_birth}
                                         type="datetime-local" name="date_of_birth" onChange={this.handleChange}/>
                         </Form.Group>
                         <Form.Group widths="equal">
-                          <Form.Input label="学校名称" placeholder="学校名称" value={this.state.school_name} name="school_name" onChange={this.handleChange}/>
-                          <Form.Field>
-                              <label>年级</label>
-                              <Dropdown selection multiple={false} search={true} name="grade"
-                                        options={Grades.list}
-                                        value={this.state.grade} placeholder="年级" onChange={this.handleChange} onSearchChange={this.handleSearchChange}/>
-                          </Form.Field>
+                            <Form.Input label="学校名称" placeholder="学校名称" value={this.state.school_name}
+                                        name="school_name" onChange={this.handleChange}/>
+                            <Form.Field>
+                                <label>年级</label>
+                                <Dropdown selection multiple={false} search={true} name="grade"
+                                          options={Grades.list}
+                                          value={this.state.grade} placeholder="年级" onChange={this.handleChange}
+                                          onSearchChange={this.handleSearchChange}/>
+                            </Form.Field>
                             <Form.Input placeholder="兴趣爱好" name="interests" value={this.state.user.interests || ''}
                                         label="兴趣爱好" readOnly width={12}/>
                         </Form.Group>
@@ -279,14 +308,29 @@ export default class Profile extends React.Component {
                         <Form.Group>
                             {
                                 this.state.user.user_id ?
-                                    <Form.Button content="修改" type="submit"/> :
-                                    <Form.Button content="创建" type="button" onClick={this.createUser}/>
+                                    <Form.Button primary content="修改" type="submit"/> :
+                                    <Form.Button positive content="创建" type="button" onClick={this.createUser}/>
                             }
-                            <Form.Button content="删除" type="button" onClick={this.deleteUser}/>
+                            <Form.Button negative content="删除" type="button" onClick={this.deleteUser}/>
+                            <Form.Button color="black"
+                                         content={`切换成 ${MemberTypeChinese[this.state.theOtherRole]}`}
+                                         type="button"
+                                         onClick={this.changeRole}/>
                         </Form.Group>
                     </Form>
                 </Modal.Content>
             </Modal>
         );
     }
-};
+
+    static theOtherRole(role) {
+        console.log('current role = ', role)
+        if (role === MemberType.Student) {
+            return MemberType.Companion
+        }
+
+        if (role === MemberType.Companion) {
+            return MemberType.Student
+        }
+    }
+}

@@ -344,10 +344,10 @@ export default class UserList extends React.Component {
         this.setState({integralModalOpen: false})
     }
 
-    openProfile(student) {
+    openProfile(user) {
         this.setState({
             profileModalOpen: true,
-            currentUser: student
+            currentUser: user
         })
     }
 
