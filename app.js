@@ -108,7 +108,7 @@ router
             }
         };
 
-        if (['qa', 'production'].indexOf(process.env.NODE_ENV) >= 0) {
+        if (['qa', 'production', 'preProduction'].indexOf(process.env.NODE_ENV) >= 0) {
             options.headers["Authorization"] = auth;
         }
 
