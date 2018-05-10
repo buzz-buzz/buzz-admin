@@ -29,7 +29,8 @@ export default class Profile extends React.Component {
             school_name: '',
             time_zone: '',
             user: {},
-            display_name: ''
+            display_name: '',
+            weekly_schedule_requirements: 1
         };
 
         this.handleChange = this.handleChange.bind(this);
@@ -75,7 +76,8 @@ export default class Profile extends React.Component {
                 time_zone: this.state.user.time_zone || '',
                 date_of_birth: this.state.user.date_of_birth && TimeHelper.toLocalDateTime(new Date(this.state.user.date_of_birth)),
                 display_name: this.state.user.display_name || '',
-                theOtherRole: Profile.theOtherRole(this.state.user.role)
+                theOtherRole: Profile.theOtherRole(this.state.user.role),
+                weekly_schedule_requirements: this.state.user.weekly_schedule_requirements || 1
             });
         })
     }
@@ -98,7 +100,8 @@ export default class Profile extends React.Component {
         school_name: this.state.school_name,
         time_zone: this.state.time_zone,
         date_of_birth: this.state.date_of_birth && new Date(this.state.date_of_birth),
-        display_name: this.state.display_name
+        display_name: this.state.display_name,
+        weekly_schedule_requirements: this.state.weekly_schedule_requirements
     }) {
         try {
             this.setState({loading: true});
@@ -232,6 +235,9 @@ export default class Profile extends React.Component {
                         <Form.Group>
                             <Form.Input placeholder="备注名称(eg: 小明宝妈)" name="display_name" value={this.state.display_name}
                                         onChange={this.handleChange} label="备注名（内部使用，对用户不可见）"/>
+                            <Form.Input placeholder="周上课频率" name="weekly_schedule_requirements"
+                                        value={this.state.weekly_schedule_requirements} onChange={this.handleChange}
+                                        label="周上课频率" type="number"/>
                         </Form.Group>
                         <Form.Group widths="equal">
                             <Form.Field>

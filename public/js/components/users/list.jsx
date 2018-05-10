@@ -19,30 +19,30 @@ async function attachEvents(users) {
 
     let userIdArray = users.map(u => u.user_id);
 
-    if(userIdArray && userIdArray.length){
+    if (userIdArray && userIdArray.length) {
         let bookings = await ServiceProxy.proxyTo({
             body: {
                 uri: `{buzzService}/api/v1/bookings/all?${queryString.stringify({users: userIdArray})}`,
                 method: 'GET'
             }
         });
-    
+
         bookings = bookings.filter(b => b.status !== 'cancelled' && b.status !== 'ended');
-    
+
         return users.map(user => {
             user.events = [];
-    
+
             bookings.filter(b => b.user_id === user.user_id).map(b => {
                 b.start_time = new Date(b.start_time);
                 b.end_time = new Date(b.end_time);
                 user.events.push(b);
-    
+
                 return b;
             });
-    
+
             return user;
         });
-    }else{
+    } else {
         return [];
     }
 }
@@ -170,7 +170,8 @@ export default class UserList extends React.Component {
                         <Form.Field control={Input} label="微信昵称" name="wechat_name"
                                     value={this.state.searchParams.wechat_name}
                                     onChange={this.handleTextChange}></Form.Field>
-                        <Form.Field control={Input} label="(孩子)英文名/备注名（内部可见）" value={this.state.searchParams.display_name}
+                        <Form.Field control={Input} label="(孩子)英文名/备注名（内部可见）"
+                                    value={this.state.searchParams.display_name}
                                     name="display_name"
                                     onChange={this.handleTextChange}></Form.Field>
                         <Form.Field control={Input} label="手机号" value={this.state.searchParams.mobile}
@@ -200,6 +201,9 @@ export default class UserList extends React.Component {
                         {
                             this.state.users.map((user, i) =>
                                 <Table.Row key={user.user_id} style={{cursor: 'pointer'}}>
+                                    <Table.Cell onClick={() => this.openProfile(user)}>
+                                        {user.user_id}
+                                    </Table.Cell>
                                     <Table.Cell onClick={() => this.openProfile(user)}>
                                         <Image src={user.avatar} avatar title={user.user_id}
                                                alt={user.user_id}/>
@@ -243,6 +247,9 @@ export default class UserList extends React.Component {
                                             {user.level}
                                         </Table.Cell>
                                     }
+                                    <Table.Cell onClick={() => this.openProfile(user)}>
+                                        {user.weekly_schedule_requirements || '1'}
+                                    </Table.Cell>
                                     <Table.Cell onClick={() => this.openSchedulePreferenceModal(user)}>
                                         <BookingTable events={user.events} defaultDate={new Date()}></BookingTable>
                                     </Table.Cell>
@@ -298,6 +305,7 @@ export default class UserList extends React.Component {
     renderTableHeader() {
         return <Table.Header>
             <Table.Row>
+                <Table.HeaderCell>用户编号</Table.HeaderCell>
                 <Table.HeaderCell>头像</Table.HeaderCell>
                 {
                     this.props['user-type'] === UserTypes.companion &&
@@ -317,6 +325,7 @@ export default class UserList extends React.Component {
                     this.props['user-type'] === UserTypes.student &&
                     <Table.HeaderCell>能力评级</Table.HeaderCell>
                 }
+                <Table.HeaderCell>周上课频率</Table.HeaderCell>
                 <Table.HeaderCell>预约/排课</Table.HeaderCell>
             </Table.Row>
         </Table.Header>;
@@ -394,6 +403,7 @@ export default class UserList extends React.Component {
         selectedUser.school_name = newProfile.school_name;
         selectedUser.time_zone = newProfile.time_zone;
         selectedUser.date_of_birth = newProfile.date_of_birth;
+        selectedUser.weekly_schedule_requirements = newProfile.weekly_schedule_requirements;
 
         let newUsers = this.state.users.map(s => {
             if (s.user_id === selectedUser.user_id) {
