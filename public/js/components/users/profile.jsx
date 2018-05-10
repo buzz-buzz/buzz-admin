@@ -113,8 +113,12 @@ export default class Profile extends React.Component {
 
             this.props.profileUpdateCallback(result);
             this.setState({error: false});
+
+            return true
         } catch (error) {
             this.setState({error: true, message: JSON.stringify(error.result)});
+
+            return false
         } finally {
             this.setState({loading: false});
         }
@@ -160,14 +164,16 @@ export default class Profile extends React.Component {
             return
         }
 
-        await this.updateProfile(this.state.user.user_id, {
+        let success = await this.updateProfile(this.state.user.user_id, {
             role: newRole
         })
 
-        window.location.href = `${{
-            [MemberType.Student]: '/students',
-            [MemberType.Companion]: '/companions'
-        }[newRole]}/${this.state.user.user_id}`
+        if (success) {
+            window.location.href = `${{
+                [MemberType.Student]: '/students',
+                [MemberType.Companion]: '/companions'
+            }[newRole]}/${this.state.user.user_id}`
+        }
     }
 
     async createUser() {
