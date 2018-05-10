@@ -57,7 +57,8 @@ export default class UserList extends React.Component {
                 wechat_name: '',
                 display_name: '',
                 mobile: '',
-                email: ''
+                email: '',
+                weekly_schedule_requirements: ''
             },
             loading: false,
             users: []
@@ -165,36 +166,7 @@ export default class UserList extends React.Component {
     render() {
         return (
             <Container>
-                <Form onSubmit={this.searchUsers} loading={this.state.loading}>
-                    <Form.Group widths='equal'>
-                        <Form.Field control={Input} label="微信昵称" name="wechat_name"
-                                    value={this.state.searchParams.wechat_name}
-                                    onChange={this.handleTextChange}></Form.Field>
-                        <Form.Field control={Input} label="(孩子)英文名/备注名（内部可见）"
-                                    value={this.state.searchParams.display_name}
-                                    name="display_name"
-                                    onChange={this.handleTextChange}></Form.Field>
-                        <Form.Field control={Input} label="手机号" value={this.state.searchParams.mobile}
-                                    name="mobile" onChange={this.handleTextChange}></Form.Field>
-                        <Form.Field control={Input} label="邮箱" value={this.state.email}
-                                    name="email" onChange={this.handleTextChange}></Form.Field>
-                    </Form.Group>
-                    <Form.Group widths="equal">
-                        <Form.Field control={Input} label="开始时间" name="start_time"
-                                    value={this.state.searchParams.start_time}
-                                    onChange={this.handleTextChange} type="datetime-local"></Form.Field>
-                        <Form.Field control={Input} label="结束时间" name="end_time"
-                                    value={this.state.searchParams.end_time}
-                                    onChange={this.handleTextChange} type="datetime-local"></Form.Field>
-                    </Form.Group>
-                    <Form.Group>
-                        <Button type="submit">查询</Button>
-                        {
-                            this.props['user-type'] === UserTypes.companion &&
-                            <Button thpe="button" onClick={this.createNewUser}>创建新用户</Button>
-                        }
-                    </Form.Group>
-                </Form>
+                {this.renderSearchForm()}
                 <Table celled>
                     {this.renderTableHeader()}
                     <Table.Body>
@@ -300,6 +272,43 @@ export default class UserList extends React.Component {
                                     onCloseCallback={this.closeSchedulePreferenceModal}/>
             </Container>
         )
+    }
+
+    renderSearchForm() {
+        return <Form onSubmit={this.searchUsers} loading={this.state.loading}>
+            <Form.Group widths='equal'>
+                <Form.Field control={Input} label="微信昵称" name="wechat_name"
+                            value={this.state.searchParams.wechat_name}
+                            onChange={this.handleTextChange}></Form.Field>
+                <Form.Field control={Input} label="(孩子)英文名/备注名（内部可见）"
+                            value={this.state.searchParams.display_name}
+                            name="display_name"
+                            onChange={this.handleTextChange}></Form.Field>
+                <Form.Field control={Input} label="手机号" value={this.state.searchParams.mobile}
+                            name="mobile" onChange={this.handleTextChange}></Form.Field>
+                <Form.Field control={Input} label="邮箱" value={this.state.searchParams.email}
+                            name="email" onChange={this.handleTextChange}></Form.Field>
+                <Form.Field control={Input} label="周上课频率" value={this.state.searchParams.weekly_schedule_requirements}
+                            name="weekly_schedule_requirements" onChange={this.handleTextChange}
+                            type="number"></Form.Field>
+            </Form.Group>
+            <Form.Group widths="equal">
+                <Form.Field control={Input} label="开始时间" name="start_time"
+                            value={this.state.searchParams.start_time}
+                            onChange={this.handleTextChange} type="datetime-local"></Form.Field>
+                <Form.Field control={Input} label="结束时间" name="end_time"
+                            value={this.state.searchParams.end_time}
+                            onChange={this.handleTextChange} type="datetime-local"></Form.Field>
+            </Form.Group>
+            <Form.Group>
+                <Button type="submit">查询</Button>
+                {
+                    this.props['user-type'] === UserTypes.companion &&
+                    <Button thpe="button" onClick={this.createNewUser}>创建新用户</Button>
+                }
+            </Form.Group>
+        </Form>
+            ;
     }
 
     renderTableHeader() {
