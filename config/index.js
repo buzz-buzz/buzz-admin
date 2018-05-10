@@ -21,4 +21,6 @@ let config = {
     }
 };
 
+config.preProduction = config.production;
+
 module.exports = config[process.env.NODE_ENV || 'development'] || config.development;
