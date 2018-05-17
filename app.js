@@ -1,3 +1,5 @@
+const koaSend = require('koa-send');
+
 const Koa = require('koa');
 const app = new Koa();
 const auth = require('koa-basic-auth');
@@ -91,7 +93,13 @@ router
         });
 
         profile = JSON.parse(profile);
-        ctx.body = await oldRequest(profile.avatar);
+        if (profile.avatar) {
+            ctx.body = await oldRequest(profile.avatar);
+        } else {
+            await koaSend(ctx, '/images/empty_avatar.jpg', {
+                root: __dirname + '/public'
+            })
+        }
     })
     .post('/proxy', async ctx => {
         if (ctx.request.body.uri) {
@@ -110,6 +118,7 @@ router
 
         if (['qa', 'production', 'preProduction'].indexOf(process.env.NODE_ENV) >= 0) {
             options.headers["Authorization"] = auth;
+            console.log('auth when proxy because it is in ', process.env.NODE_ENV);
         }
 
         ctx.body = await oldRequest(Object.assign(options, ctx.request.body));
