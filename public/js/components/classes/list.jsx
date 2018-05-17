@@ -317,9 +317,21 @@ export default class ClassList extends React.Component {
             return;
         }
 
-        this.setState({
-            classes: classes.reverse(),
-            direction: direction === 'ascending' ? 'descending' : 'ascending'
-        })
+        if (direction === 'ascending') {
+            this.setState({
+                classes: classes.reverse(),
+                direction: 'descending'
+            });
+
+            return;
+        }
+
+        if (direction === 'descending') {
+            this.setState({
+                classes: classes.sort(nearestToper),
+                direction: null,
+                column: null
+            });
+        }
     }
 }
