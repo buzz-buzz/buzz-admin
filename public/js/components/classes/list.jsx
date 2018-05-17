@@ -183,7 +183,24 @@ export default class ClassList extends React.Component {
                     </Table.Header>
                     <Table.Body>
                         {
-                            this.state.classes.filter(c => c.status === this.state.currentStatus).map((c, i) =>
+                            this.state.classes.filter(c => c.status === this.state.currentStatus).sort((x, y) => {
+                                let now = new Date();
+                                let startOfX = new Date(x.start_time);
+                                let startOfY = new Date(y.start_time);
+
+                                let diffOfX = Math.abs(now - startOfX);
+                                let diffOfY = Math.abs(now - startOfY);
+
+                                if (diffOfX < diffOfY) {
+                                    return -1;
+                                }
+
+                                if (diffOfX > diffOfY) {
+                                    return 1;
+                                }
+
+                                return 0;
+                            }).map((c, i) =>
                                 <Table.Row key={c.class_id} style={{cursor: 'pointer'}}
                                            onClick={() => this.openClassDetail(c)}>
                                     <Table.Cell>
