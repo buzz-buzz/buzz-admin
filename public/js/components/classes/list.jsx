@@ -3,6 +3,8 @@ import {Button, Container, Form, Icon, Image, Input, Menu, Segment, Table} from 
 import ServiceProxy from "../../service-proxy";
 import ClassDetail from "./class-detail-modal";
 import ClassEvaluation from "./class-evaluation-modal";
+import ClassStatuses from './class-statuses';
+import {ClassStatusCode} from "../../common/ClassStatus";
 
 export default class ClassList extends React.Component {
     constructor() {
@@ -14,7 +16,8 @@ export default class ClassList extends React.Component {
             searchParams: {
                 start_time: '',
                 end_time: ''
-            }
+            },
+            currentStatus: ClassStatusCode.Opened
         };
 
         this.openClassDetail = this.openClassDetail.bind(this);
@@ -27,6 +30,8 @@ export default class ClassList extends React.Component {
         this.updateStatus = this.updateStatus.bind(this);
         this.openFeedback = this.openFeedback.bind(this);
         this.onClassEvaluationClosed = this.onClassEvaluationClosed.bind(this);
+
+        this.switchToStatus = this.switchToStatus.bind(this);
     }
 
     async updateStatus() {
@@ -57,6 +62,13 @@ export default class ClassList extends React.Component {
 
         this.setState({
             searchParams: clonedSearchParams
+        })
+    }
+
+    switchToStatus(status) {
+        console.log('status = ', status)
+        this.setState({
+            currentStatus: status
         })
     }
 
@@ -151,6 +163,8 @@ export default class ClassList extends React.Component {
                         <Button onClick={this.updateStatus} type="button">批量更新班级结束状态</Button>
                     </Form.Group>
                 </Segment>
+                <ClassStatuses classes={this.state.classes} activeStatusChanged={this.switchToStatus}
+                               activeStatus={this.state.currentStatus}/>
                 <Table celled>
                     <Table.Header>
                         <Table.Row>
@@ -169,7 +183,7 @@ export default class ClassList extends React.Component {
                     </Table.Header>
                     <Table.Body>
                         {
-                            this.state.classes.map((c, i) =>
+                            this.state.classes.filter(c => c.status === this.state.currentStatus).map((c, i) =>
                                 <Table.Row key={c.class_id} style={{cursor: 'pointer'}}
                                            onClick={() => this.openClassDetail(c)}>
                                     <Table.Cell>
