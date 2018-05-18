@@ -231,9 +231,9 @@ export default class UserList extends React.Component {
                             )
                         }
                     </Table.Body>
-                    <Table.Footer style={{display: 'none'}}>
+                    <Table.Footer>
                         <Table.Row>
-                            <Table.HeaderCell colSpan="6">
+                            <Table.HeaderCell colSpan="12">
                                 <Menu floated="right" pagination>
                                     <Menu.Item as="a" icon>
                                         <Icon name="left chevron"/>
@@ -251,6 +251,10 @@ export default class UserList extends React.Component {
                         </Table.Row>
                     </Table.Footer>
                 </Table>
+                <br/>
+                <br/>
+                <br/>
+                <br/>
                 <ClassHours open={this.state.classHoursModalOpen} student={this.state.currentUser}
                             classHoursUpdateCallback={this.classHoursUpdated}
                             onCloseCallback={this.closeClassHoursModal}/>

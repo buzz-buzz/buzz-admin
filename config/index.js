@@ -9,7 +9,7 @@ let config = {
     },
     qa: {
         endPoints: {
-            buzzService: 'http://localhost:16888',
+            buzzService: process.env.buzz_service_endpoints,
             adminNeue: `${process.env.admin_neue}`,
         }
     },

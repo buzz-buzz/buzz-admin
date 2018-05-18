@@ -10,6 +10,7 @@ export default class BookingTable extends React.Component {
                     <Table.Row>
                         <Table.HeaderCell>预约</Table.HeaderCell>
                         <Table.HeaderCell>开始日期</Table.HeaderCell>
+                        <Table.HeaderCell>状态</Table.HeaderCell>
                     </Table.Row>
                 </Table.Header>
                 <Table.Body>
@@ -62,6 +63,9 @@ export default class BookingTable extends React.Component {
                                         <Table.Cell>
                                         <span
                                             style={{whiteSpace: 'nowrap'}}>{moment(evt.start_time).format(moment.HTML5_FMT.DATE)}</span>
+                                        </Table.Cell>
+                                        <Table.Cell>
+                                            {evt.status}
                                         </Table.Cell>
                                     </Table.Row>
                                 )

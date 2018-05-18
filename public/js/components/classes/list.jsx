@@ -3,6 +3,28 @@ import {Button, Container, Form, Icon, Image, Input, Menu, Segment, Table} from 
 import ServiceProxy from "../../service-proxy";
 import ClassDetail from "./class-detail-modal";
 import ClassEvaluation from "./class-evaluation-modal";
+import ClassStatuses from './class-statuses';
+import {ClassStatusCode} from "../../common/ClassStatus";
+import * as _ from "lodash";
+
+function nearestToper(x, y) {
+    let now = new Date();
+    let startOfX = new Date(x.start_time);
+    let startOfY = new Date(y.start_time);
+
+    let diffOfX = Math.abs(now - startOfX);
+    let diffOfY = Math.abs(now - startOfY);
+
+    if (diffOfX < diffOfY) {
+        return -1;
+    }
+
+    if (diffOfX > diffOfY) {
+        return 1;
+    }
+
+    return 0;
+}
 
 export default class ClassList extends React.Component {
     constructor() {
@@ -14,7 +36,10 @@ export default class ClassList extends React.Component {
             searchParams: {
                 start_time: '',
                 end_time: ''
-            }
+            },
+            currentStatus: ClassStatusCode.Opened,
+            column: null,
+            direction: null
         };
 
         this.openClassDetail = this.openClassDetail.bind(this);
@@ -27,6 +52,9 @@ export default class ClassList extends React.Component {
         this.updateStatus = this.updateStatus.bind(this);
         this.openFeedback = this.openFeedback.bind(this);
         this.onClassEvaluationClosed = this.onClassEvaluationClosed.bind(this);
+
+        this.switchToStatus = this.switchToStatus.bind(this);
+        this.handleSort = this.handleSort.bind(this);
     }
 
     async updateStatus() {
@@ -60,6 +88,15 @@ export default class ClassList extends React.Component {
         })
     }
 
+    switchToStatus(status) {
+        this.setState({
+            classes: this.state.classes.sort(nearestToper),
+            currentStatus: status,
+            direction: null,
+            column: null
+        })
+    }
+
     async searchClasses() {
         this.setState({loading: true})
         let result = await ServiceProxy.proxyTo({
@@ -80,7 +117,7 @@ export default class ClassList extends React.Component {
                 c.companions = (c.companions || '').split(',').filter(uniqueFilter);
                 c.students = (c.students || '').split(',').filter(uniqueFilter);
                 return c;
-            })
+            }).sort(nearestToper)
         })
     }
 
@@ -151,25 +188,38 @@ export default class ClassList extends React.Component {
                         <Button onClick={this.updateStatus} type="button">批量更新班级结束状态</Button>
                     </Form.Group>
                 </Segment>
-                <Table celled>
+                <ClassStatuses classes={this.state.classes} activeStatusChanged={this.switchToStatus}
+                               activeStatus={this.state.currentStatus}/>
+                <Table celled sortable>
                     <Table.Header>
                         <Table.Row>
-                            <Table.HeaderCell>课程 ID</Table.HeaderCell>
-                            <Table.HeaderCell>课程名称</Table.HeaderCell>
-                            <Table.HeaderCell>班级状态</Table.HeaderCell>
-                            <Table.HeaderCell>等级 </Table.HeaderCell>
-                            <Table.HeaderCell>开课日期</Table.HeaderCell>
-                            <Table.HeaderCell>开始时间</Table.HeaderCell>
-                            <Table.HeaderCell>结束时间</Table.HeaderCell>
-                            <Table.HeaderCell>教室（链接）</Table.HeaderCell>
-                            <Table.HeaderCell>外籍伙伴</Table.HeaderCell>
-                            <Table.HeaderCell>中方用户</Table.HeaderCell>
+                            <Table.HeaderCell sorted={this.state.column === 'class_id' ? this.state.direction : null}
+                                              onClick={() => this.handleSort('class_id')}>课程
+                                ID</Table.HeaderCell>
+                            <Table.HeaderCell sorted={this.state.column === 'name' ? this.state.direction : null}
+                                              onClick={() => this.handleSort('name')}>课程名称</Table.HeaderCell>
+                            <Table.HeaderCell sorted={this.state.column === 'status' ? this.state.direction : null}
+                                              onClick={() => this.handleSort('status')}>班级状态</Table.HeaderCell>
+                            <Table.HeaderCell sorted={this.state.column === 'level' ? this.state.direction : null}
+                                              onClick={() => this.handleSort('level')}>等级 </Table.HeaderCell>
+                            <Table.HeaderCell sorted={this.state.column === 'start_time' ? this.state.direction : null}
+                                              onClick={() => this.handleSort('start_time')}>开课日期</Table.HeaderCell>
+                            <Table.HeaderCell sorted={this.state.column === 'start_time' ? this.state.direction : null}
+                                              onClick={() => this.handleSort('start_time')}>开始时间</Table.HeaderCell>
+                            <Table.HeaderCell sorted={this.state.column === 'end_time' ? this.state.direction : null}
+                                              onClick={() => this.handleSort('end_time')}>结束时间</Table.HeaderCell>
+                            <Table.HeaderCell sorted={this.state.column === 'room_url' ? this.state.direction : null}
+                                              onClick={() => this.handleSort('room_url')}>教室（链接）</Table.HeaderCell>
+                            <Table.HeaderCell sorted={this.state.column === 'companions' ? this.state.direction : null}
+                                              onClick={() => this.handleSort('companions')}>外籍伙伴</Table.HeaderCell>
+                            <Table.HeaderCell sorted={this.state.column === 'students' ? this.state.direction : null}
+                                              onClick={() => this.handleSort('students')}>中方用户</Table.HeaderCell>
                             <Table.HeaderCell>操作</Table.HeaderCell>
                         </Table.Row>
                     </Table.Header>
                     <Table.Body>
                         {
-                            this.state.classes.map((c, i) =>
+                            this.state.classes.filter(c => c.status === this.state.currentStatus).map((c, i) =>
                                 <Table.Row key={c.class_id} style={{cursor: 'pointer'}}
                                            onClick={() => this.openClassDetail(c)}>
                                     <Table.Cell>
@@ -252,5 +302,36 @@ export default class ClassList extends React.Component {
                                  evaluation={this.state.currentClass} classInfo={this.state.currentClass}/>
             </Container>
         );
+    }
+
+    handleSort(clickedColumn) {
+        const {column, direction, classes} = this.state;
+
+        if (column !== clickedColumn) {
+            this.setState({
+                column: clickedColumn,
+                classes: _.sortBy(classes, [clickedColumn]),
+                direction: 'ascending'
+            });
+
+            return;
+        }
+
+        if (direction === 'ascending') {
+            this.setState({
+                classes: classes.reverse(),
+                direction: 'descending'
+            });
+
+            return;
+        }
+
+        if (direction === 'descending') {
+            this.setState({
+                classes: classes.sort(nearestToper),
+                direction: null,
+                column: null
+            });
+        }
     }
 }
