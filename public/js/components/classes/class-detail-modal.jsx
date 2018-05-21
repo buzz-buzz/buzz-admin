@@ -169,7 +169,7 @@ export default class ClassDetail extends React.Component {
 
     render() {
         return (
-            <Modal open={this.props.open} onClose={this.close} closeOnDimmerClick={false}>
+            <Modal open={this.props.open} onClose={this.close} closeOnDimmerClick={false} closeIcon>
                 <Header>班级详情</Header>
                 <Modal.Content scrolling>
                     <Form loading={this.state.loading} error={this.state.error} unstackable={true}>
@@ -243,7 +243,6 @@ export default class ClassDetail extends React.Component {
                                 :
                                 <Button onClick={this.saveClass} disabled={this.state.buttonState}>创建</Button>
                             }
-                            <Button onClick={this.close} className="right floated" type="button">关闭</Button>
                         </Form.Group>
                     </Form>
                 </Modal.Content>
