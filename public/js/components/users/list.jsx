@@ -1,5 +1,5 @@
 import * as React from "react";
-import {Button, Container, Form, Icon, Image, Input, Label, Menu, Table} from "semantic-ui-react";
+import {Button, Container, Form, Icon, Image, Input, Label, Menu, Pagination, Table} from "semantic-ui-react";
 import ServiceProxy from "../../service-proxy";
 import Profile from "./profile";
 import SchedulePreference from "./schedule-preference";
@@ -11,6 +11,7 @@ import LevelModal from "../students/level-modal";
 import BookingTable from "./booking-table";
 import queryString from 'query-string';
 import {MemberType} from "../../common/MemberType";
+import update from 'immutability-helper';
 
 BigCalendar.setLocalizer(BigCalendar.momentLocalizer(moment))
 
@@ -60,6 +61,12 @@ export default class UserList extends React.Component {
                 email: '',
                 weekly_schedule_requirements: ''
             },
+            pagination: {
+                current_page: 1,
+                per_page: 10,
+                total: 1,
+                last_page: 1
+            },
             loading: false,
             users: []
         };
@@ -81,6 +88,7 @@ export default class UserList extends React.Component {
         this.createNewUser = this.createNewUser.bind(this);
         this.userCreated = this.userCreated.bind(this);
         this.onUserDeleted = this.onUserDeleted.bind(this);
+        this.gotoPage = this.gotoPage.bind(this);
     }
 
     classHoursUpdated(newClassHours) {
@@ -120,17 +128,14 @@ export default class UserList extends React.Component {
     }
 
     async componentWillMount() {
-        this.setState({loading: true});
-        let users = await ServiceProxy.proxyTo({
-            body: {
-                uri: `{buzzService}/api/v1/users?role=${this.props['user-type']}`
-            }
-        });
+        await this.searchUsers()
 
-        this.setState({loading: false, users: await attachEvents.call(this, users)});
+        this.openSelectedUserProfile();
+    }
 
+    openSelectedUserProfile() {
         if (this.props.match.params.userId) {
-            let theStudents = users.filter(s => s.user_id === Number(this.props.match.params.userId));
+            let theStudents = this.state.users.filter(s => s.user_id === Number(this.props.match.params.userId));
             if (theStudents.length) {
                 this.openProfile(theStudents[0]);
             }
@@ -138,9 +143,8 @@ export default class UserList extends React.Component {
     }
 
     async searchUsers() {
-        console.log('searching with ', this.state.searchParams);
         this.setState({loading: true});
-        let students = await
+        let paginationData = await
             ServiceProxy.proxyTo({
                 body: {
                     uri: `{buzzService}/api/v1/users?role=${this.props['user-type']}`,
@@ -149,11 +153,23 @@ export default class UserList extends React.Component {
                     }, this.state.searchParams, {
                         start_time: this.state.searchParams.start_time ? new Date(this.state.searchParams.start_time) : undefined,
                         end_time: this.state.searchParams.end_time ? new Date(this.state.searchParams.end_time) : undefined
-                    })
+                    }, this.state.pagination)
                 }
             });
 
-        this.setState({loading: false, users: await attachEvents.call(this, students)});
+        let students = paginationData.data;
+
+        this.setState({
+            loading: false, users: await attachEvents.call(this, students), pagination: {
+                current_page: paginationData.current_page,
+                from: paginationData.from,
+                last_page: paginationData.last_page,
+                offset: paginationData.offset,
+                per_page: paginationData.per_page,
+                to: paginationData.to,
+                total: paginationData.total
+            }
+        });
     }
 
     handleTextChange(event, {value, name}) {
@@ -234,19 +250,31 @@ export default class UserList extends React.Component {
                     <Table.Footer>
                         <Table.Row>
                             <Table.HeaderCell colSpan="12">
-                                <Menu floated="right" pagination>
-                                    <Menu.Item as="a" icon>
-                                        <Icon name="left chevron"/>
-                                    </Menu.Item>
-                                    <Menu.Item as="a">1</Menu.Item>
-                                    <Menu.Item as="a">2</Menu.Item>
-                                    <Menu.Item as="a">3</Menu.Item>
-                                    <Menu.Item as="a">4</Menu.Item>
-                                    <Menu.Item as="a">5</Menu.Item>
-                                    <Menu.Item as="a" icon>
-                                        <Icon name="right chevron"/>
-                                    </Menu.Item>
-                                </Menu>
+                                <Pagination
+                                    defaultActivePage={1}
+                                    ellipsisItem={{
+                                        content: <Icon name='ellipsis horizontal'/>,
+                                        icon: true
+                                    }}
+                                    firstItem={{
+                                        content: <Icon name='angle double left'/>,
+                                        icon: true
+                                    }}
+                                    lastItem={{
+                                        content: <Icon name='angle double right'/>,
+                                        icon: true
+                                    }}
+                                    prevItem={{
+                                        content: <Icon name='angle left'/>,
+                                        icon: true
+                                    }}
+                                    nextItem={{
+                                        content: <Icon name='angle right'/>,
+                                        icon: true
+                                    }}
+                                    totalPages={this.state.pagination.last_page}
+                                    onPageChange={this.gotoPage}
+                                ></Pagination>
                             </Table.HeaderCell>
                         </Table.Row>
                     </Table.Footer>
@@ -506,5 +534,14 @@ export default class UserList extends React.Component {
 
     createNewUser() {
         this.openProfile({});
+    }
+
+    gotoPage(evt, {activePage}) {
+        let p = this.state.pagination;
+        p.current_page = activePage;
+
+        this.setState({pagination: p}, async () => {
+            await this.searchUsers();
+        })
     }
 }

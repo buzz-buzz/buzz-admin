@@ -31,6 +31,7 @@
     "babel-preset-react": "^6.24.1",
     "babel-preset-stage-0": "^6.24.1",
     "babel-register": "^6.26.0",
+    "immutability-helper": "^2.7.0",
     "jsx-loader": "^0.13.2",
     "koa": "^2.4.1",
     "koa-basic-auth": "^2.0.0",
