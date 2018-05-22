@@ -323,7 +323,11 @@ export default class Profile extends React.Component {
                                     <Form.Button primary content="修改" type="submit"/> :
                                     <Form.Button positive content="创建" type="button" onClick={this.createUser}/>
                             }
-                            <Form.Button negative content="删除" type="button" onClick={this.deleteUser}/>
+                            {
+                                // TODO: Only super user can see this button
+                                false &&
+                                <Form.Button negative content="删除" type="button" onClick={this.deleteUser}/>
+                            }
                             <Form.Button color="black"
                                          content={`切换成 ${MemberTypeChinese[this.state.theOtherRole]}`}
                                          type="button"
