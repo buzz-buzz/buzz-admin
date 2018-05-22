@@ -12,7 +12,7 @@ import BookingTable from "./booking-table";
 import queryString from 'query-string';
 import {MemberType} from "../../common/MemberType";
 import history from '../common/history';
-import BuzzPagination from "../common/BuzzPagination";
+import BuzzPagination, {BuzzPaginationData} from "../common/BuzzPagination";
 
 BigCalendar.setLocalizer(BigCalendar.momentLocalizer(moment))
 
@@ -62,12 +62,7 @@ export default class UserList extends React.Component {
                 email: '',
                 weekly_schedule_requirements: ''
             },
-            pagination: {
-                current_page: 1,
-                per_page: Number(window.localStorage.getItem('pagination.per_page')) || 10,
-                total: 1,
-                last_page: 1
-            },
+            pagination: BuzzPaginationData,
             loading: false,
             users: []
         };
@@ -518,16 +513,16 @@ export default class UserList extends React.Component {
     }
 
     onLevelUpdated(placementTestResult) {
-        let student = this.state.currentUser;
-        student.level = placementTestResult.level;
-        let newStudents = this.state.users.map(s => {
-            if (s.user_id === student.user_id) {
-                return student;
+        let currentUser = this.state.currentUser;
+        currentUser.level = placementTestResult.level;
+        let newUsers = this.state.users.map(s => {
+            if (s.user_id === currentUser.user_id) {
+                return currentUser;
             }
 
             return s;
         });
-        this.setState({currentUser: student, users: newStudents})
+        this.setState({currentUser: currentUser, users: newUsers})
     }
 
     createNewUser() {

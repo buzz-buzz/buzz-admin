@@ -1,6 +1,13 @@
 import React from "react";
 import {Dropdown, Form, Icon, Pagination, Segment, Table} from "semantic-ui-react";
 
+export let BuzzPaginationData = {
+    current_page: 1,
+    per_page: Number(window.localStorage.getItem('pagination.per_page')) || 10,
+    total: 1,
+    last_page: 1
+};
+
 export default class BuzzPagination extends React.Component {
     state = {
         per_page: this.props.pagination.per_page

@@ -21,7 +21,7 @@ export default class ClassDetail extends React.Component {
             availableStudents: [],
             availableCompanions: [],
             error: false,
-            companion: 0,
+            companion: '0',
             dirty: false,
             level: '',
             topic: '',
@@ -60,16 +60,15 @@ export default class ClassDetail extends React.Component {
             console.log(reg.test(event.target.value));
             if (reg.test(event.target.value)) {
                 event.target.value = '';
-                this.setState({topic: '', buttonState: true});
+                this.setState({topic: '', buttonDisabled: true});
             }
             else {
-                this.setState({topic: event.target.value, buttonState: false});
+                this.setState({topic: event.target.value, buttonDisabled: false});
             }
         }
     }
 
     componentWillReceiveProps(nextProps) {
-        console.log('next=', nextProps);
         let exercises = nextProps.class ? nextProps.class.exercises : '';
         let startTime = nextProps.class ? nextProps.class.start_time : '';
         let endTime = nextProps.class ? nextProps.class.end_time : '';
@@ -77,11 +76,13 @@ export default class ClassDetail extends React.Component {
         let companions = nextProps.class ? nextProps.class.companions.map(userId => Number(userId)) : [];
 
         try {
-            exercises = JSON.parse(exercises).join('\n');
+            if (exercises) {
+                exercises = JSON.parse(exercises).join('\n');
+            }
             startTime = TimeHelper.toLocalDateTime(new Date(startTime));
             endTime = TimeHelper.toLocalDateTime(new Date(endTime));
         } catch (error) {
-
+            console.error(error);
         } finally {
             this.setState({
                 className: nextProps.class ? nextProps.class.name : '',
@@ -91,18 +92,19 @@ export default class ClassDetail extends React.Component {
                 companions: companions,
                 students: students,
                 exercises: exercises,
-                remark: nextProps.class ? nextProps.class.remark : '',
+                remark: nextProps.class ? nextProps.class.remark || '' : '',
                 class_id: nextProps.class ? nextProps.class.class_id : '',
-                companion: companions[0],
+                companion: companions[0] || '',
                 level: nextProps.class ? nextProps.class.level : '',
                 topic: nextProps.class ? nextProps.class.topic : '',
-                buttonState: nextProps.buttonState
+                buttonDisabled: nextProps.buttonDisabled || true
+            }, () => {
+                console.log(this.state)
             });
         }
     }
 
     openClassEvaluation() {
-        //console.log(this.state)
         this.setState({
             evaluationOpen: true,
             currentEvaluation: this.state,
@@ -116,7 +118,6 @@ export default class ClassDetail extends React.Component {
     async saveClass() {
         this.setState({loading: true});
 
-        console.log(this.state);
         try {
             let json = {
                 companions: [this.state.companion],
@@ -164,10 +165,14 @@ export default class ClassDetail extends React.Component {
     async componentWillMount() {
         let availableStudents = await this.getAvailableStudents();
         let availableCompanions = await this.getAvailableCompanions();
-        this.setState({availableStudents: availableStudents, availableCompanions: availableCompanions});
+        this.setState({
+            availableStudents: availableStudents,
+            availableCompanions: availableCompanions
+        });
     }
 
     render() {
+        console.log('render = ', this.state);
         return (
             <Modal open={this.props.open} onClose={this.close} closeOnDimmerClick={false} closeIcon>
                 <Header>班级详情</Header>
@@ -239,9 +244,11 @@ export default class ClassDetail extends React.Component {
                         </Form.Group>
                         <Form.Group>
                             {this.state.class_id ?
-                                <Button onClick={this.saveClass} disabled={this.state.buttonState}>保存</Button>
+                                <Button onClick={this.saveClass}
+                                        disabled={!this.state.dirty && this.state.buttonDisabled}>保存</Button>
                                 :
-                                <Button onClick={this.saveClass} disabled={this.state.buttonState}>创建</Button>
+                                <Button onClick={this.saveClass}
+                                        disabled={!this.state.dirty && this.state.buttonDisabled}>创建</Button>
                             }
                         </Form.Group>
                     </Form>
@@ -269,11 +276,11 @@ export default class ClassDetail extends React.Component {
     }
 
     handleSearchStudentChange(e, {search}) {
-        this.setState({searchStudent: search});
+        this.setState({searchStudent: search, dirty: true});
     }
 
     handleSearchCompanionChange(e, {search}) {
-        this.setState({searchCompanion: search});
+        this.setState({searchCompanion: search, dirty: true});
     }
 
     async getAvailableCompanions() {
