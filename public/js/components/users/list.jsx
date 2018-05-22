@@ -12,6 +12,7 @@ import BookingTable from "./booking-table";
 import queryString from 'query-string';
 import {MemberType} from "../../common/MemberType";
 import history from '../common/history';
+import BuzzPagination from "../common/BuzzPagination";
 
 BigCalendar.setLocalizer(BigCalendar.momentLocalizer(moment))
 
@@ -63,7 +64,7 @@ export default class UserList extends React.Component {
             },
             pagination: {
                 current_page: 1,
-                per_page: 10,
+                per_page: Number(window.localStorage.getItem('pagination.per_page')) || 10,
                 total: 1,
                 last_page: 1
             },
@@ -95,17 +96,17 @@ export default class UserList extends React.Component {
         let copy = Object.assign({}, this.state.currentUser);
         copy.class_hours = newClassHours;
 
-        let newStudents = this.state.users.map(s => {
+        let newUsers = this.state.users.map(s => {
             if (s.user_id === copy.user_id) {
                 return copy;
             }
 
             return s;
-        })
+        });
 
         this.setState({
             currentUser: copy,
-            users: newStudents
+            users: newUsers
         })
     }
 
@@ -264,33 +265,11 @@ export default class UserList extends React.Component {
                     </Table.Body>
                     <Table.Footer>
                         <Table.Row>
-                            <Table.HeaderCell colSpan="12">
-                                <Pagination
-                                    defaultActivePage={1}
-                                    ellipsisItem={{
-                                        content: <Icon name='ellipsis horizontal'/>,
-                                        icon: true
-                                    }}
-                                    firstItem={{
-                                        content: <Icon name='angle double left'/>,
-                                        icon: true
-                                    }}
-                                    lastItem={{
-                                        content: <Icon name='angle double right'/>,
-                                        icon: true
-                                    }}
-                                    prevItem={{
-                                        content: <Icon name='angle left'/>,
-                                        icon: true
-                                    }}
-                                    nextItem={{
-                                        content: <Icon name='angle right'/>,
-                                        icon: true
-                                    }}
-                                    totalPages={this.state.pagination.last_page}
-                                    onPageChange={this.gotoPage}
-                                ></Pagination>
-                            </Table.HeaderCell>
+                            <BuzzPagination pagination={this.state.pagination} gotoPage={this.gotoPage}
+                                            paginationChanged={(newPagination) => {
+                                                window.localStorage.setItem('pagination.per_page', newPagination.per_page);
+                                                this.setState({pagination: newPagination})
+                                            }}/>
                         </Table.Row>
                     </Table.Footer>
                 </Table>

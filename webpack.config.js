@@ -15,8 +15,11 @@ const config = {
         loaders: [{
             test: /\.jsx?$/,
             loader: 'babel-loader',
-            query: {
-                presets: ["@babel/preset-env", "@babel/preset-react"]
+            options: {
+                presets: ["@babel/preset-env", "@babel/preset-react"],
+                plugins: [
+                    'transform-class-properties'
+                ]
             }
         }],
         // noParse: /jquery|lodash/,
