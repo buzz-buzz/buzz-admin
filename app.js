@@ -62,7 +62,7 @@ const version = new Date().getTime()
 
 let clientPage = async ctx => {
     ctx.render('index', Object.assign(ctx.state, {
-        title: 'Home | Buzzbuzz admin',
+        title: 'Home | BuzzBuzz Admin',
         v: version,
         config: {
             endPoints: {

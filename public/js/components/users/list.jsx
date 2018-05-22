@@ -130,14 +130,22 @@ export default class UserList extends React.Component {
     async componentWillMount() {
         await this.searchUsers()
 
-        this.openSelectedUserProfile();
+        await this.openSelectedUserProfile();
     }
 
-    openSelectedUserProfile() {
+    async openSelectedUserProfile() {
         if (this.props.match.params.userId) {
-            let theStudents = this.state.users.filter(s => s.user_id === Number(this.props.match.params.userId));
-            if (theStudents.length) {
-                this.openProfile(theStudents[0]);
+            let theUsers = this.state.users.filter(s => s.user_id === Number(this.props.match.params.userId));
+            if (theUsers.length) {
+                this.openProfile(theUsers[0]);
+            } else {
+                let theUser = await ServiceProxy.proxyTo({
+                    body: {
+                        uri: `{buzzService}/api/v1/users/${this.props.match.params.userId}`
+                    }
+                });
+
+                this.openProfile(theUser);
             }
         }
     }
