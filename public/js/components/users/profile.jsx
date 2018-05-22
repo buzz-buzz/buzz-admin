@@ -336,7 +336,6 @@ export default class Profile extends React.Component {
     }
 
     static theOtherRole(role) {
-        console.log('current role = ', role)
         if (role === MemberType.Student) {
             return MemberType.Companion
         }

@@ -195,8 +195,11 @@ export default class UserList extends React.Component {
                                         {user.user_id}
                                     </Table.Cell>
                                     <Table.Cell onClick={() => this.openProfile(user)}>
-                                        <Image src={user.avatar} avatar title={user.user_id}
-                                               alt={user.user_id}/>
+                                        <object data={user.avatar} type="image/png" className="ui image avatar"
+                                                title={user.user_id} alt={user.user_id}>
+                                            <Image src="/images/empty_avatar.jpg" avatar title={user.user_id}
+                                                   alt={user.user_id}/>
+                                        </object>
                                     </Table.Cell>
                                     {
                                         this.props['user-type'] === MemberType.Companion &&
