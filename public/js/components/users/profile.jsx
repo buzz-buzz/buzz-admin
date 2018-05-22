@@ -1,5 +1,4 @@
 import * as React from 'react';
-import _ from 'lodash';
 import {Dropdown, Form, Header, Image, Message, Modal, TextArea} from "semantic-ui-react";
 import ServiceProxy from "../../service-proxy";
 import * as Countries from "../../common/Countries";
@@ -9,6 +8,7 @@ import Grades from "../../common/Grades";
 import Timezones from "../../common/Timezones";
 import TimeHelper from "../../common/TimeHelper";
 import {MemberType, MemberTypeChinese} from "../../common/MemberType";
+import history from '../common/history';
 
 export default class Profile extends React.Component {
     constructor(props) {

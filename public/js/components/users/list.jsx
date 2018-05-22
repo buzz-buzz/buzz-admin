@@ -11,7 +11,7 @@ import LevelModal from "../students/level-modal";
 import BookingTable from "./booking-table";
 import queryString from 'query-string';
 import {MemberType} from "../../common/MemberType";
-import update from 'immutability-helper';
+import history from '../common/history';
 
 BigCalendar.setLocalizer(BigCalendar.momentLocalizer(moment))
 
@@ -131,6 +131,10 @@ export default class UserList extends React.Component {
         await this.searchUsers()
 
         await this.openSelectedUserProfile();
+    }
+
+    componentDidMount() {
+        history.listen(() => this.forceUpdate());
     }
 
     async openSelectedUserProfile() {
@@ -430,10 +434,14 @@ export default class UserList extends React.Component {
             profileModalOpen: true,
             currentUser: user
         })
+
+        history.push(this.props.match.path.replace(':userId?', user.user_id));
     }
 
     closeProfileModal() {
         this.setState({profileModalOpen: false});
+        let url = this.props.match.path.replace('/:userId?', '');
+        history.push(url);
     }
 
     openSchedulePreferenceModal(user) {
