@@ -1,5 +1,4 @@
 import * as React from 'react';
-import _ from 'lodash';
 import {Dropdown, Form, Header, Image, Message, Modal, TextArea} from "semantic-ui-react";
 import ServiceProxy from "../../service-proxy";
 import * as Countries from "../../common/Countries";
@@ -9,6 +8,7 @@ import Grades from "../../common/Grades";
 import Timezones from "../../common/Timezones";
 import TimeHelper from "../../common/TimeHelper";
 import {MemberType, MemberTypeChinese} from "../../common/MemberType";
+import history from '../common/history';
 
 export default class Profile extends React.Component {
     constructor(props) {
@@ -323,7 +323,11 @@ export default class Profile extends React.Component {
                                     <Form.Button primary content="修改" type="submit"/> :
                                     <Form.Button positive content="创建" type="button" onClick={this.createUser}/>
                             }
-                            <Form.Button negative content="删除" type="button" onClick={this.deleteUser}/>
+                            {
+                                // TODO: Only super user can see this button
+                                false &&
+                                <Form.Button negative content="删除" type="button" onClick={this.deleteUser}/>
+                            }
                             <Form.Button color="black"
                                          content={`切换成 ${MemberTypeChinese[this.state.theOtherRole]}`}
                                          type="button"
@@ -336,7 +340,6 @@ export default class Profile extends React.Component {
     }
 
     static theOtherRole(role) {
-        console.log('current role = ', role)
         if (role === MemberType.Student) {
             return MemberType.Companion
         }

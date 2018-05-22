@@ -6,6 +6,8 @@ import ClassEvaluation from "./class-evaluation-modal";
 import ClassStatuses from './class-statuses';
 import {ClassStatusCode} from "../../common/ClassStatus";
 import * as _ from "lodash";
+import {BuzzPaginationData} from "../common/BuzzPagination";
+import BuzzPagination from "../common/BuzzPagination";
 
 function nearestToper(x, y) {
     let now = new Date();
@@ -39,7 +41,8 @@ export default class ClassList extends React.Component {
             },
             currentStatus: ClassStatusCode.Opened,
             column: null,
-            direction: null
+            direction: null,
+            pagination: BuzzPaginationData
         };
 
         this.openClassDetail = this.openClassDetail.bind(this);
@@ -55,6 +58,7 @@ export default class ClassList extends React.Component {
 
         this.switchToStatus = this.switchToStatus.bind(this);
         this.handleSort = this.handleSort.bind(this);
+        this.gotoPage = this.gotoPage.bind(this);
     }
 
     async updateStatus() {
@@ -66,7 +70,6 @@ export default class ClassList extends React.Component {
                     method: 'PUT'
                 }
             })
-            console.log('result = ', result);
             this.setState({error: false});
             await this.searchClasses();
         } catch (error) {
@@ -99,19 +102,30 @@ export default class ClassList extends React.Component {
 
     async searchClasses() {
         this.setState({loading: true})
-        let result = await ServiceProxy.proxyTo({
+        let paginationData = await ServiceProxy.proxyTo({
             body: {
                 uri: '{buzzService}/api/v1/class-schedule',
                 method: 'GET',
                 qs: Object.assign({}, this.state.searchParams, {
                     start_time: this.state.searchParams.start_time ? new Date(this.state.searchParams.start_time) : undefined,
                     end_time: this.state.searchParams.end_time ? new Date(this.state.searchParams.end_time) : undefined
-                })
+                }, this.state.pagination),
             }
         })
 
+        let result = paginationData.data;
+
         this.setState({
             loading: false,
+            pagination: {
+                current_page: paginationData.current_page,
+                from: paginationData.from,
+                last_page: paginationData.last_page,
+                offset: paginationData.offset,
+                per_page: paginationData.per_page,
+                to: paginationData.to,
+                total: paginationData.total
+            },
             classes: result.map(c => {
                 let uniqueFilter = (value, index, self) => self.indexOf(value) === index;
                 c.companions = (c.companions || '').split(',').filter(uniqueFilter);
@@ -129,7 +143,7 @@ export default class ClassList extends React.Component {
         this.setState({
             detailOpen: true,
             currentClass: c,
-            buttonState: c == undefined ? true : false,
+            buttonDisabled: !c ? true : false,
         })
     }
 
@@ -273,29 +287,19 @@ export default class ClassList extends React.Component {
                             )
                         }
                     </Table.Body>
-                    <Table.Footer style={{display: 'none'}}>
+                    <Table.Footer>
                         <Table.Row>
-                            <Table.HeaderCell colSpan="6">
-                                <Menu floated="right" pagination>
-                                    <Menu.Item as="a" icon>
-                                        <Icon name="left chevron"/>
-                                    </Menu.Item>
-                                    <Menu.Item as="a">1</Menu.Item>
-                                    <Menu.Item as="a">2</Menu.Item>
-                                    <Menu.Item as="a">3</Menu.Item>
-                                    <Menu.Item as="a">4</Menu.Item>
-                                    <Menu.Item as="a">5</Menu.Item>
-                                    <Menu.Item as="a" icon>
-                                        <Icon name="right chevron"/>
-                                    </Menu.Item>
-                                </Menu>
-                            </Table.HeaderCell>
+                            <BuzzPagination pagination={this.state.pagination} gotoPage={this.gotoPage}
+                                            paginationChanged={(newPagination) => {
+                                                window.localStorage.setItem('pagination.per_page', newPagination.per_page);
+                                                this.setState({pagination: newPagination})
+                                            }}/>
                         </Table.Row>
                     </Table.Footer>
                 </Table>
                 <ClassDetail open={this.state.detailOpen} onClose={this.onClassDetailClosed}
                              onClassSaved={this.onClassSaved} class={this.state.currentClass}
-                             buttonState={this.state.buttonState}></ClassDetail>
+                             buttonDisabled={this.state.buttonDisabled}></ClassDetail>
 
 
                 <ClassEvaluation open={this.state.evaluationOpen} onClose={this.onClassEvaluationClosed}
@@ -333,5 +337,14 @@ export default class ClassList extends React.Component {
                 column: null
             });
         }
+    }
+
+    async gotoPage(evt, {activePage}) {
+        let p = this.state.pagination;
+        p.current_page = activePage;
+
+        this.setState({pagination: p}, async () => {
+            await this.searchClasses();
+        })
     }
 }

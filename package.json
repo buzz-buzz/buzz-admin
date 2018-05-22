@@ -31,6 +31,8 @@
     "babel-preset-react": "^6.24.1",
     "babel-preset-stage-0": "^6.24.1",
     "babel-register": "^6.26.0",
+    "history": "^4.7.2",
+    "immutability-helper": "^2.7.0",
     "jsx-loader": "^0.13.2",
     "koa": "^2.4.1",
     "koa-basic-auth": "^2.0.0",
@@ -48,6 +50,7 @@
     "react-datepicker": "^1.4.1",
     "react-dom": "^16.2.0",
     "react-router-dom": "^4.2.2",
+    "react-url-query": "^1.4.0",
     "request": "^2.83.0",
     "request-promise-native": "^1.0.5",
     "semantic-ui-css": "^2.2.14",
@@ -55,6 +58,7 @@
     "webpack": "^3.10.0"
   },
   "devDependencies": {
+    "babel-plugin-transform-class-properties": "^6.24.1",
     "concurrently": "^3.5.1",
     "cross-env": "^5.1.4",
     "koa-send": "^4.1.3",

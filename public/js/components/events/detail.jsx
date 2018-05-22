@@ -180,7 +180,7 @@ export default class EventDetail extends React.Component {
                                     </p>
                                     <Form.Group inline>
                                         <Form.Field>
-                                            <Label>开始日期：</Label>
+                                            <label>&emsp;开始日期：</label>
                                         </Form.Field>
                                         <Form.Field>
                                             <DatePicker
@@ -192,7 +192,7 @@ export default class EventDetail extends React.Component {
                                     </Form.Group>
                                     <Form.Group inline>
                                         <Form.Field>
-                                            <Label>上课时间段：</Label>
+                                            <label>上课时间段：</label>
                                         </Form.Field>
                                         <Form.Field>
                                             <DatePicker
@@ -217,7 +217,7 @@ export default class EventDetail extends React.Component {
                                         </Form.Field>
                                     </Form.Group>
                                     <Form.Group inline>
-                                        <Label>预订周数</Label>
+                                        <label>&emsp;预订周数：</label>
                                         <Input placeholder="预订周数"
                                                name="occurence"
                                                value={this.state.event.occurence}

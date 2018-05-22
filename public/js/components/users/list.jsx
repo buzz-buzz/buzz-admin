@@ -1,5 +1,5 @@
 import * as React from "react";
-import {Button, Container, Form, Icon, Image, Input, Label, Menu, Table} from "semantic-ui-react";
+import {Button, Container, Form, Icon, Image, Input, Label, Menu, Pagination, Table} from "semantic-ui-react";
 import ServiceProxy from "../../service-proxy";
 import Profile from "./profile";
 import SchedulePreference from "./schedule-preference";
@@ -11,6 +11,8 @@ import LevelModal from "../students/level-modal";
 import BookingTable from "./booking-table";
 import queryString from 'query-string';
 import {MemberType} from "../../common/MemberType";
+import history from '../common/history';
+import BuzzPagination, {BuzzPaginationData} from "../common/BuzzPagination";
 
 BigCalendar.setLocalizer(BigCalendar.momentLocalizer(moment))
 
@@ -60,6 +62,7 @@ export default class UserList extends React.Component {
                 email: '',
                 weekly_schedule_requirements: ''
             },
+            pagination: BuzzPaginationData,
             loading: false,
             users: []
         };
@@ -81,23 +84,24 @@ export default class UserList extends React.Component {
         this.createNewUser = this.createNewUser.bind(this);
         this.userCreated = this.userCreated.bind(this);
         this.onUserDeleted = this.onUserDeleted.bind(this);
+        this.gotoPage = this.gotoPage.bind(this);
     }
 
     classHoursUpdated(newClassHours) {
         let copy = Object.assign({}, this.state.currentUser);
         copy.class_hours = newClassHours;
 
-        let newStudents = this.state.users.map(s => {
+        let newUsers = this.state.users.map(s => {
             if (s.user_id === copy.user_id) {
                 return copy;
             }
 
             return s;
-        })
+        });
 
         this.setState({
             currentUser: copy,
-            users: newStudents
+            users: newUsers
         })
     }
 
@@ -120,27 +124,35 @@ export default class UserList extends React.Component {
     }
 
     async componentWillMount() {
-        this.setState({loading: true});
-        let users = await ServiceProxy.proxyTo({
-            body: {
-                uri: `{buzzService}/api/v1/users?role=${this.props['user-type']}`
-            }
-        });
+        await this.searchUsers()
 
-        this.setState({loading: false, users: await attachEvents.call(this, users)});
+        await this.openSelectedUserProfile();
+    }
 
+    componentDidMount() {
+        history.listen(() => this.forceUpdate());
+    }
+
+    async openSelectedUserProfile() {
         if (this.props.match.params.userId) {
-            let theStudents = users.filter(s => s.user_id === Number(this.props.match.params.userId));
-            if (theStudents.length) {
-                this.openProfile(theStudents[0]);
+            let theUsers = this.state.users.filter(s => s.user_id === Number(this.props.match.params.userId));
+            if (theUsers.length) {
+                this.openProfile(theUsers[0]);
+            } else {
+                let theUser = await ServiceProxy.proxyTo({
+                    body: {
+                        uri: `{buzzService}/api/v1/users/${this.props.match.params.userId}`
+                    }
+                });
+
+                this.openProfile(theUser);
             }
         }
     }
 
     async searchUsers() {
-        console.log('searching with ', this.state.searchParams);
         this.setState({loading: true});
-        let students = await
+        let paginationData = await
             ServiceProxy.proxyTo({
                 body: {
                     uri: `{buzzService}/api/v1/users?role=${this.props['user-type']}`,
@@ -149,11 +161,23 @@ export default class UserList extends React.Component {
                     }, this.state.searchParams, {
                         start_time: this.state.searchParams.start_time ? new Date(this.state.searchParams.start_time) : undefined,
                         end_time: this.state.searchParams.end_time ? new Date(this.state.searchParams.end_time) : undefined
-                    })
+                    }, this.state.pagination)
                 }
             });
 
-        this.setState({loading: false, users: await attachEvents.call(this, students)});
+        let students = paginationData.data;
+
+        this.setState({
+            loading: false, users: await attachEvents.call(this, students), pagination: {
+                current_page: paginationData.current_page,
+                from: paginationData.from,
+                last_page: paginationData.last_page,
+                offset: paginationData.offset,
+                per_page: paginationData.per_page,
+                to: paginationData.to,
+                total: paginationData.total
+            }
+        });
     }
 
     handleTextChange(event, {value, name}) {
@@ -179,8 +203,11 @@ export default class UserList extends React.Component {
                                         {user.user_id}
                                     </Table.Cell>
                                     <Table.Cell onClick={() => this.openProfile(user)}>
-                                        <Image src={user.avatar} avatar title={user.user_id}
-                                               alt={user.user_id}/>
+                                        <object data={user.avatar} type="image/png" className="ui image avatar"
+                                                title={user.user_id} alt={user.user_id}>
+                                            <Image src="/images/empty_avatar.jpg" avatar title={user.user_id}
+                                                   alt={user.user_id}/>
+                                        </object>
                                     </Table.Cell>
                                     {
                                         this.props['user-type'] === MemberType.Companion &&
@@ -233,21 +260,11 @@ export default class UserList extends React.Component {
                     </Table.Body>
                     <Table.Footer>
                         <Table.Row>
-                            <Table.HeaderCell colSpan="12">
-                                <Menu floated="right" pagination>
-                                    <Menu.Item as="a" icon>
-                                        <Icon name="left chevron"/>
-                                    </Menu.Item>
-                                    <Menu.Item as="a">1</Menu.Item>
-                                    <Menu.Item as="a">2</Menu.Item>
-                                    <Menu.Item as="a">3</Menu.Item>
-                                    <Menu.Item as="a">4</Menu.Item>
-                                    <Menu.Item as="a">5</Menu.Item>
-                                    <Menu.Item as="a" icon>
-                                        <Icon name="right chevron"/>
-                                    </Menu.Item>
-                                </Menu>
-                            </Table.HeaderCell>
+                            <BuzzPagination pagination={this.state.pagination} gotoPage={this.gotoPage}
+                                            paginationChanged={(newPagination) => {
+                                                window.localStorage.setItem('pagination.per_page', newPagination.per_page);
+                                                this.setState({pagination: newPagination})
+                                            }}/>
                         </Table.Row>
                     </Table.Footer>
                 </Table>
@@ -391,10 +408,14 @@ export default class UserList extends React.Component {
             profileModalOpen: true,
             currentUser: user
         })
+
+        history.push(this.props.match.path.replace(':userId?', user.user_id));
     }
 
     closeProfileModal() {
         this.setState({profileModalOpen: false});
+        let url = this.props.match.path.replace('/:userId?', '');
+        history.push(url);
     }
 
     openSchedulePreferenceModal(user) {
@@ -492,19 +513,28 @@ export default class UserList extends React.Component {
     }
 
     onLevelUpdated(placementTestResult) {
-        let student = this.state.currentUser;
-        student.level = placementTestResult.level;
-        let newStudents = this.state.users.map(s => {
-            if (s.user_id === student.user_id) {
-                return student;
+        let currentUser = this.state.currentUser;
+        currentUser.level = placementTestResult.level;
+        let newUsers = this.state.users.map(s => {
+            if (s.user_id === currentUser.user_id) {
+                return currentUser;
             }
 
             return s;
         });
-        this.setState({currentUser: student, users: newStudents})
+        this.setState({currentUser: currentUser, users: newUsers})
     }
 
     createNewUser() {
         this.openProfile({});
+    }
+
+    gotoPage(evt, {activePage}) {
+        let p = this.state.pagination;
+        p.current_page = activePage;
+
+        this.setState({pagination: p}, async () => {
+            await this.searchUsers();
+        })
     }
 }
