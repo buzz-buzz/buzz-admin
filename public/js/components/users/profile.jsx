@@ -325,7 +325,7 @@ export default class Profile extends React.Component {
                             }
                             {
                                 // TODO: Only super user can see this button
-                                false &&
+                                process.env.NODE_ENV !== 'production' &&
                                 <Form.Button negative content="删除" type="button" onClick={this.deleteUser}/>
                             }
                             <Form.Button color="black"

@@ -12,6 +12,7 @@ function initApp() {
     configureUrlQuery({history});
 
     var container = document.getElementById('content');
+
     // reuse server side render result
     ReactDOM.render(
         <BrowserRouter>

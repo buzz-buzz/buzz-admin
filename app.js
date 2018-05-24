@@ -64,6 +64,7 @@ let clientPage = async ctx => {
     ctx.render('index', Object.assign(ctx.state, {
         title: 'Home | BuzzBuzz Admin',
         v: version,
+        NODE_ENV: process.env.NODE_ENV,
         config: {
             endPoints: {
                 adminNeue: config.endPoints.adminNeue
