@@ -15,7 +15,6 @@ export default class index extends React.Component {
 
         return (
             <Layout title={this.props.title} path={this.props.path} v={this.props.v} config={this.props.config}>
-                <p>v = {this.props.v}</p>
                 <div id="content"></div>
             </Layout>
         );
