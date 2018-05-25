@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {Dropdown, Form, Header, Image, Message, Modal, TextArea} from "semantic-ui-react";
+import {Button, Dropdown, Form, Header, Image, Message, Modal, Popup, TextArea} from "semantic-ui-react";
 import ServiceProxy from "../../service-proxy";
 import * as Countries from "../../common/Countries";
 import Cities from "../../common/Cities";
@@ -8,7 +8,7 @@ import Grades from "../../common/Grades";
 import Timezones from "../../common/Timezones";
 import TimeHelper from "../../common/TimeHelper";
 import {MemberType, MemberTypeChinese} from "../../common/MemberType";
-import history from '../common/history';
+import WechatProfile from "./wechat-profile";
 
 export default class Profile extends React.Component {
     constructor(props) {
@@ -213,7 +213,7 @@ export default class Profile extends React.Component {
         return (
             <Modal open={this.props.open} closeOnEscape={true} closeOnRootNodeClick={false} onClose={this.close}
                    closeIcon>
-                <Header content="用户资料"></Header>
+                <Header content={`用户资料 - ${this.state.user.user_id}`}></Header>
                 <Modal.Content>
                     <Image src={this.state.avatar} avatar alt={this.state.user.user_id}
                            title={this.state.user.user_id}/>
@@ -226,15 +226,17 @@ export default class Profile extends React.Component {
                             <Form.Input placeholder="父母名称" name="parentName" value={this.state.parentName}
                                         onChange={this.handleChange}
                                         label="父母名称"/>
+
+                            <Form.Input placeholder="备注名称(eg: 小明宝妈)" name="display_name" value={this.state.display_name}
+                                        onChange={this.handleChange} label="备注名（内部使用，对用户不可见）"/>
+                        </Form.Group>
+                        <Form.Group>
+
                             <Form.Input placeholder="手机号" name="mobile" value={this.state.mobile}
                                         onChange={this.handleChange}
                                         type="number" label="手机号"/>
                             <Form.Input placeholder="邮箱" name="email" value={this.state.email}
                                         onChange={this.handleChange} type="email" label="邮箱"/>
-                        </Form.Group>
-                        <Form.Group>
-                            <Form.Input placeholder="备注名称(eg: 小明宝妈)" name="display_name" value={this.state.display_name}
-                                        onChange={this.handleChange} label="备注名（内部使用，对用户不可见）"/>
                             <Form.Input placeholder="周上课频率" name="weekly_schedule_requirements"
                                         value={this.state.weekly_schedule_requirements} onChange={this.handleChange}
                                         label="周上课频率" type="number"/>
@@ -248,7 +250,7 @@ export default class Profile extends React.Component {
                                           onSearchChange={this.handleSearchChange}/>
                             </Form.Field>
                             {
-                                this.state.user.role === 's' ? (
+                                this.state.user.role === MemberType.Student ? (
                                     <Form.Field>
                                         <label>所在城市</label>
                                         <Dropdown selection multiple={false} search={true} name="city"
@@ -264,7 +266,7 @@ export default class Profile extends React.Component {
                                 )
                             }
                             {
-                                this.state.user.role !== 's' && (
+                                this.state.user.role !== MemberType.Student && (
                                     <Form.Field>
                                         <label>时区</label>
                                         <Dropdown selection multiple={false} search={true} name="time_zone"
@@ -276,6 +278,16 @@ export default class Profile extends React.Component {
 
                                 )
                             }
+
+                            <Form.Input label="学校名称" placeholder="学校名称" value={this.state.school_name}
+                                        name="school_name" onChange={this.handleChange}/>
+                            <Form.Field>
+                                <label>年级</label>
+                                <Dropdown selection multiple={false} search={true} name="grade"
+                                          options={Grades.list}
+                                          value={this.state.grade} placeholder="年级" onChange={this.handleChange}
+                                          onSearchChange={this.handleSearchChange}/>
+                            </Form.Field>
                         </Form.Group>
                         <Form.Group widths="equal">
                             <Form.Field>
@@ -287,23 +299,19 @@ export default class Profile extends React.Component {
                             </Form.Field>
                             <Form.Input label="生日" placeholder="生日" value={this.state.date_of_birth}
                                         type="datetime-local" name="date_of_birth" onChange={this.handleChange}/>
-                        </Form.Group>
-                        <Form.Group widths="equal">
-                            <Form.Input label="学校名称" placeholder="学校名称" value={this.state.school_name}
-                                        name="school_name" onChange={this.handleChange}/>
-                            <Form.Field>
-                                <label>年级</label>
-                                <Dropdown selection multiple={false} search={true} name="grade"
-                                          options={Grades.list}
-                                          value={this.state.grade} placeholder="年级" onChange={this.handleChange}
-                                          onSearchChange={this.handleSearchChange}/>
-                            </Form.Field>
+
                             <Form.Input placeholder="兴趣爱好" name="interests" value={this.state.user.interests || ''}
                                         label="兴趣爱好" readOnly width={12}/>
                         </Form.Group>
                         <Form.Group>
-                            <Form.Input placeholder="微信昵称" name="wechat_name" value={this.state.user.wechat_name || ''}
-                                        label="微信昵称" readOnly width={3}/>
+                            <Popup trigger={
+                                <Form.Input placeholder="微信昵称" name="wechat_name"
+                                            value={this.state.user.wechat_name || ''}
+                                            label="微信昵称" readOnly width={3}/>
+                            } on="focus" header="微信详细资料" content={
+                                <WechatProfile userId={this.state.user.user_id} user={this.state.user}
+                                               profileUpdateCallback={this.props.profileUpdateCallback}/>
+                            }/>
 
                             <Form.Input placeholder="Facebook 名称" name="facebookName"
                                         value={this.state.user.facebook_name || ''} label="Facebook 名称" width={3}/>
@@ -325,7 +333,7 @@ export default class Profile extends React.Component {
                             }
                             {
                                 // TODO: Only super user can see this button
-                                false &&
+                                process.env.NODE_ENV !== 'production' &&
                                 <Form.Button negative content="删除" type="button" onClick={this.deleteUser}/>
                             }
                             <Form.Button color="black"
