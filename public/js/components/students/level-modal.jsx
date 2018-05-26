@@ -134,6 +134,7 @@ export default class LevelModal extends React.Component {
                                 </audio>
                                 <a href={typeof this.state.jsonDetail.answers[this.state.jsonDetail.questions.length] === 'object' ? this.state.jsonDetail.answers[this.state.jsonDetail.questions.length].url : this.state.jsonDetail.answers[this.state.jsonDetail.questions.length]}
                                    target="_blank" rel="no-opener">原始音频文件</a>
+                                   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                 <a href={`/m3u8/index.html?url=${encodeURIComponent(typeof this.state.jsonDetail.answers[this.state.jsonDetail.questions.length] === 'object' ? this.state.jsonDetail.answers[this.state.jsonDetail.questions.length].url : this.state.jsonDetail.answers[this.state.jsonDetail.questions.length])}`}
                                    target="_blank" rel="no-opener">在线播放</a>
                             </li>
