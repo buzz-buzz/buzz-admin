@@ -1,5 +1,5 @@
 import * as React from "react";
-import {Menu} from "semantic-ui-react";
+import {Container, Menu} from "semantic-ui-react";
 
 export default class Header extends React.Component {
     constructor(props) {
@@ -8,13 +8,18 @@ export default class Header extends React.Component {
 
     render() {
         const activeItem = this.props.path;
-        console.log('path = ', this.props.path);
         return (
-            <Menu>
-                <Menu.Item name="students" active={(activeItem || '').startsWith('/students')}
-                           href="/students">Students</Menu.Item>
-                <Menu.Item name="/companions" active={(activeItem || '').startsWith('/companions')} href="/companions">Companions</Menu.Item>
-                <Menu.Item name="classes" active={activeItem === '/classes'} href="/classes">Classes</Menu.Item>
+            <Menu fixed="top" inverted>
+                <Container>
+                    <Menu.Item name="students" active={activeItem.startsWith('/students')}
+                               href="/students">中方学生列表</Menu.Item>
+                    <Menu.Item name="/companions" active={activeItem.startsWith('/companions')}
+                               href="/companions">外籍伙伴列表</Menu.Item>
+                    <Menu.Item name="classes" active={activeItem.startsWith('/classes')}
+                               href="/classes">班级课程列表</Menu.Item>
+                    <Menu.Item name="content-list" active={activeItem === '/content-list'}
+                               href="/admin-neue/content-list" target="_blank">内容管理</Menu.Item>
+                </Container>
             </Menu>
         )
     }

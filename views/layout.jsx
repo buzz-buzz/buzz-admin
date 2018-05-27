@@ -1,6 +1,7 @@
 import * as React from "react";
 import Header from "./header";
 import cdn from "./cdn";
+import {Container} from "semantic-ui-react";
 
 export default class Layout extends React.Component {
     constructor() {
@@ -22,7 +23,9 @@ export default class Layout extends React.Component {
             </head>
             <body>
             <Header title={this.props.title} path={this.props.path}/>
-            {this.props.children}
+            <Container style={{marginTop: '7em'}}>
+                {this.props.children}
+            </Container>
             <script src={cdn("/js/bundle.js", this.props.v)}></script>
             </body>
             </html>
