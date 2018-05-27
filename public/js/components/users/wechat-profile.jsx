@@ -44,7 +44,7 @@ export default class WechatProfile extends React.Component {
                 wechat_unionid: this.state.wechat_unionid
             }
 
-            if ((this.props.user.avatar.startsWith(`//thirdwx`) || this.props.user.avatar.startsWith(`http://thirdwx`) || this.props.user.startsWith(`https://thirdwx`)) && this.wechatData.headimgurl && this.props.user.avatar !== this.wechatData.headimgurl) {
+            if ((this.props.user.avatar.startsWith(`//thirdwx`) || this.props.user.avatar.startsWith(`http://thirdwx`) || this.props.user.avatar.startsWith(`https://thirdwx`)) && this.wechatData.headimgurl && this.props.user.avatar !== this.wechatData.headimgurl) {
                 updations.avatar = this.wechatData.headimgurl.replace('http://', '//')
             }
 
@@ -61,6 +61,7 @@ export default class WechatProfile extends React.Component {
 
             this.props.profileUpdateCallback(p)
         } catch (ex) {
+            console.error(ex)
             this.formStatus.success = false;
             this.formStatus.message = JSON.stringify(ex)
         } finally {
