@@ -282,12 +282,8 @@ export default class UserList extends React.Component {
                               integralUpdateCallback={this.integralUpdated}
                               onCloseCallback={this.closeIntegralModal}/>
                 }
-                {
-                    this.props['user-type'] === MemberType.Student &&
-
-                    <LevelModal open={this.state.levelModalOpen} user={this.state.currentUser}
-                                onCloseCallback={this.onCloseLevelModal} onLevelUpdated={this.onLevelUpdated}/>
-                }
+                <LevelModal open={this.state.levelModalOpen} user={this.state.currentUser}
+                            onCloseCallback={this.onCloseLevelModal} onLevelUpdated={this.onLevelUpdated}/>
                 <Profile open={this.state.profileModalOpen} user={this.state.currentUser}
                          profileUpdateCallback={this.profileUpdated} onCloseCallback={this.closeProfileModal}
                          userCreatedCallback={this.userCreated} onUserDeleted={this.onUserDeleted}/>
@@ -362,10 +358,7 @@ export default class UserList extends React.Component {
                 <Table.HeaderCell>手机号</Table.HeaderCell>
                 <Table.HeaderCell>邮箱</Table.HeaderCell>
                 <Table.HeaderCell>课时数</Table.HeaderCell>
-                {
-                    (this.props['user-type'] === MemberType.Student) &&
-                    <Table.HeaderCell>积分</Table.HeaderCell>
-                }
+                <Table.HeaderCell>积分</Table.HeaderCell>
                 {
                     this.props['user-type'] === MemberType.Student &&
                     <Table.HeaderCell>能力评级</Table.HeaderCell>
