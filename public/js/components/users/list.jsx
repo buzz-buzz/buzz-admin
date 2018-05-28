@@ -235,13 +235,10 @@ export default class UserList extends React.Component {
                                                 style={{cursor: 'pointer'}}>
                                         {user.class_hours || 0}
                                     </Table.Cell>
-                                    {
-                                        this.props['user-type'] === MemberType.Student &&
-                                        <Table.Cell onClick={() => this.openIntegral(user)}
-                                                    style={{cursor: 'pointer'}}>
-                                            {user.integral || 0}
-                                        </Table.Cell>
-                                    }
+                                    <Table.Cell onClick={() => this.openIntegral(user)}
+                                                style={{cursor: 'pointer'}}>
+                                        {user.integral || 0}
+                                    </Table.Cell>
                                     {
                                         this.props['user-type'] === MemberType.Student &&
                                         <Table.Cell onClick={() => this.openLevelModal(user)}>
@@ -275,15 +272,16 @@ export default class UserList extends React.Component {
                 <ClassHours open={this.state.classHoursModalOpen} student={this.state.currentUser}
                             classHoursUpdateCallback={this.classHoursUpdated}
                             onCloseCallback={this.closeClassHoursModal}/>
+
+                <Integral open={this.state.integralModalOpen} student={this.state.currentUser}
+                          integralUpdateCallback={this.integralUpdated}
+                          onCloseCallback={this.closeIntegralModal}/>
                 {
                     this.props['user-type'] === MemberType.Student &&
 
-                    <Integral open={this.state.integralModalOpen} student={this.state.currentUser}
-                              integralUpdateCallback={this.integralUpdated}
-                              onCloseCallback={this.closeIntegralModal}/>
+                    <LevelModal open={this.state.levelModalOpen} user={this.state.currentUser}
+                                onCloseCallback={this.onCloseLevelModal} onLevelUpdated={this.onLevelUpdated}/>
                 }
-                <LevelModal open={this.state.levelModalOpen} user={this.state.currentUser}
-                            onCloseCallback={this.onCloseLevelModal} onLevelUpdated={this.onLevelUpdated}/>
                 <Profile open={this.state.profileModalOpen} user={this.state.currentUser}
                          profileUpdateCallback={this.profileUpdated} onCloseCallback={this.closeProfileModal}
                          userCreatedCallback={this.userCreated} onUserDeleted={this.onUserDeleted}/>
