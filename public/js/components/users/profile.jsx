@@ -30,7 +30,8 @@ export default class Profile extends React.Component {
             time_zone: '',
             user: {},
             display_name: '',
-            weekly_schedule_requirements: 1
+            weekly_schedule_requirements: 1,
+            password: ''
         };
 
         this.handleChange = this.handleChange.bind(this);
@@ -77,7 +78,8 @@ export default class Profile extends React.Component {
                 date_of_birth: this.state.user.date_of_birth && TimeHelper.toLocalDateTime(new Date(this.state.user.date_of_birth)),
                 display_name: this.state.user.display_name || '',
                 theOtherRole: Profile.theOtherRole(this.state.user.role),
-                weekly_schedule_requirements: this.state.user.weekly_schedule_requirements || 1
+                weekly_schedule_requirements: this.state.user.weekly_schedule_requirements || 1,
+                password: this.state.user.password || ''
             });
         })
     }
@@ -101,7 +103,8 @@ export default class Profile extends React.Component {
         time_zone: this.state.time_zone,
         date_of_birth: this.state.date_of_birth && new Date(this.state.date_of_birth),
         display_name: this.state.display_name,
-        weekly_schedule_requirements: this.state.weekly_schedule_requirements
+        weekly_schedule_requirements: this.state.weekly_schedule_requirements,
+        password: this.state.password
     }) {
         try {
             this.setState({loading: true});
@@ -281,13 +284,17 @@ export default class Profile extends React.Component {
 
                             <Form.Input label="学校名称" placeholder="学校名称" value={this.state.school_name}
                                         name="school_name" onChange={this.handleChange}/>
-                            <Form.Field>
+                        </Form.Group>
+                        <Form.Group widths="equal">
+                        <Form.Field>
                                 <label>年级</label>
                                 <Dropdown selection multiple={false} search={true} name="grade"
                                           options={Grades.list}
                                           value={this.state.grade} placeholder="年级" onChange={this.handleChange}
                                           onSearchChange={this.handleSearchChange}/>
                             </Form.Field>
+                            <Form.Input label="用户密码" placeholder="用户密码,不小于6位" value={this.state.password}
+                                        name="password" onChange={this.handleChange}/>
                         </Form.Group>
                         <Form.Group widths="equal">
                             <Form.Field>

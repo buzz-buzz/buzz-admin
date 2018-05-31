@@ -1,5 +1,5 @@
 import * as React from "react";
-import {Button, Container, Form, Icon, Image, Input, Label, Menu, Pagination, Table} from "semantic-ui-react";
+import { Button, Container, Form, Icon, Image, Input, Label, Menu, Pagination, Table } from "semantic-ui-react";
 import ServiceProxy from "../../service-proxy";
 import Profile from "./profile";
 import SchedulePreference from "./schedule-preference";
@@ -10,9 +10,9 @@ import Integral from "../students/integral";
 import LevelModal from "../students/level-modal";
 import BookingTable from "./booking-table";
 import queryString from 'query-string';
-import {MemberType} from "../../common/MemberType";
+import { MemberType } from "../../common/MemberType";
 import history from '../common/history';
-import BuzzPagination, {BuzzPaginationData} from "../common/BuzzPagination";
+import BuzzPagination, { BuzzPaginationData } from "../common/BuzzPagination";
 
 BigCalendar.setLocalizer(BigCalendar.momentLocalizer(moment))
 
@@ -24,7 +24,7 @@ async function attachEvents(users) {
     if (userIdArray && userIdArray.length) {
         let bookings = await ServiceProxy.proxyTo({
             body: {
-                uri: `{buzzService}/api/v1/bookings/all?${queryString.stringify({users: userIdArray})}`,
+                uri: `{buzzService}/api/v1/bookings/all?${queryString.stringify({ users: userIdArray })}`,
                 method: 'GET'
             }
         });
@@ -151,7 +151,7 @@ export default class UserList extends React.Component {
     }
 
     async searchUsers() {
-        this.setState({loading: true});
+        this.setState({ loading: true });
         let paginationData = await
             ServiceProxy.proxyTo({
                 body: {
@@ -159,9 +159,9 @@ export default class UserList extends React.Component {
                     qs: Object.assign({
                         role: this.props['user-type']
                     }, this.state.searchParams, {
-                        start_time: this.state.searchParams.start_time ? new Date(this.state.searchParams.start_time) : undefined,
-                        end_time: this.state.searchParams.end_time ? new Date(this.state.searchParams.end_time) : undefined
-                    }, this.state.pagination)
+                            start_time: this.state.searchParams.start_time ? new Date(this.state.searchParams.start_time) : undefined,
+                            end_time: this.state.searchParams.end_time ? new Date(this.state.searchParams.end_time) : undefined
+                        }, this.state.pagination)
                 }
             });
 
@@ -180,7 +180,7 @@ export default class UserList extends React.Component {
         });
     }
 
-    handleTextChange(event, {value, name}) {
+    handleTextChange(event, { value, name }) {
         let clonedSearchParams = this.state.searchParams;
         clonedSearchParams[name] = value;
 
@@ -198,15 +198,15 @@ export default class UserList extends React.Component {
                     <Table.Body>
                         {
                             this.state.users.map((user, i) =>
-                                <Table.Row key={user.user_id} style={{cursor: 'pointer'}}>
+                                <Table.Row key={user.user_id} style={{ cursor: 'pointer' }}>
                                     <Table.Cell onClick={() => this.openProfile(user)}>
                                         {user.user_id}
                                     </Table.Cell>
                                     <Table.Cell onClick={() => this.openProfile(user)}>
                                         <object data={user.avatar} type="image/png" className="ui image avatar"
-                                                title={user.user_id} alt={user.user_id}>
+                                            title={user.user_id} alt={user.user_id}>
                                             <Image src="/images/empty_avatar.jpg" avatar title={user.user_id}
-                                                   alt={user.user_id}/>
+                                                alt={user.user_id} />
                                         </object>
                                     </Table.Cell>
                                     {
@@ -232,11 +232,11 @@ export default class UserList extends React.Component {
                                         {user.email}
                                     </Table.Cell>
                                     <Table.Cell onClick={() => this.openClassHours(user)}
-                                                style={{cursor: 'pointer'}}>
+                                        style={{ cursor: 'pointer' }}>
                                         {user.class_hours || 0}
                                     </Table.Cell>
                                     <Table.Cell onClick={() => this.openIntegral(user)}
-                                                style={{cursor: 'pointer'}}>
+                                        style={{ cursor: 'pointer' }}>
                                         {user.integral || 0}
                                     </Table.Cell>
                                     {
@@ -258,35 +258,35 @@ export default class UserList extends React.Component {
                     <Table.Footer>
                         <Table.Row>
                             <BuzzPagination pagination={this.state.pagination} gotoPage={this.gotoPage}
-                                            paginationChanged={(newPagination) => {
-                                                window.localStorage.setItem('pagination.per_page', newPagination.per_page);
-                                                this.setState({pagination: newPagination})
-                                            }}/>
+                                paginationChanged={(newPagination) => {
+                                    window.localStorage.setItem('pagination.per_page', newPagination.per_page);
+                                    this.setState({ pagination: newPagination })
+                                }} />
                         </Table.Row>
                     </Table.Footer>
                 </Table>
-                <br/>
-                <br/>
-                <br/>
-                <br/>
+                <br />
+                <br />
+                <br />
+                <br />
                 <ClassHours open={this.state.classHoursModalOpen} student={this.state.currentUser}
-                            classHoursUpdateCallback={this.classHoursUpdated}
-                            onCloseCallback={this.closeClassHoursModal}/>
+                    classHoursUpdateCallback={this.classHoursUpdated}
+                    onCloseCallback={this.closeClassHoursModal} />
 
                 <Integral open={this.state.integralModalOpen} student={this.state.currentUser}
-                          integralUpdateCallback={this.integralUpdated}
-                          onCloseCallback={this.closeIntegralModal}/>
+                    integralUpdateCallback={this.integralUpdated}
+                    onCloseCallback={this.closeIntegralModal} />
                 {
                     this.props['user-type'] === MemberType.Student &&
 
                     <LevelModal open={this.state.levelModalOpen} user={this.state.currentUser}
-                                onCloseCallback={this.onCloseLevelModal} onLevelUpdated={this.onLevelUpdated}/>
+                        onCloseCallback={this.onCloseLevelModal} onLevelUpdated={this.onLevelUpdated} />
                 }
                 <Profile open={this.state.profileModalOpen} user={this.state.currentUser}
-                         profileUpdateCallback={this.profileUpdated} onCloseCallback={this.closeProfileModal}
-                         userCreatedCallback={this.userCreated} onUserDeleted={this.onUserDeleted}/>
+                    profileUpdateCallback={this.profileUpdated} onCloseCallback={this.closeProfileModal}
+                    userCreatedCallback={this.userCreated} onUserDeleted={this.onUserDeleted} />
                 <SchedulePreference open={this.state.schedulePreferenceModalOpen} user={this.state.currentUser}
-                                    onCloseCallback={this.closeSchedulePreferenceModal}/>
+                    onCloseCallback={this.closeSchedulePreferenceModal} />
             </Container>
         )
     }
@@ -295,16 +295,16 @@ export default class UserList extends React.Component {
         return <Form onSubmit={this.searchUsers} loading={this.state.loading}>
             <Form.Group widths='equal'>
                 <Form.Field control={Input} label="微信昵称" name="wechat_name"
-                            value={this.state.searchParams.wechat_name}
-                            onChange={this.handleTextChange}></Form.Field>
+                    value={this.state.searchParams.wechat_name}
+                    onChange={this.handleTextChange}></Form.Field>
                 <Form.Field control={Input} label="(孩子)英文名/备注名（内部可见）"
-                            value={this.state.searchParams.display_name}
-                            name="display_name"
-                            onChange={this.handleTextChange}></Form.Field>
+                    value={this.state.searchParams.display_name}
+                    name="display_name"
+                    onChange={this.handleTextChange}></Form.Field>
                 <Form.Field control={Input} label="手机号" value={this.state.searchParams.mobile}
-                            name="mobile" onChange={this.handleTextChange}></Form.Field>
+                    name="mobile" onChange={this.handleTextChange}></Form.Field>
                 <Form.Field control={Input} label="邮箱" value={this.state.searchParams.email}
-                            name="email" onChange={this.handleTextChange}></Form.Field>
+                    name="email" onChange={this.handleTextChange}></Form.Field>
                 <Form.Field>
                     <label>排课状态</label>
                     <Form.Select options={[{
@@ -318,17 +318,17 @@ export default class UserList extends React.Component {
                     }, {
                         key: 'need', text: '需排课', value: 'need'
                     }]} placeholder="排课状态" value={this.state.searchParams.weekly_schedule_requirements}
-                                 name="weekly_schedule_requirements" onChange={this.handleTextChange}></Form.Select>
+                        name="weekly_schedule_requirements" onChange={this.handleTextChange}></Form.Select>
                 </Form.Field>
             </Form.Group>
             <p>预约/排课时间段：</p>
             <Form.Group widths="equal">
                 <Form.Field control={Input} label="开始时间" name="start_time"
-                            value={this.state.searchParams.start_time}
-                            onChange={this.handleTextChange} type="datetime-local"></Form.Field>
+                    value={this.state.searchParams.start_time}
+                    onChange={this.handleTextChange} type="datetime-local"></Form.Field>
                 <Form.Field control={Input} label="结束时间" name="end_time"
-                            value={this.state.searchParams.end_time}
-                            onChange={this.handleTextChange} type="datetime-local"></Form.Field>
+                    value={this.state.searchParams.end_time}
+                    onChange={this.handleTextChange} type="datetime-local"></Form.Field>
             </Form.Group>
             <Form.Group>
                 <Button type="submit">查询</Button>
@@ -380,7 +380,7 @@ export default class UserList extends React.Component {
     }
 
     closeClassHoursModal() {
-        this.setState({classHoursModalOpen: false})
+        this.setState({ classHoursModalOpen: false })
     }
 
     openIntegral(student) {
@@ -391,7 +391,7 @@ export default class UserList extends React.Component {
     }
 
     closeIntegralModal() {
-        this.setState({integralModalOpen: false})
+        this.setState({ integralModalOpen: false })
     }
 
     openProfile(user) {
@@ -404,7 +404,7 @@ export default class UserList extends React.Component {
     }
 
     closeProfileModal() {
-        this.setState({profileModalOpen: false});
+        this.setState({ profileModalOpen: false });
         let url = this.props.match.path.replace('/:userId?', '');
         history.push(url);
     }
@@ -449,6 +449,7 @@ export default class UserList extends React.Component {
         selectedUser.time_zone = newProfile.time_zone;
         selectedUser.date_of_birth = newProfile.date_of_birth;
         selectedUser.weekly_schedule_requirements = newProfile.weekly_schedule_requirements;
+        selectedUser.password = newProfile.password;
 
         let newUsers = this.state.users.map(s => {
             if (s.user_id === selectedUser.user_id) {
@@ -513,18 +514,18 @@ export default class UserList extends React.Component {
 
             return s;
         });
-        this.setState({currentUser: currentUser, users: newUsers})
+        this.setState({ currentUser: currentUser, users: newUsers })
     }
 
     createNewUser() {
         this.openProfile({});
     }
 
-    gotoPage(evt, {activePage}) {
+    gotoPage(evt, { activePage }) {
         let p = this.state.pagination;
         p.current_page = activePage;
 
-        this.setState({pagination: p}, async () => {
+        this.setState({ pagination: p }, async () => {
             await this.searchUsers();
         })
     }
