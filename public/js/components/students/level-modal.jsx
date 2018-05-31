@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {Form, Header, Icon, Message, Modal, TextArea} from "semantic-ui-react";
+import {Form, Header, Icon, Message, Modal, TextArea, Dropdown} from "semantic-ui-react";
 import ServiceProxy from "../../service-proxy";
 
 export default class LevelModal extends React.Component {
@@ -9,7 +9,8 @@ export default class LevelModal extends React.Component {
         this.state = {
             level: '',
             levelDetail: '',
-            jsonDetail: {}
+            jsonDetail: {},
+            update_level: ''
         }
 
         this.handleChange = this.handleChange.bind(this);
@@ -29,6 +30,7 @@ export default class LevelModal extends React.Component {
     async componentWillReceiveProps(nextProps) {
         this.setState({
             level: nextProps.user ? (nextProps.user.level || '') : '',
+            update_level: nextProps.user ? (nextProps.user.level || '') : '',
             userId: nextProps.user ? nextProps.user.user_id : 0
         })
 
@@ -72,7 +74,7 @@ export default class LevelModal extends React.Component {
                     uri: `{buzzService}/api/v1/user-placement-tests/${this.state.userId}`,
                     method: 'PUT',
                     json: {
-                        level: this.state.level
+                        level: this.state.update_level
                     }
                 }
             });
@@ -104,7 +106,32 @@ export default class LevelModal extends React.Component {
                 <Header content="能力评级"></Header>
                 <Modal.Content>
                     <p>当前评级：{this.state.level}</p>
+                    <Form error={this.state.error} loading={this.state.loading}>
+                        <Message error header="出错了" content={this.state.message}/>
+                        {
+                            !this.state.jsonDetail.questions &&
 
+                            <Form.Group>
+                                <TextArea autoHeight rows={3} value={this.state.levelDetail}
+                                          placeholder="答题详情"></TextArea>
+                            </Form.Group>
+                        }
+                        <Form.Group>
+                            <Form.Field>
+                                        <label>能力评级</label>
+                                        <Dropdown selection name="update_level"  onChange={this.handleChange}
+                                                  options={[{key: '1', value: '1', text: '1'},
+                                                  {key: '2', value: '2', text: '2'},
+                                                  {key: '3', value: '3', text: '3'},
+                                                  {key: '4', value: '4', text: '4'},
+                                                  {key: '5', value: '5', text: '5'},
+                                                  {key: '6', value: '6', text: '6'},]}
+                                                  value={this.state.update_level} placeholder="能力评级"/>
+                            </Form.Field>
+                            <Form.Button content="保存" type="button" onClick={this.saveLevel}/>
+                            <Form.Button className="right floated" content="取消" type="button" onClick={this.close}/>
+                        </Form.Group>
+                    </Form>
                     <ol>
                         {
                             this.state.jsonDetail && this.state.jsonDetail.questions && this.state.jsonDetail.questions.map((q, k) =>
@@ -140,22 +167,6 @@ export default class LevelModal extends React.Component {
                             </li>
                         }
                     </ol>
-                    <Form error={this.state.error} loading={this.state.loading}>
-                        <Message error header="出错了" content={this.state.message}/>
-                        {
-                            !this.state.jsonDetail.questions &&
-
-                            <Form.Group>
-                                <TextArea autoHeight rows={3} value={this.state.levelDetail}
-                                          placeholder="答题详情"></TextArea>
-                            </Form.Group>
-                        }
-                        <Form.Group>
-                            <Form.Input placeholder="等级" name="level" value={level} onChange={this.handleChange}/>
-                            <Form.Button content="保存" type="button" onClick={this.saveLevel}/>
-                            <Form.Button className="right floated" content="取消" type="button" onClick={this.close}/>
-                        </Form.Group>
-                    </Form>
                 </Modal.Content>
             </Modal>
         );
