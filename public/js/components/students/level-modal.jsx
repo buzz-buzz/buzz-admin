@@ -117,9 +117,7 @@ export default class LevelModal extends React.Component {
                             </Form.Group>
                         }
                         <Form.Group>
-                            <Form.Field>
-                                        <label>能力评级</label>
-                                        <Dropdown selection name="update_level"  onChange={this.handleChange}
+                            <Dropdown selection name="update_level"  onChange={this.handleChange}
                                                   options={[{key: '1', value: '1', text: '1'},
                                                   {key: '2', value: '2', text: '2'},
                                                   {key: '3', value: '3', text: '3'},
@@ -127,7 +125,6 @@ export default class LevelModal extends React.Component {
                                                   {key: '5', value: '5', text: '5'},
                                                   {key: '6', value: '6', text: '6'},]}
                                                   value={this.state.update_level} placeholder="能力评级"/>
-                            </Form.Field>
                             <Form.Button content="保存" type="button" onClick={this.saveLevel}/>
                             <Form.Button className="right floated" content="取消" type="button" onClick={this.close}/>
                         </Form.Group>
@@ -156,14 +153,18 @@ export default class LevelModal extends React.Component {
                         {
                             this.state.jsonDetail.answers &&
                             <li>
-                                <audio controls
-                                       src={typeof this.state.jsonDetail.answers[this.state.jsonDetail.questions.length] === 'object' ? this.state.jsonDetail.answers[this.state.jsonDetail.questions.length].url : this.state.jsonDetail.answers[this.state.jsonDetail.questions.length]}>
-                                </audio>
-                                <a href={typeof this.state.jsonDetail.answers[this.state.jsonDetail.questions.length] === 'object' ? this.state.jsonDetail.answers[this.state.jsonDetail.questions.length].url : this.state.jsonDetail.answers[this.state.jsonDetail.questions.length]}
-                                   target="_blank" rel="no-opener">原始音频文件</a>
-                                   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                <a href={`/m3u8/index.html?url=${encodeURIComponent(typeof this.state.jsonDetail.answers[this.state.jsonDetail.questions.length] === 'object' ? this.state.jsonDetail.answers[this.state.jsonDetail.questions.length].url : this.state.jsonDetail.answers[this.state.jsonDetail.questions.length])}`}
-                                   target="_blank" rel="no-opener">在线播放</a>
+                                <div style={{marginTop: '15px', display: 'flex', alignItems: 'center'}}>
+                                    <span>录音题答案:</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <audio controls style={(typeof this.state.jsonDetail.answers[this.state.jsonDetail.questions.length] === 'object' ? this.state.jsonDetail.answers[this.state.jsonDetail.questions.length].url : this.state.jsonDetail.answers[this.state.jsonDetail.questions.length]).indexOf('m3u8') > -1 ? {display: 'none'} :{} }
+                                        src={typeof this.state.jsonDetail.answers[this.state.jsonDetail.questions.length] === 'object' ? this.state.jsonDetail.answers[this.state.jsonDetail.questions.length].url : this.state.jsonDetail.answers[this.state.jsonDetail.questions.length]}>
+                                    </audio>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <a href={typeof this.state.jsonDetail.answers[this.state.jsonDetail.questions.length] === 'object' ? this.state.jsonDetail.answers[this.state.jsonDetail.questions.length].url : this.state.jsonDetail.answers[this.state.jsonDetail.questions.length]}
+                                    target="_blank" rel="no-opener">原始音频文件</a>
+                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    <a href={`/m3u8/index.html?url=${encodeURIComponent(typeof this.state.jsonDetail.answers[this.state.jsonDetail.questions.length] === 'object' ? this.state.jsonDetail.answers[this.state.jsonDetail.questions.length].url : this.state.jsonDetail.answers[this.state.jsonDetail.questions.length])}`}
+                                    target="_blank" rel="no-opener">在线播放</a>
+                                </div>
                             </li>
                         }
                     </ol>
