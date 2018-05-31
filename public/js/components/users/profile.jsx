@@ -9,6 +9,7 @@ import Timezones from "../../common/Timezones";
 import TimeHelper from "../../common/TimeHelper";
 import {MemberType, MemberTypeChinese} from "../../common/MemberType";
 import WechatProfile from "./wechat-profile";
+import UserTags from "./user-tags";
 
 export default class Profile extends React.Component {
     constructor(props) {
@@ -218,9 +219,14 @@ export default class Profile extends React.Component {
                    closeIcon>
                 <Header content={`用户资料 - ${this.state.user.user_id}`}></Header>
                 <Modal.Content>
-                    <Image src={this.state.avatar} avatar alt={this.state.user.user_id}
-                           title={this.state.user.user_id}/>
+                    <object data={this.state.avatar} type="image/png" className="ui image avatar"
+                            title={this.state.user.user_id} alt={this.state.user.user_id}>
+
+                        <Image src="/images/empty_avatar.jpg" avatar title={this.state.user.user_id}
+                               alt={this.state.user.user_id}/>
+                    </object>
                     <span>{this.state.user.display_name}</span>
+                    <UserTags userId={this.state.user.user_id}/>
                     <Form error={this.state.error} loading={this.state.loading} onSubmit={() => this.updateProfile()}>
                         <Message error header="出错了" content={this.state.message}/>
                         <Form.Group>
