@@ -17,11 +17,7 @@ export default class UserTags extends React.Component {
         this.setState({isFetching: true})
 
         try {
-            let allTags = await ServiceProxy.proxyTo({
-                body: {
-                    uri: `{buzzService}/api/v1/tags`
-                }
-            })
+            let allTags = await UserTags.getAllTags()
 
             let userTags = await ServiceProxy.proxyTo({
                 body: {
@@ -46,6 +42,14 @@ export default class UserTags extends React.Component {
         }
     }
 
+    static async getAllTags() {
+        return await ServiceProxy.proxyTo({
+            body: {
+                uri: `{buzzService}/api/v1/tags`
+            }
+        });
+    }
+
     handleAddTag = async (e, {value: tag}) => {
         this.setState({
             allTags: [{text: tag, value: tag, key: tag}, ...this.state.allTags]
@@ -53,7 +57,6 @@ export default class UserTags extends React.Component {
     }
 
     async saveNewTagsToServer(tags) {
-        console.log('saving"")...')
         if (tags.length) {
             await ServiceProxy.proxyTo({
                 body: {
