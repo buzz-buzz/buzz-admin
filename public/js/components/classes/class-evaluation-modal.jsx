@@ -1,6 +1,7 @@
 import * as React from "react";
-import {Button, Image, Modal, Rating, Segment, Table} from 'semantic-ui-react'
+import { Button, Image, Modal, Rating, Segment, Table } from 'semantic-ui-react'
 import ServiceProxy from "../../service-proxy";
+import moment from 'moment';
 
 export default class ClassEvaluation extends React.Component {
     constructor(props) {
@@ -16,6 +17,7 @@ export default class ClassEvaluation extends React.Component {
     }
 
     async componentDidMount() {
+
     }
 
     async componentWillReceiveProps(nextProps) {
@@ -72,27 +74,27 @@ export default class ClassEvaluation extends React.Component {
                                             <Table.Cell>
                                                 {
                                                     <Image avatar alt={c.from_user_id}
-                                                           title={c.from_user_id}
-                                                           src={`/avatar/${c.from_user_id}`}
-                                                           key={c.from_user_id}/>
+                                                        title={c.from_user_id}
+                                                        src={`/avatar/${c.from_user_id}`}
+                                                        key={c.from_user_id} />
                                                 }
                                             </Table.Cell>
                                             <Table.Cell>
                                                 {
                                                     <Image avatar alt={c.to_user_id}
-                                                           title={c.to_user_id}
-                                                           src={`/avatar/${c.to_user_id}`}
-                                                           key={c.to_user_id}/>
+                                                        title={c.to_user_id}
+                                                        src={`/avatar/${c.to_user_id}`}
+                                                        key={c.to_user_id} />
                                                 }
                                             </Table.Cell>
                                             <Table.Cell>
-                                                <Rating disabled icon='star' defaultRating={c.score} maxRating={5}/>
+                                                <Rating disabled icon='star' defaultRating={c.score} maxRating={5} />
                                             </Table.Cell>
                                             <Table.Cell>
                                                 {c.comment}
                                             </Table.Cell>
                                             <Table.Cell>
-                                                {c.feedback_time}
+                                                {moment(c.feedback_time).format().substring(0, 19).replace('T', ' ')}
                                             </Table.Cell>
                                         </Table.Row>
                                     )
@@ -104,7 +106,7 @@ export default class ClassEvaluation extends React.Component {
                     </Segment>
                 </Modal.Content>
                 <Modal.Actions>
-                    <Button content='关闭' onClick={this.close}/>
+                    <Button content='关闭' onClick={this.close} />
                 </Modal.Actions>
             </Modal>
         )
