@@ -12,7 +12,7 @@ export default class Layout extends React.Component {
         return (
             <html>
             <head>
-                <title>{this.props.title}</title>
+                <title>{this.props.title} - {process.env.NODE_ENV}</title>
                 <link rel="stylesheet"
                       href="/css/semantic.min.css"></link>
                 <link rel="stylesheet"

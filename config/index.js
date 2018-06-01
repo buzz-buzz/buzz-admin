@@ -4,6 +4,7 @@ let config = {
     development: {
         endPoints: {
             buzzService: `${process.env.cors}/127.0.0.1:16888`,
+            // buzzService: 'http://localhost:16888',
             adminNeue: `${process.env.admin_neue}`,
         }
     },
