@@ -292,7 +292,7 @@ export default class Profile extends React.Component {
                                         name="school_name" onChange={this.handleChange}/>
                         </Form.Group>
                         <Form.Group widths="equal">
-                        <Form.Field>
+                            <Form.Field>
                                 <label>年级</label>
                                 <Dropdown selection multiple={false} search={true} name="grade"
                                           options={Grades.list}
@@ -346,7 +346,7 @@ export default class Profile extends React.Component {
                             }
                             {
                                 // TODO: Only super user can see this button
-                                process.env.NODE_ENV !== 'production' &&
+                                (!process.env.NODE_ENV || process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'qa') &&
                                 <Form.Button negative content="删除" type="button" onClick={this.deleteUser}/>
                             }
                             <Form.Button color="black"
