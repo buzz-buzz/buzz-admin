@@ -1,5 +1,18 @@
 import * as React from "react";
-import {Button, Container, Dropdown, Form, Icon, Image, Input, Label, Menu, Pagination, Table} from "semantic-ui-react";
+import {
+    Button,
+    Container,
+    Divider,
+    Dropdown,
+    Form,
+    Icon,
+    Image,
+    Input,
+    Label,
+    Menu,
+    Pagination,
+    Table
+} from "semantic-ui-react";
 import ServiceProxy from "../../service-proxy";
 import Profile from "./profile";
 import SchedulePreference from "./schedule-preference";
@@ -58,6 +71,16 @@ export default class UserList extends React.Component {
             searchParams
         }, () => {
 
+        })
+    };
+    searchUsersByTag = async (tag) => {
+        let {searchParams} = this.state
+        searchParams.tags = [tag]
+
+        this.setState({
+            searchParams: searchParams
+        }, async () => {
+            await this.searchUsers()
         })
     };
 
@@ -363,6 +386,21 @@ export default class UserList extends React.Component {
                     this.props['user-type'] === MemberType.Companion &&
                     <Button thpe="button" onClick={this.createNewUser}>创建新用户</Button>
                 }
+
+                <label>快捷方式：</label>
+                <Label.Group color='blue'>
+                    {
+                        this.state.allTags.map(t => {
+                            return (
+                                <Label as="button" key={t.key} onClick={() => {
+                                    this.searchUsersByTag(t.key)
+                                }} style={{cursor: 'pointer'}}>
+                                    {t.text}
+                                </Label>
+                            )
+                        })
+                    }
+                </Label.Group>
             </Form.Group>
         </Form>
             ;
