@@ -94,7 +94,7 @@ export default class ClassEvaluation extends React.Component {
                                                 {c.comment}
                                             </Table.Cell>
                                             <Table.Cell>
-                                                {moment(c.feedback_time).format().substring(0, 19).replace('T', ' ')}
+                                                {moment(c.feedback_time).format('YYYY-MM-DD HH:mm:ss')}
                                             </Table.Cell>
                                         </Table.Row>
                                     )
