@@ -1,5 +1,18 @@
 import * as React from "react";
-import {Button, Container, Dropdown, Form, Icon, Image, Input, Label, Menu, Pagination, Table} from "semantic-ui-react";
+import {
+    Button,
+    Container,
+    Divider,
+    Dropdown,
+    Form,
+    Icon,
+    Image,
+    Input,
+    Label,
+    Menu,
+    Pagination, Segment,
+    Table
+} from "semantic-ui-react";
 import ServiceProxy from "../../service-proxy";
 import Profile from "./profile";
 import SchedulePreference from "./schedule-preference";
@@ -58,6 +71,16 @@ export default class UserList extends React.Component {
             searchParams
         }, () => {
 
+        })
+    };
+    searchUsersByTag = async (tag) => {
+        let {searchParams} = this.state
+        searchParams.tags = [tag]
+
+        this.setState({
+            searchParams: searchParams
+        }, async () => {
+            await this.searchUsers()
         })
     };
 
@@ -217,82 +240,10 @@ export default class UserList extends React.Component {
         return (
             <Container>
                 {this.renderSearchForm()}
-                <Table celled>
-                    {this.renderTableHeader()}
-                    <Table.Body>
-                        {
-                            this.state.users.map((user, i) =>
-                                <Table.Row key={user.user_id} style={{cursor: 'pointer'}}>
-                                    <Table.Cell onClick={() => this.openProfile(user)}>
-                                        {user.user_id}
-                                    </Table.Cell>
-                                    <Table.Cell onClick={() => this.openProfile(user)}>
-                                        <object data={user.avatar} type="image/png" className="ui image avatar"
-                                                title={user.user_id} alt={user.user_id}>
-                                            <Image src="/images/empty_avatar.jpg" avatar title={user.user_id}
-                                                   alt={user.user_id}/>
-                                        </object>
-                                    </Table.Cell>
-                                    {
-                                        this.props['user-type'] === MemberType.Companion &&
 
-                                        <Table.Cell onClick={() => this.openProfile(user)}>
-                                            {user.country}
-                                        </Table.Cell>
-                                    }
-                                    <Table.Cell onClick={() => this.openProfile(user)}>
-                                        {user.wechat_name}
-                                    </Table.Cell>
-                                    <Table.Cell onClick={() => this.openProfile(user)}>
-                                        {user.name || user.facebook_name}
-                                    </Table.Cell>
-                                    <Table.Cell onClick={() => this.openProfile(user)}>
-                                        {user.display_name}
-                                    </Table.Cell>
-                                    <Table.Cell onClick={() => this.openProfile(user)}>
-                                        {user.mobile}
-                                    </Table.Cell>
-                                    <Table.Cell onClick={() => this.openProfile(user)}>
-                                        {user.email}
-                                    </Table.Cell>
-                                    <Table.Cell onClick={() => this.openClassHours(user)}
-                                                style={{cursor: 'pointer'}}>
-                                        {user.class_hours || 0}
-                                    </Table.Cell>
-                                    <Table.Cell onClick={() => this.openIntegral(user)}
-                                                style={{cursor: 'pointer'}}>
-                                        {user.integral || 0}
-                                    </Table.Cell>
-                                    {
-                                        this.props['user-type'] === MemberType.Student &&
-                                        <Table.Cell onClick={() => this.openLevelModal(user)}>
-                                            {user.level}
-                                        </Table.Cell>
-                                    }
-                                    <Table.Cell onClick={() => this.openProfile(user)}>
-                                        {user.weekly_schedule_requirements || '1'}
-                                    </Table.Cell>
-                                    <Table.Cell onClick={() => this.openSchedulePreferenceModal(user)}>
-                                        <BookingTable events={user.events} defaultDate={new Date()}></BookingTable>
-                                    </Table.Cell>
-                                </Table.Row>
-                            )
-                        }
-                    </Table.Body>
-                    <Table.Footer>
-                        <Table.Row>
-                            <BuzzPagination pagination={this.state.pagination} gotoPage={this.gotoPage}
-                                            paginationChanged={(newPagination) => {
-                                                window.localStorage.setItem('pagination.per_page', newPagination.per_page);
-                                                this.setState({pagination: newPagination})
-                                            }}/>
-                        </Table.Row>
-                    </Table.Footer>
-                </Table>
-                <br/>
-                <br/>
-                <br/>
-                <br/>
+                <Segment basic loading={this.state.loading}>
+                    {this.renderListTable()}
+                </Segment>
                 <ClassHours open={this.state.classHoursModalOpen} student={this.state.currentUser}
                             classHoursUpdateCallback={this.classHoursUpdated}
                             onCloseCallback={this.closeClassHoursModal}/>
@@ -313,6 +264,81 @@ export default class UserList extends React.Component {
                                     onCloseCallback={this.closeSchedulePreferenceModal}/>
             </Container>
         )
+    }
+
+    renderListTable() {
+        return <Table celled>
+            {this.renderTableHeader()}
+            <Table.Body>
+                {
+                    this.state.users.map((user, i) =>
+                        <Table.Row key={user.user_id} style={{cursor: 'pointer'}}>
+                            <Table.Cell onClick={() => this.openProfile(user)}>
+                                {user.user_id}
+                            </Table.Cell>
+                            <Table.Cell onClick={() => this.openProfile(user)}>
+                                <object data={user.avatar} type="image/png" className="ui image avatar"
+                                        title={user.user_id} alt={user.user_id}>
+                                    <Image src="/images/empty_avatar.jpg" avatar title={user.user_id}
+                                           alt={user.user_id}/>
+                                </object>
+                            </Table.Cell>
+                            {
+                                this.props['user-type'] === MemberType.Companion &&
+
+                                <Table.Cell onClick={() => this.openProfile(user)}>
+                                    {user.country}
+                                </Table.Cell>
+                            }
+                            <Table.Cell onClick={() => this.openProfile(user)}>
+                                {user.wechat_name}
+                            </Table.Cell>
+                            <Table.Cell onClick={() => this.openProfile(user)}>
+                                {user.name || user.facebook_name}
+                            </Table.Cell>
+                            <Table.Cell onClick={() => this.openProfile(user)}>
+                                {user.display_name}
+                            </Table.Cell>
+                            <Table.Cell onClick={() => this.openProfile(user)}>
+                                {user.mobile}
+                            </Table.Cell>
+                            <Table.Cell onClick={() => this.openProfile(user)}>
+                                {user.email}
+                            </Table.Cell>
+                            <Table.Cell onClick={() => this.openClassHours(user)}
+                                        style={{cursor: 'pointer'}}>
+                                {user.class_hours || 0}
+                            </Table.Cell>
+                            <Table.Cell onClick={() => this.openIntegral(user)}
+                                        style={{cursor: 'pointer'}}>
+                                {user.integral || 0}
+                            </Table.Cell>
+                            {
+                                this.props['user-type'] === MemberType.Student &&
+                                <Table.Cell onClick={() => this.openLevelModal(user)}>
+                                    {user.level}
+                                </Table.Cell>
+                            }
+                            <Table.Cell onClick={() => this.openProfile(user)}>
+                                {user.weekly_schedule_requirements || '1'}
+                            </Table.Cell>
+                            <Table.Cell onClick={() => this.openSchedulePreferenceModal(user)}>
+                                <BookingTable events={user.events} defaultDate={new Date()}></BookingTable>
+                            </Table.Cell>
+                        </Table.Row>
+                    )
+                }
+            </Table.Body>
+            <Table.Footer>
+                <Table.Row>
+                    <BuzzPagination pagination={this.state.pagination} gotoPage={this.gotoPage}
+                                    paginationChanged={(newPagination) => {
+                                        window.localStorage.setItem('pagination.per_page', newPagination.per_page);
+                                        this.setState({pagination: newPagination})
+                                    }}/>
+                </Table.Row>
+            </Table.Footer>
+        </Table>;
     }
 
     renderSearchForm() {
@@ -363,6 +389,21 @@ export default class UserList extends React.Component {
                     this.props['user-type'] === MemberType.Companion &&
                     <Button thpe="button" onClick={this.createNewUser}>创建新用户</Button>
                 }
+
+                <label>快捷方式：</label>
+                <Label.Group color='blue'>
+                    {
+                        this.state.allTags.map(t => {
+                            return (
+                                <Label as="button" key={t.key} onClick={() => {
+                                    this.searchUsersByTag(t.key)
+                                }} style={{cursor: 'pointer'}}>
+                                    {t.text}
+                                </Label>
+                            )
+                        })
+                    }
+                </Label.Group>
             </Form.Group>
         </Form>
             ;
