@@ -69,8 +69,6 @@ export default class UserList extends React.Component {
         searchParams.tags = value;
         this.setState({
             searchParams
-        }, () => {
-
         })
     };
     searchUsersByTag = async (tag) => {
