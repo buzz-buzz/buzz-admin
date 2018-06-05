@@ -305,7 +305,11 @@ export default class UserList extends React.Component {
                             </Table.Cell>
                             <Table.Cell onClick={() => this.openClassHours(user)}
                                         style={{cursor: 'pointer'}}>
-                                {user.class_hours || 0}
+                                <span
+                                    style={{whiteSpace: 'nowrap'}}>
+                                    <a title="可用课时数">{user.class_hours || 0}</a>
+                                    （<a title="冻结课时数">{user.locked_class_hours || 0}</a>）
+                                </span>
                             </Table.Cell>
                             <Table.Cell onClick={() => this.openIntegral(user)}
                                         style={{cursor: 'pointer'}}>
@@ -382,10 +386,13 @@ export default class UserList extends React.Component {
                             onChange={this.handleSelectedTagsChange}></Form.Field>
             </Form.Group>
             <Form.Group>
-                <Button type="submit">查询</Button>
+                <Button type="submit">
+                    <Icon name="search"/>
+                    查询
+                </Button>
                 {
                     this.props['user-type'] === MemberType.Companion &&
-                    <Button thpe="button" onClick={this.createNewUser}>创建新用户</Button>
+                    <Button type="button" onClick={this.createNewUser}>创建新用户</Button>
                 }
 
                 <label>快捷方式：</label>
