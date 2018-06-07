@@ -8,6 +8,7 @@ import {ClassStatusCode} from "../../common/ClassStatus";
 import * as _ from "lodash";
 import {BuzzPaginationData} from "../common/BuzzPagination";
 import BuzzPagination from "../common/BuzzPagination";
+import {Avatar} from "../../common/Avatar";
 
 function nearestToper(x, y) {
     let now = new Date();
@@ -296,21 +297,19 @@ export default class ClassList extends React.Component {
                                         {c.room_url}
                                     </Table.Cell>
                                     <Table.Cell>
-                                        {c.companions.map(userId => <Image avatar alt={userId} title={userId}
-                                                                           src={`/avatar/${userId}`} key={userId}/>)}
+                                        {
+                                            c.companions.map(userId => <a href={`/companions/${userId}`} target="_blank"
+                                                                          key={userId}>
+                                                <Avatar userId={userId}/>
+                                            </a>)
+                                        }
                                     </Table.Cell>
                                     <Table.Cell onClick={(event) => event.stopPropagation()}>
-                                        {c.students.map(userId => <a href={`/students/${userId}`} target="_blank"
-                                                                     key={userId}>
-                                                <object data={`/avatar/${userId}`} type="image/png"
-                                                        className="ui image avatar" title={userId} alt={userId}>
-                                                    <Image avatar alt={userId} title={userId}
-                                                           src={`/images/empty_avatar.jpg`}
-                                                    />
-                                                </object>
-                                                <span>{}</span>
-                                            </a>
-                                        )
+                                        {
+                                            c.students.map(userId => <a href={`/students/${userId}`} target="_blank"
+                                                                        key={userId}>
+                                                <Avatar userId={userId}/>
+                                            </a>)
                                         }
                                     </Table.Cell>
                                     <Table.Cell onClick={(e) => {
