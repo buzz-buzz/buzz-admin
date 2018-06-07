@@ -95,11 +95,12 @@ router
 
         profile = JSON.parse(profile);
         if (profile.avatar) {
-            if (profile.avatar.startsWith('//')) {
-                profile.avatar = 'https:' + profile.avatar;
-            }
-
-            ctx.body = await oldRequest(profile.avatar);
+            // if (profile.avatar.startsWith('//')) {
+            //     profile.avatar = 'https:' + profile.avatar;
+            // }
+            //
+            // ctx.body = await oldRequest(profile.avatar);
+            ctx.redirect(profile.avatar)
         } else {
             await koaSend(ctx, '/images/empty_avatar.jpg', {
                 root: __dirname + '/public'

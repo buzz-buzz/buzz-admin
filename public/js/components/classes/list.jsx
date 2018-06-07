@@ -64,6 +64,7 @@ export default class ClassList extends React.Component {
         this.onClassDetailClosed = this.onClassDetailClosed.bind(this);
         this.onClassSaved = this.onClassSaved.bind(this);
         this.openClassDetail = this.openClassDetail.bind(this);
+        this.openAdminNeueClassDetail = this.openAdminNeueClassDetail.bind(this);
 
         this.handleChange = this.handleChange.bind(this);
         this.searchClasses = this.searchClasses.bind(this);
@@ -216,10 +217,13 @@ export default class ClassList extends React.Component {
                     </Form>
                     <Form.Group>
                         <Button type="submit" onClick={this.searchClasses}>查询</Button>
-                        <Button onClick={() => this.openClassDetail()} type="button">创建班级</Button>
+                        {
+                            process.env.NODE_ENV !== 'production' &&
+                            <Button onClick={() => this.openClassDetail()} type="button">创建班级</Button>
+                        }
                         <a className="ui button green"
                            href={`/admin-neue/classDetail/create`}
-                           target="_blank">创建班级（新）</a>
+                           target="_blank">创建班级</a>
                         <Button onClick={this.updateStatus} type="button">批量更新班级结束状态</Button>
                     </Form.Group>
                 </Segment>
@@ -266,7 +270,7 @@ export default class ClassList extends React.Component {
                         {
                             this.state.classes.filter(c => this.state.currentStatuses.length === 0 || this.state.currentStatuses.indexOf(c.status) >= 0).map((c, i) =>
                                 <Table.Row key={c.class_id} style={{cursor: 'pointer'}}
-                                           onClick={() => this.openClassDetail(c)}>
+                                           onClick={() => process.env.NODE_ENV !== 'production ' ? this.openClassDetail(c) : this.openAdminNeueClassDetail(c)}>
                                     <Table.Cell>
                                         {c.class_id}
                                     </Table.Cell>
@@ -298,9 +302,16 @@ export default class ClassList extends React.Component {
                                     <Table.Cell onClick={(event) => event.stopPropagation()}>
                                         {c.students.map(userId => <a href={`/students/${userId}`} target="_blank"
                                                                      key={userId}>
-                                            <Image avatar alt={userId} title={userId}
-                                                   src={`/avatar/${userId}`}
-                                                   key={userId}/></a>)}
+                                                <object data={`/avatar/${userId}`} type="image/png"
+                                                        className="ui image avatar" title={userId} alt={userId}>
+                                                    <Image avatar alt={userId} title={userId}
+                                                           src={`/images/empty_avatar.jpg`}
+                                                    />
+                                                </object>
+                                                <span>{}</span>
+                                            </a>
+                                        )
+                                        }
                                     </Table.Cell>
                                     <Table.Cell onClick={(e) => {
                                         e.stopPropagation();
@@ -328,9 +339,14 @@ export default class ClassList extends React.Component {
                         </Table.Row>
                     </Table.Footer>
                 </Table>
-                <ClassDetail open={this.state.detailOpen} onClose={this.onClassDetailClosed}
-                             onClassSaved={this.onClassSaved} class={this.state.currentClass}
-                             buttonDisabled={this.state.buttonDisabled}></ClassDetail>
+
+                {
+                    (process.env.NODE_NEV !== 'production') &&
+
+                    <ClassDetail open={this.state.detailOpen} onClose={this.onClassDetailClosed}
+                                 onClassSaved={this.onClassSaved} class={this.state.currentClass}
+                                 buttonDisabled={this.state.buttonDisabled}></ClassDetail>
+                }
 
 
                 <ClassEvaluation open={this.state.evaluationOpen} onClose={this.onClassEvaluationClosed}
@@ -386,5 +402,9 @@ export default class ClassList extends React.Component {
         this.setState({searchParams, pagination: BuzzPaginationData}, async () => {
             await this.searchClasses()
         })
+    }
+
+    openAdminNeueClassDetail(c) {
+
     }
 }
