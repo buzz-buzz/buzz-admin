@@ -17,7 +17,7 @@ let config = {
             adminNeue: `${process.env.admin_neue}`,
         },
         superUsers: [56],
-        signInUrl: 'http://live.buzzbuzzenglish.com/select-role?return_url=%s',
+        signInUrl: 'http://corner-test.buzzbuzzenglish.com/select-role?return_url=%s',
         origin: 'http://admin-test.buzzbuzzenglish.com'
     },
     production: {
