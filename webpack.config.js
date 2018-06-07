@@ -25,9 +25,9 @@ const config = {
         // noParse: /jquery|lodash/,
     },
     plugins: [
-        new webpack.DefinePlugin({
-            'process.env.NODE_ENV': JSON.stringify('development')
-        }),
+        // new webpack.DefinePlugin({
+        //     'process.env.NODE_ENV': JSON.stringify('development')
+        // }),
 
         // new webpack.NoEmitOnErrorsPlugin(),
         // new webpack.DefinePlugin({'process.env.NODE_ENV': '"production"'}),
@@ -61,6 +61,8 @@ if (process.env.NODE_ENV === 'production') {
             screw_ie8: true
         }
     }))
+} else {
+    config.plugins.push(new webpack.DefinePlugin({'process.env.NODE_ENV': '"development"'}))
 }
 
 module.exports = config
