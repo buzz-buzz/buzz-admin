@@ -9,7 +9,7 @@ export default class ClassStatuses extends React.Component {
         this.state = {
             statuses: [],
             counter: {},
-            activeItem: ClassStatusCode.Opened
+            activeItems: [ClassStatusCode.Opened]
         }
     }
 
@@ -30,7 +30,7 @@ export default class ClassStatuses extends React.Component {
             this.setState({
                 counter,
                 statuses,
-                activeItem: nextProps.activeStatus
+                activeItems: nextProps.activeStatuses
             })
         }
     }
@@ -44,7 +44,7 @@ export default class ClassStatuses extends React.Component {
                     {
                         this.state.statuses.map(
                             status =>
-                                <Menu.Item name={status} active={this.state.activeItem === status}
+                                <Menu.Item name={status} active={this.state.activeItems.indexOf(status) >= 0}
                                            onClick={() => this.switchTo(status)} key={status}/>
                         )
                     }
@@ -54,7 +54,7 @@ export default class ClassStatuses extends React.Component {
     }
 
     switchTo(status) {
-        this.setState({activeItem: status}, () => {
+        this.setState({activeItems: status}, () => {
             this.props.activeStatusChanged(status);
         });
     }

@@ -1,5 +1,5 @@
 import * as React from "react";
-import {Button, Container, Form, Icon, Image, Input, Menu, Segment, Table} from "semantic-ui-react";
+import {Button, Container, Dropdown, Form, Icon, Image, Input, Menu, Segment, Table} from "semantic-ui-react";
 import ServiceProxy from "../../service-proxy";
 import ClassDetail from "./class-detail-modal";
 import ClassEvaluation from "./class-evaluation-modal";
@@ -8,6 +8,7 @@ import {ClassStatusCode} from "../../common/ClassStatus";
 import * as _ from "lodash";
 import {BuzzPaginationData} from "../common/BuzzPagination";
 import BuzzPagination from "../common/BuzzPagination";
+import {Avatar} from "../../common/Avatar";
 
 function nearestToper(x, y) {
     let now = new Date();
@@ -29,6 +30,15 @@ function nearestToper(x, y) {
 }
 
 export default class ClassList extends React.Component {
+    handleStatusChange = (e, {value}) => {
+        let {searchParams} = this.state;
+        searchParams.statuses = value;
+
+        this.setState({
+            searchParams,
+        })
+    };
+
     constructor() {
         super();
 
@@ -37,18 +47,25 @@ export default class ClassList extends React.Component {
             loading: false,
             searchParams: {
                 start_time: '',
-                end_time: ''
+                end_time: '',
+                statuses: [ClassStatusCode.Opened]
             },
-            currentStatus: ClassStatusCode.Opened,
+            currentStatuses: [ClassStatusCode.Opened],
             column: null,
             direction: null,
-            pagination: BuzzPaginationData
+            pagination: BuzzPaginationData,
+            allStatuses: Object.keys(ClassStatusCode).map(key => ({
+                key: ClassStatusCode[key],
+                value: ClassStatusCode[key],
+                text: ClassStatusCode[key]
+            }))
         };
 
         this.openClassDetail = this.openClassDetail.bind(this);
         this.onClassDetailClosed = this.onClassDetailClosed.bind(this);
         this.onClassSaved = this.onClassSaved.bind(this);
         this.openClassDetail = this.openClassDetail.bind(this);
+        this.openAdminNeueClassDetail = this.openAdminNeueClassDetail.bind(this);
 
         this.handleChange = this.handleChange.bind(this);
         this.searchClasses = this.searchClasses.bind(this);
@@ -94,7 +111,7 @@ export default class ClassList extends React.Component {
     switchToStatus(status) {
         this.setState({
             classes: this.state.classes.sort(nearestToper),
-            currentStatus: status,
+            currentStatuses: [status],
             direction: null,
             column: null
         })
@@ -108,8 +125,9 @@ export default class ClassList extends React.Component {
                 method: 'GET',
                 qs: Object.assign({}, this.state.searchParams, {
                     start_time: this.state.searchParams.start_time ? new Date(this.state.searchParams.start_time) : undefined,
-                    end_time: this.state.searchParams.end_time ? new Date(this.state.searchParams.end_time) : undefined
+                    end_time: this.state.searchParams.end_time ? new Date(this.state.searchParams.end_time) : undefined,
                 }, this.state.pagination),
+                useQuerystring: true
             }
         })
 
@@ -131,11 +149,12 @@ export default class ClassList extends React.Component {
                 c.companions = (c.companions || '').split(',').filter(uniqueFilter);
                 c.students = (c.students || '').split(',').filter(uniqueFilter);
                 return c;
-            }).sort(nearestToper)
+            }).sort(nearestToper),
+            currentStatuses: this.state.searchParams.statuses
         })
     }
 
-    async componentDidMount() {
+    async componentWillMount() {
         await this.searchClasses();
     }
 
@@ -143,7 +162,7 @@ export default class ClassList extends React.Component {
         this.setState({
             detailOpen: true,
             currentClass: c,
-            buttonDisabled: !c ? true : false,
+            buttonDisabled: !c,
         })
     }
 
@@ -191,19 +210,36 @@ export default class ClassList extends React.Component {
                             <Form.Field control={Input} label="结束时间" name="end_time"
                                         value={this.state.searchParams.end_time} onChange={this.handleChange}
                                         type="datetime-local"></Form.Field>
+                            <Form.Field control={Dropdown} label="状态" name="status"
+                                        value={this.state.searchParams.statuses}
+                                        onChange={this.handleStatusChange} multiple search selection
+                                        options={this.state.allStatuses}></Form.Field>
                         </Form.Group>
                     </Form>
                     <Form.Group>
                         <Button type="submit" onClick={this.searchClasses}>查询</Button>
-                        <Button onClick={() => this.openClassDetail()} type="button">创建班级</Button>
+                        {
+                            process.env.NODE_ENV !== 'production' &&
+                            <Button onClick={() => this.openClassDetail()} type="button">创建班级</Button>
+                        }
                         <a className="ui button green"
                            href={`/admin-neue/classDetail/create`}
-                           target="_blank">创建班级（新）</a>
+                           target="_blank">创建班级</a>
                         <Button onClick={this.updateStatus} type="button">批量更新班级结束状态</Button>
                     </Form.Group>
                 </Segment>
-                <ClassStatuses classes={this.state.classes} activeStatusChanged={this.switchToStatus}
-                               activeStatus={this.state.currentStatus}/>
+                <Menu fluid widths={Object.keys(ClassStatusCode).length}>
+                    {
+                        Object.keys(ClassStatusCode).map(
+                            key => (
+                                <Menu.Item name={key}
+                                           active={this.state.currentStatuses.indexOf(ClassStatusCode[key]) >= 0}
+                                           onClick={() => this.searchClassesByStatus(ClassStatusCode[key])}
+                                           key={key}/>
+                            )
+                        )
+                    }
+                </Menu>
                 <Table celled sortable>
                     <Table.Header>
                         <Table.Row>
@@ -234,9 +270,9 @@ export default class ClassList extends React.Component {
                     </Table.Header>
                     <Table.Body>
                         {
-                            this.state.classes.filter(c => c.status === this.state.currentStatus).map((c, i) =>
+                            this.state.classes.filter(c => this.state.currentStatuses.length === 0 || this.state.currentStatuses.indexOf(c.status) >= 0).map((c, i) =>
                                 <Table.Row key={c.class_id} style={{cursor: 'pointer'}}
-                                           onClick={() => this.openClassDetail(c)}>
+                                           onClick={() => process.env.NODE_ENV !== 'production ' ? this.openClassDetail(c) : this.openAdminNeueClassDetail(c)}>
                                     <Table.Cell>
                                         {c.class_id}
                                     </Table.Cell>
@@ -265,15 +301,20 @@ export default class ClassList extends React.Component {
                                         {c.room_url}
                                     </Table.Cell>
                                     <Table.Cell>
-                                        {c.companions.map(userId => <Image avatar alt={userId} title={userId}
-                                                                           src={`/avatar/${userId}`} key={userId}/>)}
+                                        {
+                                            c.companions.map(userId => <a href={`/companions/${userId}`} target="_blank"
+                                                                          key={userId}>
+                                                <Avatar userId={userId}/>
+                                            </a>)
+                                        }
                                     </Table.Cell>
                                     <Table.Cell onClick={(event) => event.stopPropagation()}>
-                                        {c.students.map(userId => <a href={`/students/${userId}`} target="_blank"
-                                                                     key={userId}>
-                                            <Image avatar alt={userId} title={userId}
-                                                   src={`/avatar/${userId}`}
-                                                   key={userId}/></a>)}
+                                        {
+                                            c.students.map(userId => <a href={`/students/${userId}`} target="_blank"
+                                                                        key={userId}>
+                                                <Avatar userId={userId}/>
+                                            </a>)
+                                        }
                                     </Table.Cell>
                                     <Table.Cell onClick={(e) => {
                                         e.stopPropagation();
@@ -301,9 +342,14 @@ export default class ClassList extends React.Component {
                         </Table.Row>
                     </Table.Footer>
                 </Table>
-                <ClassDetail open={this.state.detailOpen} onClose={this.onClassDetailClosed}
-                             onClassSaved={this.onClassSaved} class={this.state.currentClass}
-                             buttonDisabled={this.state.buttonDisabled}></ClassDetail>
+
+                {
+                    (process.env.NODE_NEV !== 'production') &&
+
+                    <ClassDetail open={this.state.detailOpen} onClose={this.onClassDetailClosed}
+                                 onClassSaved={this.onClassSaved} class={this.state.currentClass}
+                                 buttonDisabled={this.state.buttonDisabled}></ClassDetail>
+                }
 
 
                 <ClassEvaluation open={this.state.evaluationOpen} onClose={this.onClassEvaluationClosed}
@@ -350,5 +396,18 @@ export default class ClassList extends React.Component {
         this.setState({pagination: p}, async () => {
             await this.searchClasses();
         })
+    }
+
+    searchClassesByStatus(status) {
+        let searchParams = this.state.searchParams
+        searchParams.statuses = [status]
+
+        this.setState({searchParams, pagination: BuzzPaginationData}, async () => {
+            await this.searchClasses()
+        })
+    }
+
+    openAdminNeueClassDetail(c) {
+
     }
 }

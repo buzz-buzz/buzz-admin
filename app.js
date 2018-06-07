@@ -1,3 +1,5 @@
+const membership = require("./membership");
+
 const koaSend = require('koa-send');
 
 const Koa = require('koa');
@@ -51,10 +53,10 @@ app.use(async (ctx, next) => {
 
 app.use(auth({name: process.env.BASIC_NAME, pass: process.env.BASIC_PASS}));
 
+app.use(membership.ensureAuthenticated)
+
 app.use(async (ctx, next) => {
-    console.log('path = ', ctx.path);
     ctx.state.path = ctx.path;
-    console.log('path = ', ctx.state.path);
     await next();
 });
 
@@ -95,11 +97,12 @@ router
 
         profile = JSON.parse(profile);
         if (profile.avatar) {
-            if (profile.avatar.startsWith('//')) {
-                profile.avatar = 'https:' + profile.avatar;
-            }
-
-            ctx.body = await oldRequest(profile.avatar);
+            // if (profile.avatar.startsWith('//')) {
+            //     profile.avatar = 'https:' + profile.avatar;
+            // }
+            //
+            // ctx.body = await oldRequest(profile.avatar);
+            ctx.redirect(profile.avatar)
         } else {
             await koaSend(ctx, '/images/empty_avatar.jpg', {
                 root: __dirname + '/public'
