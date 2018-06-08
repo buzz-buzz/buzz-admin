@@ -45,7 +45,6 @@ export default class LevelModal extends React.Component {
                     }
                 })
 
-                console.log('result = ', result);
                 this.setState({ levelDetail: result.detail });
 
                 if (result.detail) {
@@ -138,8 +137,12 @@ export default class LevelModal extends React.Component {
                                         {
                                             q.items.map((item, i) =>
                                                 <li key={i}>
-                                                    {
+                                                    {/* {
                                                         this.state.jsonDetail.answers[i].charCodeAt(0) + i - 'A'.charCodeAt(0) === 0 &&
+                                                        <Icon name="checkmark box" />
+                                                    } */}
+                                                    {
+                                                        ((item === '是' && this.state.jsonDetail.answers[k] === 'A') || (item === '否' && this.state.jsonDetail.answers[k] === 'B') || (i === 2 && this.state.jsonDetail.answers[k] === 'C')  ) &&
                                                         <Icon name="checkmark box" />
                                                     }
                                                     {item}
