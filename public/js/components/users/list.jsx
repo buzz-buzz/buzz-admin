@@ -280,6 +280,7 @@ export default class UserList extends React.Component {
                                     <Image src="/images/empty_avatar.jpg" avatar title={user.user_id}
                                            alt={user.user_id}/>
                                 </object>
+                                <span>{user.wechat_name}</span>
                             </Table.Cell>
                             {
                                 this.props['user-type'] === MemberType.Companion &&
@@ -288,44 +289,53 @@ export default class UserList extends React.Component {
                                     {user.country}
                                 </Table.Cell>
                             }
+                            {
+                                this.props['user-type'] === MemberType.Student &&
+                                <Table.Cell onClick={() => this.openProfile(user)}>
+                                    {user.mobile}
+                                </Table.Cell>
+                            }
+                            {
+                                this.props['user-type'] === MemberType.Companion &&
+                                <Table.Cell onClick={() => this.openProfile(user)}>
+                                    {user.email}
+                                </Table.Cell>
+                            }
                             <Table.Cell onClick={() => this.openProfile(user)}>
-                                {user.wechat_name}
+                                {user.display_name}
                             </Table.Cell>
                             <Table.Cell onClick={() => this.openProfile(user)}>
                                 {user.name || user.facebook_name}
                             </Table.Cell>
                             <Table.Cell onClick={() => this.openProfile(user)}>
-                                {user.display_name}
-                            </Table.Cell>
-                            <Table.Cell onClick={() => this.openProfile(user)}>
-                                {user.mobile}
-                            </Table.Cell>
-                            <Table.Cell onClick={() => this.openProfile(user)}>
-                                {user.email}
+                                {user.grade}
                             </Table.Cell>
                             <Table.Cell onClick={() => this.openClassHours(user)}
                                         style={{cursor: 'pointer'}}>
                                 <span
                                     style={{whiteSpace: 'nowrap'}}>
-                                    <a title="可用课时数">{user.class_hours || 0}</a>
-                                    （<a title="冻结课时数">{user.locked_class_hours || 0}</a>）
+                                    <a title="可用课时数">{user.class_hours + user.locked_class_hours || 0}</a>
+                                    （<a title="冻结课时数">{user.class_hours || 0}</a>）
                                 </span>
                             </Table.Cell>
-                            <Table.Cell onClick={() => this.openIntegral(user)}
+                            {/* <Table.Cell onClick={() => this.openIntegral(user)}
                                         style={{cursor: 'pointer'}}>
                                 {user.integral || 0}
-                            </Table.Cell>
+                            </Table.Cell> */}
                             {
                                 this.props['user-type'] === MemberType.Student &&
                                 <Table.Cell onClick={() => this.openLevelModal(user)}>
                                     {user.level}
                                 </Table.Cell>
                             }
-                            <Table.Cell onClick={() => this.openProfile(user)}>
+                            {/* <Table.Cell onClick={() => this.openProfile(user)}>
                                 {user.weekly_schedule_requirements || '1'}
-                            </Table.Cell>
+                            </Table.Cell> */}
                             <Table.Cell onClick={() => this.openSchedulePreferenceModal(user)}>
                                 <BookingTable events={user.events} defaultDate={new Date()}></BookingTable>
+                            </Table.Cell>
+                            <Table.Cell>
+                                <span>{user.tags}</span>
                             </Table.Cell>
                         </Table.Row>
                     )
@@ -418,29 +428,35 @@ export default class UserList extends React.Component {
         return <Table.Header>
             <Table.Row>
                 <Table.HeaderCell>用户编号</Table.HeaderCell>
-                <Table.HeaderCell>头像</Table.HeaderCell>
+                <Table.HeaderCell>头像-昵称</Table.HeaderCell>
                 {
                     this.props['user-type'] === MemberType.Companion &&
                     <Table.HeaderCell>国籍</Table.HeaderCell>
                 }
-                <Table.HeaderCell>微信昵称</Table.HeaderCell>
-                <Table.HeaderCell>(孩子)英文名</Table.HeaderCell>
-                <Table.HeaderCell>备注名（内部可见）</Table.HeaderCell>
-                <Table.HeaderCell>手机号</Table.HeaderCell>
-                <Table.HeaderCell>邮箱</Table.HeaderCell>
-                <Table.HeaderCell>课时数</Table.HeaderCell>
-                <Table.HeaderCell>积分</Table.HeaderCell>
+                {
+                    this.props['user-type'] === MemberType.Student &&
+                    <Table.HeaderCell>手机号</Table.HeaderCell>
+                }
+                {
+                    this.props['user-type'] === MemberType.Companion &&
+                    <Table.HeaderCell>邮箱</Table.HeaderCell>
+                }
+                <Table.HeaderCell>备注名</Table.HeaderCell>
+                <Table.HeaderCell>孩子英文名</Table.HeaderCell>
+                <Table.HeaderCell>年级</Table.HeaderCell>
+                <Table.HeaderCell>总课时(可用课时)</Table.HeaderCell>
                 {
                     this.props['user-type'] === MemberType.Student &&
                     <Table.HeaderCell>能力评级</Table.HeaderCell>
                 }
-                {
+                {/* {
                     this.props['user-type'] === MemberType.Student && <Table.HeaderCell>每周学习次数</Table.HeaderCell>
                 }
                 {
                     this.props['user-type'] === MemberType.Companion && <Table.HeaderCell>每周教学次数</Table.HeaderCell>
-                }
+                } */}
                 <Table.HeaderCell>预约/排课</Table.HeaderCell>
+                <Table.HeaderCell>标签</Table.HeaderCell>
             </Table.Row>
         </Table.Header>;
     }
