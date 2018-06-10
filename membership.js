@@ -1,6 +1,7 @@
 const config = require('./config');
 const cookie = require('./cookie-helper');
 const util = require('util');
+const request = require('request-promise-native')
 
 async function setUserToState(context, user_id) {
     console.log('super users = ', config.superUsers);
@@ -71,6 +72,30 @@ membership.ensureAuthenticated = async function (context, next) {
 
     await next();
 };
+
+membership.ensureSystemUsers = async function (context, next) {
+    let userId = context.state.user.userId
+
+    console.log("checking user is system user of ", userId)
+
+    let profile = JSON.parse(await request({
+        uri: `${config.endPoints.buzzService}/api/v1/users/${userId}`,
+        headers: {
+            'X-Requested-With': 'buzz-admin'
+        }
+    }))
+
+    console.log(`user ${userId} is :`, profile)
+
+    if (!profile.isSystemUser) {
+        context.status = 401;
+        context.body = 'You don\'t have privilege to access this.';
+
+        return
+    }
+
+    await next();
+}
 
 membership.pretendToBeOtherUser = async function (context, next) {
     await setUserToState(context, context.params.user_id)

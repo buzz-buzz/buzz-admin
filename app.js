@@ -54,6 +54,7 @@ app.use(async (ctx, next) => {
 app.use(auth({name: process.env.BASIC_NAME, pass: process.env.BASIC_PASS}));
 
 app.use(membership.ensureAuthenticated)
+app.use(membership.ensureSystemUsers)
 
 app.use(async (ctx, next) => {
     ctx.state.path = ctx.path;
@@ -120,7 +121,8 @@ router
 
         let options = {
             headers: {
-                'X-Requested-With': 'buzz-admin'
+                'X-Requested-With': 'buzz-admin',
+                Cookie: `user_id=${ctx.state.user.userId}`
             }
         };
 
