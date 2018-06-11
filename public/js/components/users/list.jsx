@@ -1,18 +1,5 @@
 import * as React from "react";
-import {
-    Button,
-    Container,
-    Divider,
-    Dropdown,
-    Form,
-    Icon,
-    Image,
-    Input,
-    Label,
-    Menu,
-    Pagination, Segment,
-    Table
-} from "semantic-ui-react";
+import {Button, Container, Dropdown, Form, Icon, Image, Input, Label, Segment, Table} from "semantic-ui-react";
 import ServiceProxy from "../../service-proxy";
 import Profile from "./profile";
 import SchedulePreference from "./schedule-preference";
@@ -88,6 +75,7 @@ export default class UserList extends React.Component {
         this.state = {
             searchParams: {
                 wechat_name: '',
+                name: '',
                 display_name: '',
                 mobile: '',
                 email: '',
@@ -359,7 +347,10 @@ export default class UserList extends React.Component {
                 <Form.Field control={Input} label="微信昵称" name="wechat_name"
                             value={this.state.searchParams.wechat_name}
                             onChange={this.handleTextChange}></Form.Field>
-                <Form.Field control={Input} label="(孩子)英文名/备注名（内部可见）"
+                <Form.Field control={Input} label="（孩子）英文名" value={this.state.searchParams.name} name="name"
+                            onChange={this.handleTextChange}>
+                </Form.Field>
+                <Form.Field control={Input} label="备注名（内部可见）"
                             value={this.state.searchParams.display_name}
                             name="display_name"
                             onChange={this.handleTextChange}></Form.Field>
@@ -367,6 +358,19 @@ export default class UserList extends React.Component {
                             name="mobile" onChange={this.handleTextChange}></Form.Field>
                 <Form.Field control={Input} label="邮箱" value={this.state.searchParams.email}
                             name="email" onChange={this.handleTextChange}></Form.Field>
+            </Form.Group>
+            <Form.Group widths="equal">
+                <Form.Field control={Input} label="预约/排课时间段 开始时间" name="start_time"
+                            value={this.state.searchParams.start_time}
+                            onChange={this.handleTextChange} type="datetime-local"></Form.Field>
+                <Form.Field control={Input} label="结束时间" name="end_time"
+                            value={this.state.searchParams.end_time}
+                            onChange={this.handleTextChange} type="datetime-local"></Form.Field>
+                <Form.Field control={Dropdown} label="用户标签" name="tags" value={this.state.searchParams.tags} multiple
+                            options={this.state.allTags}
+                            search selection
+                            onChange={this.handleSelectedTagsChange}></Form.Field>
+
                 <Form.Field>
                     <label>排课状态</label>
                     <Form.Select options={[{
@@ -382,18 +386,6 @@ export default class UserList extends React.Component {
                     }]} placeholder="排课状态" value={this.state.searchParams.weekly_schedule_requirements}
                                  name="weekly_schedule_requirements" onChange={this.handleTextChange}></Form.Select>
                 </Form.Field>
-            </Form.Group>
-            <Form.Group widths="equal">
-                <Form.Field control={Input} label="预约/排课时间段 开始时间" name="start_time"
-                            value={this.state.searchParams.start_time}
-                            onChange={this.handleTextChange} type="datetime-local"></Form.Field>
-                <Form.Field control={Input} label="结束时间" name="end_time"
-                            value={this.state.searchParams.end_time}
-                            onChange={this.handleTextChange} type="datetime-local"></Form.Field>
-                <Form.Field control={Dropdown} label="用户标签" name="tags" value={this.state.searchParams.tags} multiple
-                            options={this.state.allTags}
-                            search selection
-                            onChange={this.handleSelectedTagsChange}></Form.Field>
             </Form.Group>
             <Form.Group>
                 <Button type="submit">
