@@ -251,8 +251,8 @@ export default class ClassList extends React.Component {
                                               onClick={() => this.handleSort('name')}>班级名称</Table.HeaderCell>
                             <Table.HeaderCell sorted={this.state.column === 'topic' ? this.state.direction : null}
                                               onClick={() => this.handleSort('topic')}>主题名</Table.HeaderCell>
-                            <Table.HeaderCell sorted={this.state.column === 'level' ? this.state.direction : null}
-                                              onClick={() => this.handleSort('level')}>级别 </Table.HeaderCell>
+                            <Table.HeaderCell sorted={this.state.column === 'topic_level' ? this.state.direction : null}
+                                              onClick={() => this.handleSort('topic_level')}>级别 </Table.HeaderCell>
                             <Table.HeaderCell sorted={this.state.column === 'start_time' ? this.state.direction : null}
                                               onClick={() => this.handleSort('start_time')}>开课日期</Table.HeaderCell>
                             <Table.HeaderCell sorted={this.state.column === 'start_time' ? this.state.direction : null}
@@ -286,7 +286,7 @@ export default class ClassList extends React.Component {
                                         {c.topic}
                                     </Table.Cell>
                                     <Table.Cell>
-                                        {c.level}
+                                        {c.topic_level}
                                     </Table.Cell>
                                     <Table.Cell>
                                         {new Date(c.start_time).toLocaleDateString()}

@@ -23,7 +23,7 @@ export default class ClassDetail extends React.Component {
             error: false,
             companion: '0',
             dirty: false,
-            level: '',
+            topic_level: '',
             topic: '',
         }
 
@@ -95,7 +95,7 @@ export default class ClassDetail extends React.Component {
                 remark: nextProps.class ? nextProps.class.remark || '' : '',
                 class_id: nextProps.class ? nextProps.class.class_id : '',
                 companion: companions[0] || '',
-                level: nextProps.class ? nextProps.class.level : '',
+                topic_level: nextProps.class ? nextProps.class.topic_level : '',
                 topic: nextProps.class ? nextProps.class.topic : '',
                 buttonDisabled: nextProps.buttonDisabled || true
             }, () => {
@@ -131,7 +131,7 @@ export default class ClassDetail extends React.Component {
                 remark: this.state.remark,
                 adviser_id: this.state.remark,
                 class_id: this.state.class_id,
-                level: this.state.level,
+                topic_level: this.state.topic_level,
                 topic: this.state.topic
             };
             let result = await ServiceProxy.proxyTo({
@@ -182,7 +182,7 @@ export default class ClassDetail extends React.Component {
                         <Form.Group widths="equal">
                             <Form.Input label="课程名称" placeholder="课程名称" value={this.state.className} name="className"
                                         onChange={this.handleChange}/>
-                            <Form.Input label="等级" placeholder="等级" value={this.state.level} name="level"
+                            <Form.Input label="等级" placeholder="等级" value={this.state.topic_level} name="topic_level"
                                         onChange={this.handleChange}/>
                             <Form.Input label="教室链接" placeholder="教室链接" value={this.state.classroomUrl}
                                         name="classroomUrl" onChange={this.handleChange}/>
