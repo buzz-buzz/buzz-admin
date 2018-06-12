@@ -139,6 +139,9 @@ router
     .get('/admin-neue/content-list', async ctx => {
         ctx.redirect(`${config.endPoints.adminNeue}/contentList`);
     })
+    .get('/sign-out', membership.signOut, async ctx => {
+        ctx.redirect(membership.getSignInUrl('/'))
+    })
 ;
 
 app

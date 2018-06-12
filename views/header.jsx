@@ -19,6 +19,13 @@ export default class Header extends React.Component {
                                href="/classes">班级课程列表</Menu.Item>
                     <Menu.Item name="content-list" active={activeItem === '/content-list'}
                                href="/admin-neue/content-list" target="_blank">内容管理</Menu.Item>
+                    <Menu.Menu position="right">
+                        <Menu.Item
+                            name="退出登录"
+                            active={activeItem === '/sign-out'}
+                            href="/sign-out"
+                        />
+                    </Menu.Menu>
                 </Container>
             </Menu>
         )
