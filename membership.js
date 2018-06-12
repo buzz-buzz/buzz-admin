@@ -49,6 +49,9 @@ async function setUserFromQSOrCookie(context) {
 
 let membership = {};
 
+membership.getSignInUrl = function (returnUrl) {
+    return util.format(config.signInUrl, `${encodeURIComponent(`${config.origin}${returnUrl}`)}`);
+};
 membership.ensureAuthenticated = async function (context, next) {
     await setUserFromQSOrCookie(context);
 
@@ -62,9 +65,7 @@ membership.ensureAuthenticated = async function (context, next) {
 
             return context.body = result;
         } else {
-            let url = config.signInUrl;
-
-            return context.redirect(util.format(url, `${encodeURIComponent(`${config.origin}${context.request.url}`)}`));
+            return context.redirect(membership.getSignInUrl(context.request.url));
         }
 
 
@@ -88,6 +89,8 @@ membership.ensureSystemUsers = async function (context, next) {
     console.log(`user ${userId} is :`, profile)
 
     if (!profile.isSystemUser) {
+        await this.signOut(context, async () => {
+        });
         context.status = 401;
         context.body = 'You don\'t have privilege to access this.';
 
