@@ -45,8 +45,12 @@ app.use(async (ctx, next) => {
             ctx.status = 401;
             ctx.set('WWW-Authenticate', 'Basic');
             ctx.body = 'You don\'t have privilege to access this.';
+        } else if (404 == err.statusCode) {
+            await membership.signOut(ctx, async () => {
+            })
+            ctx.redirect(membership.getSignInUrl(ctx.request.url))
         } else {
-            throw err;
+            ctx.throw(err.status, err)
         }
     }
 });

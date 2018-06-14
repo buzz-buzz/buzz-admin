@@ -77,17 +77,13 @@ membership.ensureAuthenticated = async function (context, next) {
 membership.ensureSystemUsers = async function (context, next) {
     let userId = context.state.user.userId
 
-    console.log("checking user is system user of ", userId)
-
     let profile = JSON.parse(await request({
         uri: `${config.endPoints.buzzService}/api/v1/users/${userId}`,
         headers: {
             'X-Requested-With': 'buzz-admin'
         }
     }))
-
-    console.log(`user ${userId} is :`, profile)
-
+    
     if (!profile.isSystemUser) {
         await this.signOut(context, async () => {
         });
