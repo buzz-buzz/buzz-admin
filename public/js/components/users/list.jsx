@@ -268,7 +268,7 @@ export default class UserList extends React.Component {
                                     <Image src="/images/empty_avatar.jpg" avatar title={user.user_id}
                                            alt={user.user_id}/>
                                 </object>
-                                <span>{user.wechat_name}</span>
+                                <span>{user.wechat_name || user.name || user.display_name || user.faceboock_name}</span>
                             </Table.Cell>
                             {
                                 this.props['user-type'] === MemberType.Companion &&
