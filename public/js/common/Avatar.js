@@ -30,7 +30,7 @@ export class Avatar extends React.Component {
                        src={`/images/empty_avatar.jpg`}
                 />
             </object>
-            <span>{this.state.profile.name}</span>
+            <span>{this.state.profile.name + '('+ this.state.profile.wechat_name || this.state.profile.facebook_name + ')'}</span>
             <span>&emsp;</span>
         </span>
     }
