@@ -146,6 +146,9 @@ router
     .get('/sign-out', membership.signOut, async ctx => {
         ctx.redirect(membership.getSignInUrl('/'))
     })
+    .get('/current-user', membership.ensureAuthenticated, membership.ensureSystemUsers, async ctx => {
+        ctx.body = ctx.state.user;
+    })
 ;
 
 app

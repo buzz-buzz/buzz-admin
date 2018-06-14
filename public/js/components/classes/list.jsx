@@ -9,6 +9,7 @@ import * as _ from "lodash";
 import {BuzzPaginationData} from "../common/BuzzPagination";
 import BuzzPagination from "../common/BuzzPagination";
 import {Avatar} from "../../common/Avatar";
+import CurrentUser from "../../common/CurrentUser";
 
 function nearestToper(x, y) {
     let now = new Date();
@@ -58,7 +59,8 @@ export default class ClassList extends React.Component {
                 key: ClassStatusCode[key],
                 value: ClassStatusCode[key],
                 text: ClassStatusCode[key]
-            }))
+            })),
+            currentUser: {}
         };
 
         this.openClassDetail = this.openClassDetail.bind(this);
@@ -156,6 +158,9 @@ export default class ClassList extends React.Component {
 
     async componentWillMount() {
         await this.searchClasses();
+        this.setState({
+            currentUser: await CurrentUser.getProfile()
+        })
     }
 
     openClassDetail(c) {
@@ -225,7 +230,10 @@ export default class ClassList extends React.Component {
                         <a className="ui button green"
                            href={`/admin-neue/classDetail/create`}
                            target="_blank">创建班级</a>
-                        <Button onClick={this.updateStatus} type="button">批量更新班级结束状态</Button>
+                        {
+                            this.state.currentUser.super &&
+                            <Button onClick={this.updateStatus} type="button">批量更新班级结束状态</Button>
+                        }
                     </Form.Group>
                 </Segment>
                 <Menu fluid widths={Object.keys(ClassStatusCode).length}>
