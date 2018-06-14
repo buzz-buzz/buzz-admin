@@ -272,7 +272,7 @@ export default class ClassList extends React.Component {
                         {
                             this.state.classes.filter(c => this.state.currentStatuses.length === 0 || this.state.currentStatuses.indexOf(c.status) >= 0).map((c, i) =>
                                 <Table.Row key={c.class_id} style={{cursor: 'pointer'}}
-                                           onClick={() => process.env.NODE_ENV !== 'production ' ? this.openClassDetail(c) : this.openAdminNeueClassDetail(c)}>
+                                           onClick={() => process.env.NODE_ENV !== 'production' ? this.openClassDetail(c) : this.openAdminNeueClassDetail(c)}>
                                     <Table.Cell>
                                         {c.class_id}
                                     </Table.Cell>

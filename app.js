@@ -41,14 +41,14 @@ app.use(async (ctx, next) => {
     try {
         await next();
     } catch (err) {
-        if (401 == err.status) {
+        if (401 === Number(err.status)) {
             ctx.status = 401;
             ctx.set('WWW-Authenticate', 'Basic');
             ctx.body = 'You don\'t have privilege to access this.';
-        } else if (404 == err.statusCode) {
+        } else if (404 === Number(err.statusCode)) {
             await membership.signOut(ctx, async () => {
-            })
-            ctx.redirect(membership.getSignInUrl(ctx.request.url))
+            });
+            ctx.redirect(membership.getSignInUrl(ctx.request.url));
         } else {
             ctx.throw(err.status, err)
         }
