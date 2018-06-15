@@ -1,5 +1,5 @@
 import * as React from "react";
-import {Container, Menu} from "semantic-ui-react";
+import {Container, Image, Menu} from "semantic-ui-react";
 
 export default class Header extends React.Component {
     constructor(props) {
@@ -20,6 +20,20 @@ export default class Header extends React.Component {
                     <Menu.Item name="content-list" active={activeItem === '/content-list'}
                                href="/admin-neue/content-list" target="_blank">内容管理</Menu.Item>
                     <Menu.Menu position="right">
+                        <Menu.Item href={`/users/${this.props.user.user_id}`}>
+                            <object data={this.props.user.profile.avatar} type="image/png" className="ui image avatar"
+                                    title={this.props.user.profile.name} alt={this.props.user.profile.name}>
+                                <Image avatar src="/images/empty_avatar.jpg" title={this.props.user.profile.name}
+                                       alt={this.props.user.profile.name}
+                                       label={this.props.user.isSuper ? {
+                                           as: 'a',
+                                           color: 'red',
+                                           corner: 'right',
+                                           icon: 'heart'
+                                       } : {}}
+                                ></Image>
+                            </object>
+                        </Menu.Item>
                         <Menu.Item
                             name="退出登录"
                             active={activeItem === '/sign-out'}

@@ -217,7 +217,13 @@ export default class Profile extends React.Component {
         return (
             <Modal open={this.props.open} closeOnEscape={true} closeOnRootNodeClick={false} onClose={this.close}
                    closeIcon>
-                <Header content={`用户资料 - ${this.state.user.user_id}`}></Header>
+                <Header content={
+                    <div>
+                        用户资料 - {this.state.user.user_id}
+                        &emsp;<a href={`/classes?userIds=${this.state.user.user_id}`}
+                                 target="_blank">查看课程历史</a>
+                    </div>
+                }></Header>
                 <Modal.Content>
                     <object data={this.state.avatar} type="image/png" className="ui image avatar"
                             title={this.state.user.user_id} alt={this.state.user.user_id}>

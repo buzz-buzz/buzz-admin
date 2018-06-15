@@ -58,10 +58,12 @@ app.use(async (ctx, next) => {
 app.use(auth({name: process.env.BASIC_NAME, pass: process.env.BASIC_PASS}));
 
 app.use(membership.ensureAuthenticated)
+
 app.use(membership.ensureSystemUsers)
 
 app.use(async (ctx, next) => {
     ctx.state.path = ctx.path;
+
     await next();
 });
 
@@ -76,7 +78,7 @@ let clientPage = async ctx => {
             endPoints: {
                 adminNeue: config.endPoints.adminNeue
             }
-        }
+        },
     }));
 };
 router

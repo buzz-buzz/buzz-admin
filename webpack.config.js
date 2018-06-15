@@ -18,7 +18,8 @@ const config = {
             options: {
                 presets: ["@babel/preset-env", "@babel/preset-react"],
                 plugins: [
-                    'transform-class-properties'
+                    'transform-class-properties',
+                    require("babel-plugin-transform-object-rest-spread")
                 ]
             }
         }],

@@ -22,7 +22,7 @@ export default class Layout extends React.Component {
                 <link rel="stylesheet" href="/css/style.css"></link>
             </head>
             <body>
-            <Header title={this.props.title} path={this.props.path}/>
+            <Header title={this.props.title} path={this.props.path} user={this.props.user}/>
             <Container style={{marginTop: '7em'}}>
                 {this.props.children}
             </Container>
