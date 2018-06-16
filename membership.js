@@ -83,7 +83,7 @@ membership.ensureSystemUsers = async function (context, next) {
     }));
 
     if (!profile.isSystemUser) {
-        await this.signOut(context, async () => {
+        await membership.signOut(context, async () => {
         });
         context.status = 401;
         context.body = 'You don\'t have privilege to access this.';
