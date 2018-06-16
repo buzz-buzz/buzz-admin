@@ -14,6 +14,7 @@ import {MemberType} from "../../common/MemberType";
 import history from '../common/history';
 import BuzzPagination, {BuzzPaginationData} from "../common/BuzzPagination";
 import UserTags from "./user-tags";
+import {ClassStatusCode} from "../../common/ClassStatus";
 
 BigCalendar.setLocalizer(BigCalendar.momentLocalizer(moment))
 
@@ -342,7 +343,8 @@ export default class UserList extends React.Component {
                                 <span>{user.tags}</span>
                             </Table.Cell>
                             <Table.Cell>
-                                <a href={`/classes/?userIds=${user.user_id}`} target="_blank">课程历史</a>
+                                <a href={`/classes/?userIds=${user.user_id}&statuses=${ClassStatusCode.Opened}&statuses=${ClassStatusCode.Cancelled}&statuses=${ClassStatusCode.Ended}`}
+                                   target="_blank">课程历史</a>
                             </Table.Cell>
                         </Table.Row>
                     )

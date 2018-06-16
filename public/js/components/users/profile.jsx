@@ -10,6 +10,7 @@ import TimeHelper from "../../common/TimeHelper";
 import {MemberType, MemberTypeChinese} from "../../common/MemberType";
 import WechatProfile from "./wechat-profile";
 import UserTags from "./user-tags";
+import {ClassStatusCode} from "../../common/ClassStatus";
 
 export default class Profile extends React.Component {
     constructor(props) {
@@ -220,7 +221,7 @@ export default class Profile extends React.Component {
                 <Header content={
                     <div>
                         用户资料 - {this.state.user.user_id}
-                        &emsp;<a href={`/classes?userIds=${this.state.user.user_id}`}
+                        &emsp;<a href={`/classes?userIds=${this.state.user.user_id}&statuses=${ClassStatusCode.Opened}&statuses=${ClassStatusCode.Cancelled}&statuses=${ClassStatusCode.Ended}`}
                                  target="_blank">查看课程历史</a>
                     </div>
                 }></Header>

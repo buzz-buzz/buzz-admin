@@ -52,16 +52,17 @@ export default class ClassList extends React.Component {
     constructor() {
         super();
 
+        let query = new URLSearchParams(window.location.search);
         this.state = {
             classes: [],
             loading: false,
             searchParams: {
                 start_time: '',
                 end_time: '',
-                statuses: [ClassStatusCode.Opened],
-                user_ids: new URLSearchParams(window.location.search).getAll('userIds').map(id => Number(id))
+                statuses: query.getAll('statuses') || [ClassStatusCode.Opened],
+                user_ids: query.getAll('userIds').map(id => Number(id))
             },
-            currentStatuses: [ClassStatusCode.Opened],
+            currentStatuses: query.getAll('statuses') || [ClassStatusCode.Opened],
             column: null,
             direction: null,
             pagination: BuzzPaginationData,
