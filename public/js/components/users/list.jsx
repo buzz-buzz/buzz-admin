@@ -1,5 +1,5 @@
 import * as React from "react";
-import {Button, Container, Dropdown, Form, Icon, Image, Input, Label, Segment, Table} from "semantic-ui-react";
+import {Button, Container, Dropdown, Form, Icon, Image, Input, Label, Popup, Segment, Table} from "semantic-ui-react";
 import ServiceProxy from "../../service-proxy";
 import Profile from "./profile";
 import SchedulePreference from "./schedule-preference";
@@ -253,12 +253,14 @@ export default class UserList extends React.Component {
     }
 
     renderListTable() {
-        return <Table celled>
+        return <Table celled selectable striped>
             {this.renderTableHeader()}
             <Table.Body>
                 {
                     this.state.users.map((user, i) =>
-                        <Table.Row key={user.user_id} style={{cursor: 'pointer'}}>
+                        <Table.Row key={user.user_id} style={{cursor: 'pointer'}}
+                                   onClick={() => this.setState({activeIndex: this.state.activeIndex === i ? null : i})}
+                                   active={this.state.activeIndex === i}>
                             <Table.Cell onClick={() => this.openProfile(user)}>
                                 {user.user_id}
                             </Table.Cell>
@@ -300,21 +302,35 @@ export default class UserList extends React.Component {
                             </Table.Cell>
                             <Table.Cell onClick={() => this.openClassHours(user)}
                                         style={{cursor: 'pointer'}}>
-                                <span
+                                <div><a
+                                    title="总课时数"><strong>{(user.class_hours + user.locked_class_hours) || 0}</strong></a>
+                                </div>
+                                <div
                                     style={{whiteSpace: 'nowrap'}}>
-                                    <a title="可用课时数">{user.class_hours + user.locked_class_hours || 0}</a>
-                                    （<a title="冻结课时数">{user.class_hours || 0}</a>）
-                                </span>
+                                    <a title="可用课时数">{user.class_hours || 0}</a>
+                                    （<a title="冻结课时数">{user.locked_class_hours || 0}</a>）
+                                </div>
                             </Table.Cell>
                             {/* <Table.Cell onClick={() => this.openIntegral(user)}
                                         style={{cursor: 'pointer'}}>
                                 {user.integral || 0}
                             </Table.Cell> */}
                             {
-                                this.props['user-type'] === MemberType.Student &&
-                                <Table.Cell onClick={() => this.openLevelModal(user)}>
-                                    {user.level}
+                                this.props['user-type'] === MemberType.Student && user.placement_test &&
+                                <Table.Cell onClick={() => this.openLevelModal(user)}
+                                            style={{whiteSpace: 'nowrap', color: user.level ? 'black' : 'red'}}>
+                                    {user.level ? <strong>{user.level}</strong> : '待评级'}
                                 </Table.Cell>
+                            }
+                            {
+                                this.props['user-type'] === MemberType.Student && !user.placement_test &&
+                                <Popup
+                                    trigger={
+                                        <Table.Cell style={{color: 'gainsboro', whiteSpace: 'nowrap'}}>待测试</Table.Cell>
+                                    }
+                                    content={`${user.display_name || user.name || user.wechat_name} 还没有进行测试，请提醒 TA 完成。`}
+                                    on='click'
+                                />
                             }
                             {/* <Table.Cell onClick={() => this.openProfile(user)}>
                                 {user.weekly_schedule_requirements || '1'}
@@ -322,8 +338,11 @@ export default class UserList extends React.Component {
                             <Table.Cell onClick={() => this.openSchedulePreferenceModal(user)}>
                                 <BookingTable events={user.events} defaultDate={new Date()}></BookingTable>
                             </Table.Cell>
-                            <Table.Cell>
+                            <Table.Cell onClick={() => this.openProfile(user)}>
                                 <span>{user.tags}</span>
+                            </Table.Cell>
+                            <Table.Cell>
+                                <a href={`/classes/?userIds=${user.user_id}`} target="_blank">课程历史</a>
                             </Table.Cell>
                         </Table.Row>
                     )
@@ -436,7 +455,11 @@ export default class UserList extends React.Component {
                 <Table.HeaderCell>备注名</Table.HeaderCell>
                 <Table.HeaderCell>孩子英文名</Table.HeaderCell>
                 <Table.HeaderCell>年级</Table.HeaderCell>
-                <Table.HeaderCell>总课时(可用课时)</Table.HeaderCell>
+                <Table.HeaderCell>
+                    总课时
+                    <br/>
+                    可用(冻结)
+                </Table.HeaderCell>
                 {
                     this.props['user-type'] === MemberType.Student &&
                     <Table.HeaderCell>能力评级</Table.HeaderCell>
@@ -449,8 +472,10 @@ export default class UserList extends React.Component {
                 } */}
                 <Table.HeaderCell>预约/排课</Table.HeaderCell>
                 <Table.HeaderCell>标签</Table.HeaderCell>
+                <Table.HeaderCell></Table.HeaderCell>
             </Table.Row>
-        </Table.Header>;
+        </Table.Header>
+            ;
     }
 
     openClassHours(student) {
@@ -573,10 +598,12 @@ export default class UserList extends React.Component {
     }
 
     openLevelModal(student) {
-        this.setState({
-            currentUser: student,
-            levelModalOpen: true
-        })
+        if (student.placement_test) {
+            this.setState({
+                currentUser: student,
+                levelModalOpen: true
+            })
+        }
     }
 
     onCloseLevelModal() {
