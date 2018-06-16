@@ -91,6 +91,7 @@ router
     .get('/', async ctx => {
         ctx.redirect('/classes');
     })
+    .get('/users/:userId?', clientPage)
     .get('/students/:userId?', clientPage)
     .get('/companions/:userId?', clientPage)
     .get('/classes', clientPage)

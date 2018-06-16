@@ -33,7 +33,7 @@ export class Avatar extends React.Component {
                        src={`/images/empty_avatar.jpg`}
                 />
             </object>
-            <span>{this.state.profile.name}</span>
+            <span style={{color: 'black'}}>{this.state.profile.name}</span>
             <span style={{color: 'green'}}>{this.state.profile.wechat_name}</span>
             <span style={{color: 'blue'}}>{this.state.profile.facebook_name}</span>
             <span style={{color: 'darkgray'}}>{this.state.profile.display_name}</span>
