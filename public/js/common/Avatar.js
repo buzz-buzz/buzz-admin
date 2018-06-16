@@ -1,5 +1,5 @@
 import React from "react";
-import {Image} from "semantic-ui-react";
+import {Image, Label} from "semantic-ui-react";
 import CachableProxy from "../CachableProxy";
 
 export class Avatar extends React.Component {
@@ -34,10 +34,14 @@ export class Avatar extends React.Component {
                 />
             </object>
             <span style={{color: 'black'}}>{this.state.profile.name}</span>
-            <span style={{color: 'green'}}>{this.state.profile.wechat_name}</span>
-            <span style={{color: 'blue'}}>{this.state.profile.facebook_name}</span>
-            <span style={{color: 'darkgray'}}>{this.state.profile.display_name}</span>
+                &emsp;
+                <span style={{color: 'green'}}>{this.state.profile.wechat_name}</span>
+                &emsp;
+                <span style={{color: 'blue'}}>{this.state.profile.facebook_name}</span>
+                &emsp;
+                <span style={{color: 'darkgray'}}>{this.state.profile.display_name}</span>
             <span>&emsp;</span>
+                {this.props.children}
         </span> :
             null
     }

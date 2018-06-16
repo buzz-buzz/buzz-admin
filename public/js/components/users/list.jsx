@@ -1,5 +1,18 @@
 import * as React from "react";
-import {Button, Container, Dropdown, Form, Icon, Image, Input, Label, Popup, Segment, Table} from "semantic-ui-react";
+import {
+    Button,
+    Container,
+    Dropdown,
+    Form,
+    Icon,
+    Image,
+    Input,
+    Label,
+    Menu,
+    Popup,
+    Segment,
+    Table
+} from "semantic-ui-react";
 import ServiceProxy from "../../service-proxy";
 import Profile from "./profile";
 import SchedulePreference from "./schedule-preference";
@@ -10,17 +23,16 @@ import Integral from "../students/integral";
 import LevelModal from "../students/level-modal";
 import BookingTable from "./booking-table";
 import queryString from 'query-string';
-import {MemberType} from "../../common/MemberType";
+import {MemberType, MemberTypeChinese} from "../../common/MemberType";
 import history from '../common/history';
 import BuzzPagination, {BuzzPaginationData} from "../common/BuzzPagination";
 import UserTags from "./user-tags";
 import {ClassStatusCode} from "../../common/ClassStatus";
+import {Avatar} from "../../common/Avatar";
 
 BigCalendar.setLocalizer(BigCalendar.momentLocalizer(moment))
 
 async function attachEvents(users) {
-    let self = this;
-
     let userIdArray = users.map(u => u.user_id);
 
     if (userIdArray && userIdArray.length) {
@@ -188,7 +200,7 @@ export default class UserList extends React.Component {
         let paginationData = await
             ServiceProxy.proxyTo({
                 body: {
-                    uri: `{buzzService}/api/v1/users?role=${this.props['user-type']}`,
+                    uri: `{buzzService}/api/v1/users`,
                     useQuerystring: true,
                     qs: Object.assign({
                         role: this.props['user-type']
@@ -266,12 +278,24 @@ export default class UserList extends React.Component {
                                 {user.user_id}
                             </Table.Cell>
                             <Table.Cell onClick={() => this.openProfile(user)}>
-                                <object data={user.avatar} type="image/png" className="ui image avatar"
-                                        title={user.user_id} alt={user.user_id}>
-                                    <Image src="/images/empty_avatar.jpg" avatar title={user.user_id}
-                                           alt={user.user_id}/>
-                                </object>
-                                <span>{user.wechat_name || user.name || user.display_name || user.faceboock_name}</span>
+                                <Menu text compact>
+                                    <Menu.Item style={{maxWidth: '100%'}}>
+                                        <Avatar userId={user.user_id}>
+                                        </Avatar>
+                                        {
+                                            this.props.match.path === '/users/:userId?' &&
+                                            <Label floating
+                                                   color={user.role === MemberType.Student ? 'yellow' : 'black'}>
+                                            <span
+                                                style={{whiteSpace: 'nowrap'}}>{MemberTypeChinese[user.role].substr(0, 1)}</span>
+                                            </Label>
+                                        }
+                                    </Menu.Item>
+                                </Menu>
+
+                                <div style={{color: 'gainsboro'}}>
+                                    {user.created_at}
+                                </div>
                             </Table.Cell>
                             {
                                 this.props['user-type'] === MemberType.Companion &&
