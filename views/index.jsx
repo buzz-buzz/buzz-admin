@@ -14,7 +14,8 @@ export default class index extends React.Component {
         // var contentString = ReactDOMServer.renderToString(<Content list={this.props.list}/>);
 
         return (
-            <Layout title={this.props.title} path={this.props.path} v={this.props.v} config={this.props.config}>
+            <Layout title={this.props.title} path={this.props.path} v={this.props.v} config={this.props.config}
+                    user={this.props.user}>
                 <div id="content"></div>
             </Layout>
         );

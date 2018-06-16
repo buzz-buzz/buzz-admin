@@ -58,10 +58,12 @@ app.use(async (ctx, next) => {
 app.use(auth({name: process.env.BASIC_NAME, pass: process.env.BASIC_PASS}));
 
 app.use(membership.ensureAuthenticated)
+
 app.use(membership.ensureSystemUsers)
 
 app.use(async (ctx, next) => {
     ctx.state.path = ctx.path;
+
     await next();
 });
 
@@ -76,7 +78,7 @@ let clientPage = async ctx => {
             endPoints: {
                 adminNeue: config.endPoints.adminNeue
             }
-        }
+        },
     }));
 };
 router
@@ -89,6 +91,7 @@ router
     .get('/', async ctx => {
         ctx.redirect('/classes');
     })
+    .get('/users/:userId?', clientPage)
     .get('/students/:userId?', clientPage)
     .get('/companions/:userId?', clientPage)
     .get('/classes', clientPage)
@@ -145,6 +148,9 @@ router
     })
     .get('/sign-out', membership.signOut, async ctx => {
         ctx.redirect(membership.getSignInUrl('/'))
+    })
+    .get('/current-user', membership.ensureAuthenticated, membership.ensureSystemUsers, async ctx => {
+        ctx.body = ctx.state.user;
     })
 ;
 

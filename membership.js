@@ -4,8 +4,6 @@ const util = require('util');
 const request = require('request-promise-native')
 
 async function setUserToState(context, user_id) {
-    console.log('super users = ', config.superUsers);
-
     context.state.user = {
         userId: user_id,
         super: (config.superUsers || []).indexOf(Number(user_id)) >= 0
@@ -82,8 +80,8 @@ membership.ensureSystemUsers = async function (context, next) {
         headers: {
             'X-Requested-With': 'buzz-admin'
         }
-    }))
-    
+    }));
+
     if (!profile.isSystemUser) {
         await this.signOut(context, async () => {
         });
@@ -91,6 +89,9 @@ membership.ensureSystemUsers = async function (context, next) {
         context.body = 'You don\'t have privilege to access this.';
 
         return
+    } else {
+        context.state.user.profile = profile;
+        context.state.user.super = profile.isSuper;
     }
 
     await next();

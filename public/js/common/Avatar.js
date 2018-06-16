@@ -1,5 +1,5 @@
 import React from "react";
-import {Image} from "semantic-ui-react";
+import {Image, Label} from "semantic-ui-react";
 import CachableProxy from "../CachableProxy";
 
 export class Avatar extends React.Component {
@@ -12,26 +12,37 @@ export class Avatar extends React.Component {
     }
 
     async componentWillMount() {
-        const profile = await CachableProxy.get({
-            body: {
-                uri: `{buzzService}/api/v1/users/${this.props.userId}`
-            }
-        })
+        if (this.props.userId) {
+            const profile = await CachableProxy.get({
+                body: {
+                    uri: `{buzzService}/api/v1/users/${this.props.userId}`
+                }
+            })
 
-        this.setState({profile})
+            this.setState({profile})
+        }
     }
 
     render() {
         const props = this.props
-        return <span>
+
+        return props.userId ? <span>
             <object data={`/avatar/${props.userId}`} type="image/png"
                     className="ui image avatar" title={props.userId} alt={props.userId}>
                 <Image avatar alt={props.userId} title={props.userId}
                        src={`/images/empty_avatar.jpg`}
                 />
             </object>
-            <span>{this.state.profile.name}</span>
+            <span style={{color: 'black'}}>{this.state.profile.name}</span>
+                &emsp;
+                <span style={{color: 'green'}}>{this.state.profile.wechat_name}</span>
+                &emsp;
+                <span style={{color: 'blue'}}>{this.state.profile.facebook_name}</span>
+                &emsp;
+                <span style={{color: 'darkgray'}}>{this.state.profile.display_name}</span>
             <span>&emsp;</span>
-        </span>
+                {this.props.children}
+        </span> :
+            null
     }
 }
