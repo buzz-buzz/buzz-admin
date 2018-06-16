@@ -53,16 +53,17 @@ export default class ClassList extends React.Component {
         super();
 
         let query = new URLSearchParams(window.location.search);
+        let statuses = query.getAll('statuses').length ? query.getAll('statuses') : [ClassStatusCode.Opened];
         this.state = {
             classes: [],
             loading: false,
             searchParams: {
                 start_time: '',
                 end_time: '',
-                statuses: query.getAll('statuses') || [ClassStatusCode.Opened],
+                statuses: statuses,
                 user_ids: query.getAll('userIds').map(id => Number(id))
             },
-            currentStatuses: query.getAll('statuses') || [ClassStatusCode.Opened],
+            currentStatuses: statuses,
             column: null,
             direction: null,
             pagination: BuzzPaginationData,
@@ -140,6 +141,7 @@ export default class ClassList extends React.Component {
                 qs: Object.assign({}, this.state.searchParams, {
                     start_time: this.state.searchParams.start_time ? new Date(this.state.searchParams.start_time) : undefined,
                     end_time: this.state.searchParams.end_time ? new Date(this.state.searchParams.end_time) : undefined,
+                    statuses: this.state.searchParams.statuses.length ? this.state.searchParams.statuses : undefined
                 }, this.state.pagination),
                 useQuerystring: true
             }
