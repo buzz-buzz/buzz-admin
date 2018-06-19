@@ -12,7 +12,7 @@ export default class Layout extends React.Component {
         return (
             <html>
             <head>
-                <title>{this.props.title} - {process.env.NODE_ENV}</title>
+                <title>{this.props.title}</title>
                 <link rel="stylesheet"
                       href="/css/semantic.min.css"></link>
                 <link rel="stylesheet"
@@ -22,7 +22,7 @@ export default class Layout extends React.Component {
                 <link rel="stylesheet" href="/css/style.css"></link>
             </head>
             <body>
-            <Header title={this.props.title} path={this.props.path}/>
+            <Header title={this.props.title} path={this.props.path} user={this.props.user}/>
             <Container style={{marginTop: '7em'}}>
                 {this.props.children}
             </Container>

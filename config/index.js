@@ -9,7 +9,7 @@ let config = {
         },
         superUsers: [532],
         signInUrl: `http://corner-test.buzzbuzzenglish.com/select-role?return_url=%s`,
-        origin: 'http://localhost:16666'
+        origin: 'http://heroku.buzzbuzzenglish.com:16666'
     },
     qa: {
         endPoints: {

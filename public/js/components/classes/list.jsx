@@ -9,6 +9,7 @@ import * as _ from "lodash";
 import {BuzzPaginationData} from "../common/BuzzPagination";
 import BuzzPagination from "../common/BuzzPagination";
 import {Avatar} from "../../common/Avatar";
+import CurrentUser from "../../common/CurrentUser";
 
 function nearestToper(x, y) {
     let now = new Date();
@@ -39,18 +40,30 @@ export default class ClassList extends React.Component {
         })
     };
 
+    handleUsersChange = (e, {value}) => {
+        this.setState({
+            searchParams: {
+                ...this.state.searchParams,
+                user_ids: value
+            }
+        })
+    }
+
     constructor() {
         super();
 
+        let query = new URLSearchParams(window.location.search);
+        let statuses = query.getAll('statuses').length ? query.getAll('statuses') : [ClassStatusCode.Opened];
         this.state = {
             classes: [],
             loading: false,
             searchParams: {
                 start_time: '',
                 end_time: '',
-                statuses: [ClassStatusCode.Opened]
+                statuses: statuses,
+                user_ids: query.getAll('userIds').map(id => Number(id))
             },
-            currentStatuses: [ClassStatusCode.Opened],
+            currentStatuses: statuses,
             column: null,
             direction: null,
             pagination: BuzzPaginationData,
@@ -58,7 +71,9 @@ export default class ClassList extends React.Component {
                 key: ClassStatusCode[key],
                 value: ClassStatusCode[key],
                 text: ClassStatusCode[key]
-            }))
+            })),
+            currentUser: {},
+            allUsers: []
         };
 
         this.openClassDetail = this.openClassDetail.bind(this);
@@ -126,6 +141,7 @@ export default class ClassList extends React.Component {
                 qs: Object.assign({}, this.state.searchParams, {
                     start_time: this.state.searchParams.start_time ? new Date(this.state.searchParams.start_time) : undefined,
                     end_time: this.state.searchParams.end_time ? new Date(this.state.searchParams.end_time) : undefined,
+                    statuses: this.state.searchParams.statuses.length ? this.state.searchParams.statuses : undefined
                 }, this.state.pagination),
                 useQuerystring: true
             }
@@ -154,8 +170,36 @@ export default class ClassList extends React.Component {
         })
     }
 
+    async getAllUsers() {
+        this.setState({loading: true})
+        let result = await ServiceProxy.proxyTo({
+            body: {uri: `{buzzService}/api/v1/users`}
+        });
+        this.setState({
+            loading: false, allUsers: result.map(u => ({
+                key: u.user_id,
+                value: u.user_id,
+                text: u.name || u.display_name || u.wechat_name,
+                // description: u.display_name,
+                image: {avatar: true, src: u.avatar}
+            }))
+        }, () => {
+            this.setState({
+                searchParams: {
+                    ...this.state.searchParams,
+                    user_ids: new URLSearchParams(window.location.search).getAll('userIds').map(id => Number(id))
+                }
+            })
+        });
+    }
+
     async componentWillMount() {
         await this.searchClasses();
+        this.setState({
+            currentUser: await CurrentUser.getProfile()
+        }, async () => {
+            await this.getAllUsers();
+        })
     }
 
     openClassDetail(c) {
@@ -199,6 +243,7 @@ export default class ClassList extends React.Component {
     }
 
     render() {
+        console.log("rendering", this.state)
         return (
             <Container>
                 <Segment loading={this.state.loading}>
@@ -214,6 +259,9 @@ export default class ClassList extends React.Component {
                                         value={this.state.searchParams.statuses}
                                         onChange={this.handleStatusChange} multiple search selection
                                         options={this.state.allStatuses}></Form.Field>
+                            <Form.Field control={Dropdown} label="参与者" name="users"
+                                        value={this.state.searchParams.user_ids} onChange={this.handleUsersChange}
+                                        multiple search selection options={this.state.allUsers}></Form.Field>
                         </Form.Group>
                     </Form>
                     <Form.Group>
@@ -225,7 +273,10 @@ export default class ClassList extends React.Component {
                         <a className="ui button green"
                            href={`/admin-neue/classDetail/create`}
                            target="_blank">创建班级</a>
-                        <Button onClick={this.updateStatus} type="button">批量更新班级结束状态</Button>
+                        {
+                            this.state.currentUser.super &&
+                            <Button onClick={this.updateStatus} type="button">批量更新班级结束状态</Button>
+                        }
                     </Form.Group>
                 </Segment>
                 <Menu fluid widths={Object.keys(ClassStatusCode).length}>
@@ -272,7 +323,7 @@ export default class ClassList extends React.Component {
                         {
                             this.state.classes.filter(c => this.state.currentStatuses.length === 0 || this.state.currentStatuses.indexOf(c.status) >= 0).map((c, i) =>
                                 <Table.Row key={c.class_id} style={{cursor: 'pointer'}}
-                                           onClick={() => process.env.NODE_ENV !== 'production ' ? this.openClassDetail(c) : this.openAdminNeueClassDetail(c)}>
+                                           onClick={() => process.env.NODE_ENV !== 'production' ? this.openClassDetail(c) : this.openAdminNeueClassDetail(c)}>
                                     <Table.Cell>
                                         {c.class_id}
                                     </Table.Cell>

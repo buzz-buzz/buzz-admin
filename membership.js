@@ -4,8 +4,6 @@ const util = require('util');
 const request = require('request-promise-native')
 
 async function setUserToState(context, user_id) {
-    console.log('super users = ', config.superUsers);
-
     context.state.user = {
         userId: user_id,
         super: (config.superUsers || []).indexOf(Number(user_id)) >= 0
@@ -49,6 +47,9 @@ async function setUserFromQSOrCookie(context) {
 
 let membership = {};
 
+membership.getSignInUrl = function (returnUrl) {
+    return util.format(config.signInUrl, `${encodeURIComponent(`${config.origin}${returnUrl}`)}`);
+};
 membership.ensureAuthenticated = async function (context, next) {
     await setUserFromQSOrCookie(context);
 
@@ -62,9 +63,7 @@ membership.ensureAuthenticated = async function (context, next) {
 
             return context.body = result;
         } else {
-            let url = config.signInUrl;
-
-            return context.redirect(util.format(url, `${encodeURIComponent(`${config.origin}${context.request.url}`)}`));
+            return context.redirect(membership.getSignInUrl(context.request.url));
         }
 
 
@@ -76,22 +75,23 @@ membership.ensureAuthenticated = async function (context, next) {
 membership.ensureSystemUsers = async function (context, next) {
     let userId = context.state.user.userId
 
-    console.log("checking user is system user of ", userId)
-
     let profile = JSON.parse(await request({
         uri: `${config.endPoints.buzzService}/api/v1/users/${userId}`,
         headers: {
             'X-Requested-With': 'buzz-admin'
         }
-    }))
-
-    console.log(`user ${userId} is :`, profile)
+    }));
 
     if (!profile.isSystemUser) {
+        await membership.signOut(context, async () => {
+        });
         context.status = 401;
         context.body = 'You don\'t have privilege to access this.';
 
         return
+    } else {
+        context.state.user.profile = profile;
+        context.state.user.super = profile.isSuper;
     }
 
     await next();

@@ -41,12 +41,16 @@ app.use(async (ctx, next) => {
     try {
         await next();
     } catch (err) {
-        if (401 == err.status) {
+        if (401 === Number(err.status)) {
             ctx.status = 401;
             ctx.set('WWW-Authenticate', 'Basic');
             ctx.body = 'You don\'t have privilege to access this.';
+        } else if (404 === Number(err.statusCode)) {
+            await membership.signOut(ctx, async () => {
+            });
+            ctx.redirect(membership.getSignInUrl(ctx.request.url));
         } else {
-            throw err;
+            ctx.throw(err.status, err)
         }
     }
 });
@@ -54,10 +58,12 @@ app.use(async (ctx, next) => {
 app.use(auth({name: process.env.BASIC_NAME, pass: process.env.BASIC_PASS}));
 
 app.use(membership.ensureAuthenticated)
+
 app.use(membership.ensureSystemUsers)
 
 app.use(async (ctx, next) => {
     ctx.state.path = ctx.path;
+
     await next();
 });
 
@@ -72,7 +78,7 @@ let clientPage = async ctx => {
             endPoints: {
                 adminNeue: config.endPoints.adminNeue
             }
-        }
+        },
     }));
 };
 router
@@ -85,6 +91,7 @@ router
     .get('/', async ctx => {
         ctx.redirect('/classes');
     })
+    .get('/users/:userId?', clientPage)
     .get('/students/:userId?', clientPage)
     .get('/companions/:userId?', clientPage)
     .get('/classes', clientPage)
@@ -138,6 +145,12 @@ router
     })
     .get('/admin-neue/content-list', async ctx => {
         ctx.redirect(`${config.endPoints.adminNeue}/contentList`);
+    })
+    .get('/sign-out', membership.signOut, async ctx => {
+        ctx.redirect(membership.getSignInUrl('/'))
+    })
+    .get('/current-user', membership.ensureAuthenticated, membership.ensureSystemUsers, async ctx => {
+        ctx.body = ctx.state.user;
     })
 ;
 
