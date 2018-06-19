@@ -142,7 +142,7 @@ export default class LevelModal extends React.Component {
                                                         <Icon name="checkmark box" />
                                                     } */}
                                                     {
-                                                        ((item === '是' && this.state.jsonDetail.answers[k] === 'A') || (item === '否' && this.state.jsonDetail.answers[k] === 'B') || (i === 2 && this.state.jsonDetail.answers[k] === 'C')  ) &&
+                                                        ((i === 0  && this.state.jsonDetail.answers[k] === 'A') || (i === 1 && this.state.jsonDetail.answers[k] === 'B') || (i === 2 && this.state.jsonDetail.answers[k] === 'C')  ) &&
                                                         <Icon name="checkmark box" />
                                                     }
                                                     {item}
