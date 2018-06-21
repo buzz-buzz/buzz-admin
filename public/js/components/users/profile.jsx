@@ -221,8 +221,9 @@ export default class Profile extends React.Component {
                 <Header content={
                     <div>
                         用户资料 - {this.state.user.user_id}
-                        &emsp;<a href={`/classes?userIds=${this.state.user.user_id}&statuses=${ClassStatusCode.Opened}&statuses=${ClassStatusCode.Cancelled}&statuses=${ClassStatusCode.Ended}`}
-                                 target="_blank">查看课程历史</a>
+                        &emsp;<a
+                        href={`/classes?userIds=${this.state.user.user_id}&statuses=${ClassStatusCode.Opened}&statuses=${ClassStatusCode.Cancelled}&statuses=${ClassStatusCode.Ended}`}
+                        target="_blank">查看课程历史</a>
                     </div>
                 }></Header>
                 <Modal.Content>
@@ -353,7 +354,7 @@ export default class Profile extends React.Component {
                             }
                             {
                                 // TODO: Only super user can see this button
-                                (!process.env.NODE_ENV || process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'qa') &&
+                                (!process.env.NODE_ENV || process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'qa' || window.location.host.startsWith('admin-test')) &&
                                 <Form.Button negative content="删除" type="button" onClick={this.deleteUser}/>
                             }
                             <Form.Button color="black"
