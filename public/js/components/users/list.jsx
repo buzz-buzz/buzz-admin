@@ -1,23 +1,11 @@
 import * as React from "react";
-import {
-    Button,
-    Container,
-    Dropdown,
-    Form,
-    Icon,
-    Image,
-    Input,
-    Label,
-    Menu,
-    Popup,
-    Segment,
-    Table
-} from "semantic-ui-react";
+import {Button, Container, Dropdown, Form, Icon, Input, Label, Menu, Popup, Segment, Table} from "semantic-ui-react";
 import ServiceProxy from "../../service-proxy";
 import Profile from "./profile";
 import SchedulePreference from "./schedule-preference";
 import BigCalendar from 'react-big-calendar'
 import moment from 'moment'
+import 'moment/locale/zh-cn'
 import ClassHours from "../students/class-hours";
 import Integral from "../students/integral";
 import LevelModal from "../students/level-modal";
@@ -30,6 +18,7 @@ import UserTags from "./user-tags";
 import {ClassStatusCode} from "../../common/ClassStatus";
 import {Avatar} from "../../common/Avatar";
 
+moment.locale('zh-CN');
 BigCalendar.setLocalizer(BigCalendar.momentLocalizer(moment))
 
 async function attachEvents(users) {
@@ -294,7 +283,9 @@ export default class UserList extends React.Component {
                                 </Menu>
 
                                 <div style={{color: 'gainsboro'}}>
-                                    {user.created_at}
+                                    {user.created_at}<br/>
+                                    <span
+                                        style={{color: 'black!important'}}>{moment(user.created_at).format('LLLL')}</span>
                                 </div>
                             </Table.Cell>
                             {
@@ -304,23 +295,9 @@ export default class UserList extends React.Component {
                                     {user.country}
                                 </Table.Cell>
                             }
-                            {
-                                this.props['user-type'] === MemberType.Student &&
-                                <Table.Cell onClick={() => this.openProfile(user)}>
-                                    {user.mobile}
-                                </Table.Cell>
-                            }
-                            {
-                                this.props['user-type'] === MemberType.Companion &&
-                                <Table.Cell onClick={() => this.openProfile(user)}>
-                                    {user.email}
-                                </Table.Cell>
-                            }
                             <Table.Cell onClick={() => this.openProfile(user)}>
-                                {user.display_name}
-                            </Table.Cell>
-                            <Table.Cell onClick={() => this.openProfile(user)}>
-                                {user.name || user.facebook_name}
+                                <p>{user.mobile}</p>
+                                <p>{user.email}</p>
                             </Table.Cell>
                             <Table.Cell onClick={() => this.openProfile(user)}>
                                 {user.grade}
@@ -336,10 +313,12 @@ export default class UserList extends React.Component {
                                     （<a title="冻结课时数">{user.locked_class_hours || 0}</a>）
                                 </div>
                             </Table.Cell>
-                            {/* <Table.Cell onClick={() => this.openIntegral(user)}
-                                        style={{cursor: 'pointer'}}>
-                                {user.integral || 0}
-                            </Table.Cell> */}
+                            {
+                                <Table.Cell onClick={() => this.openIntegral(user)}
+                                            style={{cursor: 'pointer'}}>
+                                    {user.integral || 0}
+                                </Table.Cell>
+                            }
                             {
                                 this.props['user-type'] === MemberType.Student && user.placement_test &&
                                 <Table.Cell onClick={() => this.openLevelModal(user)}
@@ -470,21 +449,15 @@ export default class UserList extends React.Component {
                     this.props['user-type'] === MemberType.Companion &&
                     <Table.HeaderCell>国籍</Table.HeaderCell>
                 }
-                {
-                    this.props['user-type'] === MemberType.Student &&
-                    <Table.HeaderCell>手机号</Table.HeaderCell>
-                }
-                {
-                    this.props['user-type'] === MemberType.Companion &&
-                    <Table.HeaderCell>邮箱</Table.HeaderCell>
-                }
-                <Table.HeaderCell>备注名</Table.HeaderCell>
-                <Table.HeaderCell>孩子英文名</Table.HeaderCell>
+                <Table.HeaderCell>联系信息<br/>手机号<br/>邮箱</Table.HeaderCell>
                 <Table.HeaderCell>年级</Table.HeaderCell>
                 <Table.HeaderCell>
                     总课时
                     <br/>
                     可用(冻结)
+                </Table.HeaderCell>
+                <Table.HeaderCell>
+                    积分
                 </Table.HeaderCell>
                 {
                     this.props['user-type'] === MemberType.Student &&
