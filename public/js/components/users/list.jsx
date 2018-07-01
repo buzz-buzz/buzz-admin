@@ -359,8 +359,10 @@ export default class UserList extends React.Component {
                     <BuzzPagination pagination={this.state.pagination} gotoPage={this.gotoPage}
                         paginationChanged={(newPagination) => {
                             window.localStorage.setItem('pagination.per_page', newPagination.per_page);
-                            this.setState({ pagination: newPagination })
-                        }} />
+                            this.setState({ pagination: newPagination }, async () => {
+                                await this.searchUsers();
+                            });
+                        }} colSpan={this.props['user-type'] === MemberType.Student ? 10 : (this.props['user-type'] === MemberType.Companion ? 10 : 9)} />
                 </Table.Row>
             </Table.Footer>
         </Table>;

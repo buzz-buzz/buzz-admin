@@ -1,14 +1,13 @@
 import * as React from "react";
-import {Button, Container, Dropdown, Form, Icon, Image, Input, Menu, Segment, Table} from "semantic-ui-react";
+import { Button, Container, Dropdown, Form, Input, Menu, Segment, Table } from "semantic-ui-react";
 import ServiceProxy from "../../service-proxy";
 import ClassDetail from "./class-detail-modal";
 import ClassEvaluation from "./class-evaluation-modal";
-import ClassStatuses from './class-statuses';
-import {ClassStatusCode} from "../../common/ClassStatus";
+import { ClassStatusCode } from "../../common/ClassStatus";
 import * as _ from "lodash";
-import {BuzzPaginationData} from "../common/BuzzPagination";
+import { BuzzPaginationData } from "../common/BuzzPagination";
 import BuzzPagination from "../common/BuzzPagination";
-import {Avatar} from "../../common/Avatar";
+import { Avatar } from "../../common/Avatar";
 import CurrentUser from "../../common/CurrentUser";
 
 function nearestToper(x, y) {
@@ -31,8 +30,8 @@ function nearestToper(x, y) {
 }
 
 export default class ClassList extends React.Component {
-    handleStatusChange = (e, {value}) => {
-        let {searchParams} = this.state;
+    handleStatusChange = ({ value }) => {
+        let { searchParams } = this.state;
         searchParams.statuses = value;
 
         this.setState({
@@ -40,7 +39,7 @@ export default class ClassList extends React.Component {
         })
     };
 
-    handleUsersChange = (e, {value}) => {
+    handleUsersChange = ({ value }) => {
         this.setState({
             searchParams: {
                 ...this.state.searchParams,
@@ -94,15 +93,9 @@ export default class ClassList extends React.Component {
     }
 
     async updateStatus() {
-        this.setState({loading: true});
+        this.setState({ loading: true });
         try {
-            let result = await ServiceProxy.proxyTo({
-                body: {
-                    uri: `{buzzService}/api/v1/class-schedule`,
-                    method: 'PUT'
-                }
-            })
-            this.setState({error: false});
+            this.setState({ error: false });
             await this.searchClasses();
         } catch (error) {
             this.setState({
@@ -110,11 +103,11 @@ export default class ClassList extends React.Component {
                 message: JSON.stringify(error.result || error.message || error)
             })
         } finally {
-            this.setState({loading: false})
+            this.setState({ loading: false })
         }
     }
 
-    handleChange(event, {name, value}) {
+    handleChange({ name, value }) {
         let clonedSearchParams = this.state.searchParams;
         clonedSearchParams[name] = value;
 
@@ -133,7 +126,7 @@ export default class ClassList extends React.Component {
     }
 
     async searchClasses() {
-        this.setState({loading: true})
+        this.setState({ loading: true })
         let paginationData = await ServiceProxy.proxyTo({
             body: {
                 uri: '{buzzService}/api/v1/class-schedule',
@@ -171,9 +164,9 @@ export default class ClassList extends React.Component {
     }
 
     async getAllUsers() {
-        this.setState({loading: true})
+        this.setState({ loading: true })
         let result = await ServiceProxy.proxyTo({
-            body: {uri: `{buzzService}/api/v1/users`}
+            body: { uri: `{buzzService}/api/v1/users` }
         });
         this.setState({
             loading: false, allUsers: result.map(u => ({
@@ -181,7 +174,7 @@ export default class ClassList extends React.Component {
                 value: u.user_id,
                 text: u.name || u.display_name || u.wechat_name,
                 // description: u.display_name,
-                image: {avatar: true, src: u.avatar}
+                image: { avatar: true, src: u.avatar }
             }))
         }, () => {
             this.setState({
@@ -211,7 +204,7 @@ export default class ClassList extends React.Component {
     }
 
     onClassDetailClosed() {
-        this.setState({detailOpen: false})
+        this.setState({ detailOpen: false })
     }
 
     onClassSaved(savedClass) {
@@ -228,7 +221,7 @@ export default class ClassList extends React.Component {
             })
         }
 
-        this.setState({classes: classes, currentClass: savedClass});
+        this.setState({ classes: classes, currentClass: savedClass });
     }
 
     openFeedback(c) {
@@ -239,7 +232,7 @@ export default class ClassList extends React.Component {
     }
 
     onClassEvaluationClosed() {
-        this.setState({evaluationOpen: false})
+        this.setState({ evaluationOpen: false })
     }
 
     render() {
@@ -250,18 +243,18 @@ export default class ClassList extends React.Component {
                     <Form onSubmit={this.searchClasses}>
                         <Form.Group widths="equal">
                             <Form.Field control={Input} label="开始时间" name="start_time"
-                                        value={this.state.searchParams.start_time} onChange={this.handleChange}
-                                        type="datetime-local"></Form.Field>
+                                value={this.state.searchParams.start_time} onChange={this.handleChange}
+                                type="datetime-local"></Form.Field>
                             <Form.Field control={Input} label="结束时间" name="end_time"
-                                        value={this.state.searchParams.end_time} onChange={this.handleChange}
-                                        type="datetime-local"></Form.Field>
+                                value={this.state.searchParams.end_time} onChange={this.handleChange}
+                                type="datetime-local"></Form.Field>
                             <Form.Field control={Dropdown} label="状态" name="status"
-                                        value={this.state.searchParams.statuses}
-                                        onChange={this.handleStatusChange} multiple search selection
-                                        options={this.state.allStatuses}></Form.Field>
+                                value={this.state.searchParams.statuses}
+                                onChange={this.handleStatusChange} multiple search selection
+                                options={this.state.allStatuses}></Form.Field>
                             <Form.Field control={Dropdown} label="参与者" name="users"
-                                        value={this.state.searchParams.user_ids} onChange={this.handleUsersChange}
-                                        multiple search selection options={this.state.allUsers}></Form.Field>
+                                value={this.state.searchParams.user_ids} onChange={this.handleUsersChange}
+                                multiple search selection options={this.state.allUsers}></Form.Field>
                         </Form.Group>
                     </Form>
                     <Form.Group>
@@ -271,8 +264,8 @@ export default class ClassList extends React.Component {
                             <Button onClick={() => this.openClassDetail()} type="button">创建班级</Button>
                         }
                         <a className="ui button green"
-                           href={`/admin-neue/classDetail/create`}
-                           target="_blank">创建班级</a>
+                            href={`/admin-neue/classDetail/create`}
+                            target="_blank">创建班级</a>
                         {
                             this.state.currentUser.super &&
                             <Button onClick={this.updateStatus} type="button">批量更新班级结束状态</Button>
@@ -284,54 +277,50 @@ export default class ClassList extends React.Component {
                         Object.keys(ClassStatusCode).map(
                             key => (
                                 <Menu.Item name={key}
-                                           active={this.state.currentStatuses.indexOf(ClassStatusCode[key]) >= 0}
-                                           onClick={() => this.searchClassesByStatus(ClassStatusCode[key])}
-                                           key={key}/>
+                                    active={this.state.currentStatuses.indexOf(ClassStatusCode[key]) >= 0}
+                                    onClick={() => this.searchClassesByStatus(ClassStatusCode[key])}
+                                    key={key} />
                             )
                         )
                     }
                 </Menu>
-                <Table celled sortable>
+                <Table celled sortable fixed selectable striped>
                     <Table.Header>
                         <Table.Row>
                             <Table.HeaderCell sorted={this.state.column === 'class_id' ? this.state.direction : null}
-                                              onClick={() => this.handleSort('class_id')}>班级ID</Table.HeaderCell>
-                            <Table.HeaderCell sorted={this.state.column === 'status' ? this.state.direction : null}
-                                              onClick={() => this.handleSort('status')}>班级状态</Table.HeaderCell>
+                                onClick={() => this.handleSort('class_id')}>班级ID</Table.HeaderCell>
                             <Table.HeaderCell sorted={this.state.column === 'name' ? this.state.direction : null}
-                                              onClick={() => this.handleSort('name')}>班级名称</Table.HeaderCell>
+                                onClick={() => this.handleSort('name')}>班级名称</Table.HeaderCell>
                             <Table.HeaderCell sorted={this.state.column === 'topic' ? this.state.direction : null}
-                                              onClick={() => this.handleSort('topic')}>主题名</Table.HeaderCell>
+                                onClick={() => this.handleSort('topic')}>主题名</Table.HeaderCell>
                             <Table.HeaderCell sorted={this.state.column === 'topic_level' ? this.state.direction : null}
-                                              onClick={() => this.handleSort('topic_level')}>级别 </Table.HeaderCell>
+                                onClick={() => this.handleSort('topic_level')}>级别 </Table.HeaderCell>
                             <Table.HeaderCell sorted={this.state.column === 'start_time' ? this.state.direction : null}
-                                              onClick={() => this.handleSort('start_time')}>开课日期</Table.HeaderCell>
+                                onClick={() => this.handleSort('start_time')}>开课日期</Table.HeaderCell>
                             <Table.HeaderCell sorted={this.state.column === 'start_time' ? this.state.direction : null}
-                                              onClick={() => this.handleSort('start_time')}>开始时间</Table.HeaderCell>
+                                onClick={() => this.handleSort('start_time')}>开始时间</Table.HeaderCell>
                             <Table.HeaderCell sorted={this.state.column === 'end_time' ? this.state.direction : null}
-                                              onClick={() => this.handleSort('end_time')}>结束时间</Table.HeaderCell>
+                                onClick={() => this.handleSort('end_time')}>结束时间</Table.HeaderCell>
                             <Table.HeaderCell sorted={this.state.column === 'room_url' ? this.state.direction : null}
-                                              onClick={() => this.handleSort('room_url')}>教室（链接）</Table.HeaderCell>
+                                onClick={() => this.handleSort('room_url')}>教室（链接）</Table.HeaderCell>
                             <Table.HeaderCell sorted={this.state.column === 'companions' ? this.state.direction : null}
-                                              onClick={() => this.handleSort('companions')}>外籍伙伴</Table.HeaderCell>
+                                onClick={() => this.handleSort('companions')}>外籍伙伴</Table.HeaderCell>
                             <Table.HeaderCell sorted={this.state.column === 'students' ? this.state.direction : null}
-                                              onClick={() => this.handleSort('students')}>中方用户</Table.HeaderCell>
+                                onClick={() => this.handleSort('students')}>中方用户</Table.HeaderCell>
                             <Table.HeaderCell>操作</Table.HeaderCell>
                         </Table.Row>
                     </Table.Header>
                     <Table.Body>
                         {
-                            this.state.classes.filter(c => this.state.currentStatuses.length === 0 || this.state.currentStatuses.indexOf(c.status) >= 0).map((c, i) =>
-                                <Table.Row key={c.class_id} style={{cursor: 'pointer'}}
-                                           onClick={() => process.env.NODE_ENV !== 'production' ? this.openClassDetail(c) : this.openAdminNeueClassDetail(c)}>
+                            this.state.classes.filter(c => this.state.currentStatuses.length === 0 || this.state.currentStatuses.indexOf(c.status) >= 0).map((c) =>
+                                <Table.Row key={c.class_id} style={{ cursor: 'pointer' }}
+                                    onClick={() => process.env.NODE_ENV !== 'production' ? this.openClassDetail(c) : this.openAdminNeueClassDetail(c)}>
                                     <Table.Cell>
                                         {c.class_id}
                                     </Table.Cell>
                                     <Table.Cell>
-                                        {c.status}
-                                    </Table.Cell>
-                                    <Table.Cell>
-                                        {c.name}
+                                        <strong>{c.name}</strong><br />
+                                        <span style={{ color: 'gainsboro' }}>{c.status}</span>
                                     </Table.Cell>
                                     <Table.Cell>
                                         {c.topic}
@@ -354,16 +343,16 @@ export default class ClassList extends React.Component {
                                     <Table.Cell>
                                         {
                                             c.companions.map(userId => <a href={`/companions/${userId}`} target="_blank"
-                                                                          key={userId}>
-                                                <Avatar userId={userId}/>
+                                                key={userId}>
+                                                <Avatar userId={userId} />
                                             </a>)
                                         }
                                     </Table.Cell>
                                     <Table.Cell onClick={(event) => event.stopPropagation()}>
                                         {
                                             c.students.map(userId => <a href={`/students/${userId}`} target="_blank"
-                                                                        key={userId}>
-                                                <Avatar userId={userId}/>
+                                                key={userId}>
+                                                <Avatar userId={userId} />
                                             </a>)
                                         }
                                     </Table.Cell>
@@ -372,11 +361,11 @@ export default class ClassList extends React.Component {
                                     }}>
                                         <p>
                                             <a className="ui green button" target="_blank"
-                                               href={`/admin-neue/classDetail/${c.class_id}`}
-                                               style={{whiteSpace: 'nowrap'}}>编辑详情</a>
+                                                href={`/admin-neue/classDetail/${c.class_id}`}
+                                                style={{ whiteSpace: 'nowrap' }}>编辑详情</a>
                                         </p>
                                         <Button onClick={() => this.openFeedback(c)}>
-                                            <span style={{whiteSpace: 'nowrap'}}>查看评价</span>
+                                            <span style={{ whiteSpace: 'nowrap' }}>查看评价</span>
                                         </Button>
                                     </Table.Cell>
                                 </Table.Row>
@@ -386,10 +375,12 @@ export default class ClassList extends React.Component {
                     <Table.Footer>
                         <Table.Row>
                             <BuzzPagination pagination={this.state.pagination} gotoPage={this.gotoPage}
-                                            paginationChanged={(newPagination) => {
-                                                window.localStorage.setItem('pagination.per_page', newPagination.per_page);
-                                                this.setState({pagination: newPagination})
-                                            }}/>
+                                paginationChanged={(newPagination) => {
+                                    window.localStorage.setItem('pagination.per_page', newPagination.per_page);
+                                    this.setState({ pagination: newPagination }, async () => {
+                                        await this.searchClasses();
+                                    })
+                                }} colSpan={11} />
                         </Table.Row>
                     </Table.Footer>
                 </Table>
@@ -398,19 +389,19 @@ export default class ClassList extends React.Component {
                     (process.env.NODE_NEV !== 'production') &&
 
                     <ClassDetail open={this.state.detailOpen} onClose={this.onClassDetailClosed}
-                                 onClassSaved={this.onClassSaved} class={this.state.currentClass}
-                                 buttonDisabled={this.state.buttonDisabled}></ClassDetail>
+                        onClassSaved={this.onClassSaved} class={this.state.currentClass}
+                        buttonDisabled={this.state.buttonDisabled}></ClassDetail>
                 }
 
 
                 <ClassEvaluation open={this.state.evaluationOpen} onClose={this.onClassEvaluationClosed}
-                                 evaluation={this.state.currentClass} classInfo={this.state.currentClass}/>
+                    evaluation={this.state.currentClass} classInfo={this.state.currentClass} />
             </Container>
         );
     }
 
     handleSort(clickedColumn) {
-        const {column, direction, classes} = this.state;
+        const { column, direction, classes } = this.state;
 
         if (column !== clickedColumn) {
             this.setState({
@@ -440,11 +431,11 @@ export default class ClassList extends React.Component {
         }
     }
 
-    async gotoPage(evt, {activePage}) {
+    async gotoPage({ activePage }) {
         let p = this.state.pagination;
         p.current_page = activePage;
 
-        this.setState({pagination: p}, async () => {
+        this.setState({ pagination: p }, async () => {
             await this.searchClasses();
         })
     }
@@ -453,12 +444,12 @@ export default class ClassList extends React.Component {
         let searchParams = this.state.searchParams
         searchParams.statuses = [status]
 
-        this.setState({searchParams, pagination: BuzzPaginationData}, async () => {
+        this.setState({ searchParams, pagination: BuzzPaginationData }, async () => {
             await this.searchClasses()
         })
     }
 
-    openAdminNeueClassDetail(c) {
+    openAdminNeueClassDetail() {
 
     }
 }

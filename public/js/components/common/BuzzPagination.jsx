@@ -1,5 +1,5 @@
 import React from "react";
-import {Dropdown, Form, Icon, Pagination, Segment, Table} from "semantic-ui-react";
+import { Dropdown, Form, Icon, Pagination, Segment, Table } from "semantic-ui-react";
 
 export let BuzzPaginationData = {
     current_page: 1,
@@ -13,17 +13,17 @@ export default class BuzzPagination extends React.Component {
         per_page: this.props.pagination.per_page
     };
 
-    handleInputChange = (e, {name, value}) => {
-        this.setState({[name]: value}, () => {
+    handleInputChange = (e, { name, value }) => {
+        this.setState({ [name]: value }, () => {
             this.props.paginationChanged(Object.assign({}, this.props.pagination, this.state))
         });
     };
 
     render() {
         return (
-            <Table.HeaderCell colSpan="12">
+            <Table.HeaderCell colSpan={this.props.colSpan}>
                 <label>每页条数：</label>
-                <Dropdown compact search searchInput={{type: 'number'}} selection options={[{
+                <Dropdown compact search searchInput={{ type: 'number' }} selection options={[{
                     key: 10, text: '10', value: 10
                 }, {
                     key: 20, text: '20', value: 20
@@ -32,28 +32,28 @@ export default class BuzzPagination extends React.Component {
                 }, {
                     key: 100, text: '100', value: 100
                 }]} placeholder="选择每页条数" value={this.state.per_page}
-                          onChange={(e, {value}) => this.handleInputChange(e, {name: 'per_page', value})}/>
+                    onChange={(e, { value }) => this.handleInputChange(e, { name: 'per_page', value })} />
                 &emsp;
                 <Pagination
                     defaultActivePage={1}
                     ellipsisItem={{
-                        content: <Icon name='ellipsis horizontal'/>,
+                        content: <Icon name='ellipsis horizontal' />,
                         icon: true
                     }}
                     firstItem={{
-                        content: <Icon name='angle double left'/>,
+                        content: <Icon name='angle double left' />,
                         icon: true
                     }}
                     lastItem={{
-                        content: <Icon name='angle double right'/>,
+                        content: <Icon name='angle double right' />,
                         icon: true
                     }}
                     prevItem={{
-                        content: <Icon name='angle left'/>,
+                        content: <Icon name='angle left' />,
                         icon: true
                     }}
                     nextItem={{
-                        content: <Icon name='angle right'/>,
+                        content: <Icon name='angle right' />,
                         icon: true
                     }}
                     totalPages={this.props.pagination.last_page}
