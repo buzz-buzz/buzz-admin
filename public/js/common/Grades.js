@@ -1,13 +1,19 @@
+export const Grades = {
+  0: '幼儿园',
+  1: '一年级',
+  2: '二年级',
+  3: '三年级',
+  4: '四年级',
+  5: '五年级',
+  6: '六年级',
+  7: '七年级',
+  8: '八年级',
+  9: '九年级',
+  10: '十年级',
+  11: '十一年级',
+  12: '十二年级'
+}
+
 export default {
-  list: [
-    {key: '1', value: '1', text: '一年级'},
-    {key: '2', value: '2', text: '二年级'},
-    {key: '3', value: '3', text: '三年级'},
-    {key: '4', value: '4', text: '四年级'},
-    {key: '5', value: '5', text: '五年级'},
-    {key: '6', value: '6', text: '六年级'},
-    {key: '7', value: '7', text: '七年级'},
-    {key: '8', value: '8', text: '八年级'},
-    {key: '9', value: '9', text: '九年级'},
-    ]
+  list: Object.keys(Grades).map(number => ({ key: number, value: number, text: Grades[number] }))
 }

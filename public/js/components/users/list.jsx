@@ -1,5 +1,5 @@
 import * as React from "react";
-import {Button, Container, Dropdown, Form, Icon, Input, Label, Menu, Popup, Segment, Table} from "semantic-ui-react";
+import { Button, Container, Dropdown, Form, Icon, Input, Label, Menu, Popup, Segment, Table } from "semantic-ui-react";
 import ServiceProxy from "../../service-proxy";
 import Profile from "./profile";
 import SchedulePreference from "./schedule-preference";
@@ -11,12 +11,13 @@ import Integral from "../students/integral";
 import LevelModal from "../students/level-modal";
 import BookingTable from "./booking-table";
 import queryString from 'query-string';
-import {MemberType, MemberTypeChinese} from "../../common/MemberType";
+import { MemberType, MemberTypeChinese } from "../../common/MemberType";
 import history from '../common/history';
-import BuzzPagination, {BuzzPaginationData} from "../common/BuzzPagination";
+import BuzzPagination, { BuzzPaginationData } from "../common/BuzzPagination";
 import UserTags from "./user-tags";
-import {ClassStatusCode} from "../../common/ClassStatus";
-import {Avatar} from "../../common/Avatar";
+import { ClassStatusCode } from "../../common/ClassStatus";
+import { Avatar } from "../../common/Avatar";
+import { Grades } from '../../common/Grades';
 
 moment.locale('zh-CN');
 BigCalendar.setLocalizer(BigCalendar.momentLocalizer(moment))
@@ -27,7 +28,7 @@ async function attachEvents(users) {
     if (userIdArray && userIdArray.length) {
         let bookings = await ServiceProxy.proxyTo({
             body: {
-                uri: `{buzzService}/api/v1/bookings/all?${queryString.stringify({users: userIdArray})}`,
+                uri: `{buzzService}/api/v1/bookings/all?${queryString.stringify({ users: userIdArray })}`,
                 method: 'GET'
             }
         });
@@ -53,15 +54,15 @@ async function attachEvents(users) {
 }
 
 export default class UserList extends React.Component {
-    handleSelectedTagsChange = (e, {value}) => {
-        let {searchParams} = this.state;
+    handleSelectedTagsChange = (e, { value }) => {
+        let { searchParams } = this.state;
         searchParams.tags = value;
         this.setState({
             searchParams
         })
     };
     searchUsersByTag = async (tag) => {
-        let {searchParams} = this.state
+        let { searchParams } = this.state
         searchParams.tags = [tag]
 
         this.setState({
@@ -185,7 +186,7 @@ export default class UserList extends React.Component {
     }
 
     async searchUsers() {
-        this.setState({loading: true});
+        this.setState({ loading: true });
         let paginationData = await
             ServiceProxy.proxyTo({
                 body: {
@@ -194,9 +195,9 @@ export default class UserList extends React.Component {
                     qs: Object.assign({
                         role: this.props['user-type']
                     }, this.state.searchParams, {
-                        start_time: this.state.searchParams.start_time ? new Date(this.state.searchParams.start_time) : undefined,
-                        end_time: this.state.searchParams.end_time ? new Date(this.state.searchParams.end_time) : undefined
-                    }, this.state.pagination)
+                            start_time: this.state.searchParams.start_time ? new Date(this.state.searchParams.start_time) : undefined,
+                            end_time: this.state.searchParams.end_time ? new Date(this.state.searchParams.end_time) : undefined
+                        }, this.state.pagination)
                 }
             });
 
@@ -215,7 +216,7 @@ export default class UserList extends React.Component {
         });
     }
 
-    handleTextChange(event, {value, name}) {
+    handleTextChange(event, { value, name }) {
         let clonedSearchParams = this.state.searchParams;
         clonedSearchParams[name] = value;
 
@@ -233,23 +234,23 @@ export default class UserList extends React.Component {
                     {this.renderListTable()}
                 </Segment>
                 <ClassHours open={this.state.classHoursModalOpen} student={this.state.currentUser}
-                            classHoursUpdateCallback={this.classHoursUpdated}
-                            onCloseCallback={this.closeClassHoursModal}/>
+                    classHoursUpdateCallback={this.classHoursUpdated}
+                    onCloseCallback={this.closeClassHoursModal} />
 
                 <Integral open={this.state.integralModalOpen} student={this.state.currentUser}
-                          integralUpdateCallback={this.integralUpdated}
-                          onCloseCallback={this.closeIntegralModal}/>
+                    integralUpdateCallback={this.integralUpdated}
+                    onCloseCallback={this.closeIntegralModal} />
                 {
                     this.props['user-type'] === MemberType.Student &&
 
                     <LevelModal open={this.state.levelModalOpen} user={this.state.currentUser}
-                                onCloseCallback={this.onCloseLevelModal} onLevelUpdated={this.onLevelUpdated}/>
+                        onCloseCallback={this.onCloseLevelModal} onLevelUpdated={this.onLevelUpdated} />
                 }
                 <Profile open={this.state.profileModalOpen} user={this.state.currentUser}
-                         profileUpdateCallback={this.profileUpdated} onCloseCallback={this.closeProfileModal}
-                         userCreatedCallback={this.userCreated} onUserDeleted={this.onUserDeleted}/>
+                    profileUpdateCallback={this.profileUpdated} onCloseCallback={this.closeProfileModal}
+                    userCreatedCallback={this.userCreated} onUserDeleted={this.onUserDeleted} />
                 <SchedulePreference open={this.state.schedulePreferenceModalOpen} user={this.state.currentUser}
-                                    onCloseCallback={this.closeSchedulePreferenceModal}/>
+                    onCloseCallback={this.closeSchedulePreferenceModal} />
             </Container>
         )
     }
@@ -260,32 +261,32 @@ export default class UserList extends React.Component {
             <Table.Body>
                 {
                     this.state.users.map((user, i) =>
-                        <Table.Row key={user.user_id} style={{cursor: 'pointer'}}
-                                   onClick={() => this.setState({activeIndex: this.state.activeIndex === i ? null : i})}
-                                   active={this.state.activeIndex === i}>
+                        <Table.Row key={user.user_id} style={{ cursor: 'pointer' }}
+                            onClick={() => this.setState({ activeIndex: this.state.activeIndex === i ? null : i })}
+                            active={this.state.activeIndex === i}>
                             <Table.Cell onClick={() => this.openProfile(user)}>
                                 {user.user_id}
                             </Table.Cell>
                             <Table.Cell onClick={() => this.openProfile(user)}>
                                 <Menu text compact>
-                                    <Menu.Item style={{maxWidth: '100%'}}>
+                                    <Menu.Item style={{ maxWidth: '100%' }}>
                                         <Avatar userId={user.user_id}>
                                         </Avatar>
                                         {
                                             this.props.match.path === '/users/:userId?' &&
                                             <Label floating
-                                                   color={user.role === MemberType.Student ? 'yellow' : 'black'}>
-                                            <span
-                                                style={{whiteSpace: 'nowrap'}}>{MemberTypeChinese[user.role].substr(0, 1)}</span>
+                                                color={user.role === MemberType.Student ? 'yellow' : 'black'}>
+                                                <span
+                                                    style={{ whiteSpace: 'nowrap' }}>{MemberTypeChinese[user.role].substr(0, 1)}</span>
                                             </Label>
                                         }
                                     </Menu.Item>
                                 </Menu>
 
-                                <div style={{color: 'gainsboro'}}>
-                                    {user.created_at}<br/>
+                                <div style={{ color: 'gainsboro' }}>
+                                    {user.created_at}<br />
                                     <span
-                                        style={{color: 'black!important'}}>{moment(user.created_at).format('LLLL')}</span>
+                                        style={{ color: 'darkgray' }}>{moment(user.created_at).format('LLLL')}</span>
                                 </div>
                             </Table.Cell>
                             {
@@ -300,29 +301,29 @@ export default class UserList extends React.Component {
                                 <p>{user.email}</p>
                             </Table.Cell>
                             <Table.Cell onClick={() => this.openProfile(user)}>
-                                {user.grade}
+                                {Grades[user.grade]}
                             </Table.Cell>
                             <Table.Cell onClick={() => this.openClassHours(user)}
-                                        style={{cursor: 'pointer'}}>
+                                style={{ cursor: 'pointer' }}>
                                 <div><a
                                     title="总课时数"><strong>{(user.class_hours + user.locked_class_hours) || 0}</strong></a>
                                 </div>
                                 <div
-                                    style={{whiteSpace: 'nowrap'}}>
+                                    style={{ whiteSpace: 'nowrap' }}>
                                     <a title="可用课时数">{user.class_hours || 0}</a>
                                     （<a title="冻结课时数">{user.locked_class_hours || 0}</a>）
                                 </div>
                             </Table.Cell>
                             {
                                 <Table.Cell onClick={() => this.openIntegral(user)}
-                                            style={{cursor: 'pointer'}}>
+                                    style={{ cursor: 'pointer' }}>
                                     {user.integral || 0}
                                 </Table.Cell>
                             }
                             {
                                 this.props['user-type'] === MemberType.Student && user.placement_test &&
                                 <Table.Cell onClick={() => this.openLevelModal(user)}
-                                            style={{whiteSpace: 'nowrap', color: user.level ? 'black' : 'red'}}>
+                                    style={{ whiteSpace: 'nowrap', color: user.level ? 'black' : 'red' }}>
                                     {user.level ? <strong>{user.level}</strong> : '待评级'}
                                 </Table.Cell>
                             }
@@ -330,7 +331,7 @@ export default class UserList extends React.Component {
                                 this.props['user-type'] === MemberType.Student && !user.placement_test &&
                                 <Popup
                                     trigger={
-                                        <Table.Cell style={{color: 'gainsboro', whiteSpace: 'nowrap'}}>待测试</Table.Cell>
+                                        <Table.Cell style={{ color: 'gainsboro', whiteSpace: 'nowrap' }}>待测试</Table.Cell>
                                     }
                                     content={`${user.display_name || user.name || user.wechat_name} 还没有进行测试，请提醒 TA 完成。`}
                                     on='click'
@@ -347,7 +348,7 @@ export default class UserList extends React.Component {
                             </Table.Cell>
                             <Table.Cell>
                                 <a href={`/classes/?userIds=${user.user_id}&statuses=${ClassStatusCode.Opened}&statuses=${ClassStatusCode.Cancelled}&statuses=${ClassStatusCode.Ended}`}
-                                   target="_blank">课程历史</a>
+                                    target="_blank">课程历史</a>
                             </Table.Cell>
                         </Table.Row>
                     )
@@ -356,10 +357,10 @@ export default class UserList extends React.Component {
             <Table.Footer>
                 <Table.Row>
                     <BuzzPagination pagination={this.state.pagination} gotoPage={this.gotoPage}
-                                    paginationChanged={(newPagination) => {
-                                        window.localStorage.setItem('pagination.per_page', newPagination.per_page);
-                                        this.setState({pagination: newPagination})
-                                    }}/>
+                        paginationChanged={(newPagination) => {
+                            window.localStorage.setItem('pagination.per_page', newPagination.per_page);
+                            this.setState({ pagination: newPagination })
+                        }} />
                 </Table.Row>
             </Table.Footer>
         </Table>;
@@ -369,31 +370,31 @@ export default class UserList extends React.Component {
         return <Form onSubmit={this.searchUsers} loading={this.state.loading}>
             <Form.Group widths='equal'>
                 <Form.Field control={Input} label="微信昵称" name="wechat_name"
-                            value={this.state.searchParams.wechat_name}
-                            onChange={this.handleTextChange}></Form.Field>
+                    value={this.state.searchParams.wechat_name}
+                    onChange={this.handleTextChange}></Form.Field>
                 <Form.Field control={Input} label="（孩子）英文名" value={this.state.searchParams.name} name="name"
-                            onChange={this.handleTextChange}>
+                    onChange={this.handleTextChange}>
                 </Form.Field>
                 <Form.Field control={Input} label="备注名（内部可见）"
-                            value={this.state.searchParams.display_name}
-                            name="display_name"
-                            onChange={this.handleTextChange}></Form.Field>
+                    value={this.state.searchParams.display_name}
+                    name="display_name"
+                    onChange={this.handleTextChange}></Form.Field>
                 <Form.Field control={Input} label="手机号" value={this.state.searchParams.mobile}
-                            name="mobile" onChange={this.handleTextChange}></Form.Field>
+                    name="mobile" onChange={this.handleTextChange}></Form.Field>
                 <Form.Field control={Input} label="邮箱" value={this.state.searchParams.email}
-                            name="email" onChange={this.handleTextChange}></Form.Field>
+                    name="email" onChange={this.handleTextChange}></Form.Field>
             </Form.Group>
             <Form.Group widths="equal">
                 <Form.Field control={Input} label="预约/排课时间段 开始时间" name="start_time"
-                            value={this.state.searchParams.start_time}
-                            onChange={this.handleTextChange} type="datetime-local"></Form.Field>
+                    value={this.state.searchParams.start_time}
+                    onChange={this.handleTextChange} type="datetime-local"></Form.Field>
                 <Form.Field control={Input} label="结束时间" name="end_time"
-                            value={this.state.searchParams.end_time}
-                            onChange={this.handleTextChange} type="datetime-local"></Form.Field>
+                    value={this.state.searchParams.end_time}
+                    onChange={this.handleTextChange} type="datetime-local"></Form.Field>
                 <Form.Field control={Dropdown} label="用户标签" name="tags" value={this.state.searchParams.tags} multiple
-                            options={this.state.allTags}
-                            search selection
-                            onChange={this.handleSelectedTagsChange}></Form.Field>
+                    options={this.state.allTags}
+                    search selection
+                    onChange={this.handleSelectedTagsChange}></Form.Field>
 
                 <Form.Field>
                     <label>排课状态</label>
@@ -408,12 +409,12 @@ export default class UserList extends React.Component {
                     }, {
                         key: 'need', text: '需排课', value: 'need'
                     }]} placeholder="排课状态" value={this.state.searchParams.weekly_schedule_requirements}
-                                 name="weekly_schedule_requirements" onChange={this.handleTextChange}></Form.Select>
+                        name="weekly_schedule_requirements" onChange={this.handleTextChange}></Form.Select>
                 </Form.Field>
             </Form.Group>
             <Form.Group>
                 <Button type="submit">
-                    <Icon name="search"/>
+                    <Icon name="search" />
                     查询
                 </Button>
                 {
@@ -428,7 +429,7 @@ export default class UserList extends React.Component {
                             return (
                                 <Label as="button" key={t.key} onClick={() => {
                                     this.searchUsersByTag(t.key)
-                                }} style={{cursor: 'pointer'}}>
+                                }} style={{ cursor: 'pointer' }}>
                                     {t.text}
                                 </Label>
                             )
@@ -449,11 +450,11 @@ export default class UserList extends React.Component {
                     this.props['user-type'] === MemberType.Companion &&
                     <Table.HeaderCell>国籍</Table.HeaderCell>
                 }
-                <Table.HeaderCell>联系信息<br/>手机号<br/>邮箱</Table.HeaderCell>
+                <Table.HeaderCell>联系信息<br />手机号<br />邮箱</Table.HeaderCell>
                 <Table.HeaderCell>年级</Table.HeaderCell>
                 <Table.HeaderCell>
                     总课时
-                    <br/>
+                    <br />
                     可用(冻结)
                 </Table.HeaderCell>
                 <Table.HeaderCell>
@@ -485,7 +486,7 @@ export default class UserList extends React.Component {
     }
 
     closeClassHoursModal() {
-        this.setState({classHoursModalOpen: false})
+        this.setState({ classHoursModalOpen: false })
     }
 
     openIntegral(student) {
@@ -496,7 +497,7 @@ export default class UserList extends React.Component {
     }
 
     closeIntegralModal() {
-        this.setState({integralModalOpen: false})
+        this.setState({ integralModalOpen: false })
     }
 
     openProfile(user) {
@@ -509,7 +510,7 @@ export default class UserList extends React.Component {
     }
 
     closeProfileModal() {
-        this.setState({profileModalOpen: false});
+        this.setState({ profileModalOpen: false });
         let url = this.props.match.path.replace('/:userId?', '');
         history.push(url);
     }
@@ -621,18 +622,18 @@ export default class UserList extends React.Component {
 
             return s;
         });
-        this.setState({currentUser: currentUser, users: newUsers})
+        this.setState({ currentUser: currentUser, users: newUsers })
     }
 
     createNewUser() {
         this.openProfile({});
     }
 
-    gotoPage(evt, {activePage}) {
+    gotoPage(evt, { activePage }) {
         let p = this.state.pagination;
         p.current_page = activePage;
 
-        this.setState({pagination: p}, async () => {
+        this.setState({ pagination: p }, async () => {
             await this.searchUsers();
         })
     }

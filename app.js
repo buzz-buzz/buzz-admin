@@ -22,7 +22,7 @@ let viewpath = path.join(__dirname, 'views');
 let assetPath = path.join(__dirname, 'public');
 let nodeModules = path.join(__dirname, 'node_modules');
 
-koaReactView(app, {views: viewpath});
+koaReactView(app, { views: viewpath });
 
 register({
     presets: ['es2015', 'react', 'stage-0'],
@@ -44,7 +44,7 @@ app.use(async (ctx, next) => {
         if (401 === Number(err.status)) {
             ctx.status = 401;
             ctx.set('WWW-Authenticate', 'Basic');
-            ctx.body = 'You don\'t have privilege to access this.';
+            ctx.body = '你当前登录的用户身份没有权限查看该页面，请<a href="/sign-out">点击这里</a>尝试用新的身份登录。';
         } else if (404 === Number(err.statusCode)) {
             await membership.signOut(ctx, async () => {
             });
@@ -55,7 +55,7 @@ app.use(async (ctx, next) => {
     }
 });
 
-app.use(auth({name: process.env.BASIC_NAME, pass: process.env.BASIC_PASS}));
+app.use(auth({ name: process.env.BASIC_NAME, pass: process.env.BASIC_PASS }));
 
 app.use(membership.ensureAuthenticated)
 
@@ -121,7 +121,7 @@ router
         if (ctx.request.body.uri) {
             ctx.request.body.uri = ctx.request.body.uri
                 .replace('{buzzService}', config.endPoints.buzzService)
-            ;
+                ;
         }
 
         let auth = `Basic ${new Buffer(`${process.env.BASIC_NAME}:${process.env.BASIC_PASS}`).toString('base64')}`;
@@ -152,12 +152,12 @@ router
     .get('/current-user', membership.ensureAuthenticated, membership.ensureSystemUsers, async ctx => {
         ctx.body = ctx.state.user;
     })
-;
+    ;
 
 app
     .use(router.routes())
     .use(router.allowedMethods())
-;
+    ;
 
 let port = process.env.PORT || 16666;
 app.listen(port, function () {
