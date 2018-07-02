@@ -2,8 +2,7 @@ import * as React from "react";
 import _ from "lodash";
 import moment from 'moment-timezone'
 import {
-    Button, Form, Header, Message, Modal, Dropdown, Confirm, Tab, Container, Label,
-    Segment, Input
+    Button, Form, Header, Message, Modal, Dropdown, Confirm, Tab, Container, Segment, Input
 } from "semantic-ui-react";
 import ServiceProxy from "../../service-proxy";
 import TimeHelper from "../../common/TimeHelper";
