@@ -75,8 +75,6 @@ export default class UserList extends React.Component {
         this.setState({
             downloadLink: `data:text/csv;charset=utf-8,\ufeff${this.generateCSV()}`,
             filename: 'users.csv'
-        }, () => {
-            console.log(this.state.downloadLink)
         })
     };
 
