@@ -72,6 +72,12 @@ membership.ensureAuthenticated = async function (context, next) {
     await next();
 };
 
+membership.rejectAccess = function (ctx) {
+    ctx.status = 401;
+    ctx.body = '<html><head><title>Buzzbuzz Admin</title></head><body>你当前登录的用户身份没有权限查看该页面，请<a' +
+        ' href="/sign-out">点击这里</a>尝试用新的身份登录。</body></html>';
+};
+
 membership.ensureSystemUsers = async function (context, next) {
     let userId = context.state.user.userId
 
@@ -85,10 +91,10 @@ membership.ensureSystemUsers = async function (context, next) {
     if (!profile.isSystemUser) {
         await membership.signOut(context, async () => {
         });
-        context.status = 401;
-        context.body = 'You don\'t have privilege to access this.';
 
-        return
+        membership.rejectAccess(context);
+
+        return;
     } else {
         context.state.user.profile = profile;
         context.state.user.super = profile.isSuper;
