@@ -17,3 +17,7 @@
 .rbc-event-content {
     position: absolute !important;
 }
+
+.ui.container {
+    width: 99%;
+}

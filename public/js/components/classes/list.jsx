@@ -78,6 +78,8 @@ export default class ClassList extends React.Component {
             allUsers: []
         };
 
+        console.log('pagination = ', this.state.pagination);
+
         this.openClassDetail = this.openClassDetail.bind(this);
         this.onClassDetailClosed = this.onClassDetailClosed.bind(this);
         this.onClassSaved = this.onClassSaved.bind(this);
@@ -141,6 +143,7 @@ export default class ClassList extends React.Component {
     async searchClasses() {
         this.setState({loading: true})
         try {
+            console.log('pagination = ', this.state.pagination);
             let paginationData = await ServiceProxy.proxyTo({
                 body: {
                     uri: '{buzzService}/api/v1/class-schedule',
@@ -263,7 +266,7 @@ export default class ClassList extends React.Component {
             <Container>
                 {this.renderSearchForm()}
                 {this.renderClassStatuses()}
-                {this.renderPagination()}
+                {/*{this.renderPagination()}*/}
                 {this.renderTable()}
                 {this.renderPagination()}
                 {
@@ -282,7 +285,7 @@ export default class ClassList extends React.Component {
     }
 
     renderTable() {
-        return <Table celled sortable fixed selectable striped>
+        return <Table celled sortable selectable striped>
             <Table.Header>
                 <Table.Row>
                     <Table.HeaderCell sorted={this.state.column === 'class_id' ? this.state.direction : null}
@@ -327,15 +330,20 @@ export default class ClassList extends React.Component {
                                 {c.topic_level}
                             </Table.Cell>
                             <Table.Cell>
-                                {new Date(c.start_time).toLocaleDateString()}
+                                <span style={{whiteSpace: 'nowrap'}}>{moment(c.start_time).format('LL')}</span><br/>
+                                <span style={{color: 'lightgray'}}>{moment(c.start_time).calendar()}</span><br/>
+                                {moment(c.start_time).format('dddd')}<br/>
+                                <span style={{color: 'lightgray'}}>{moment(c.start_time).fromNow()}</span>
                             </Table.Cell>
                             <Table.Cell>
-                                {new Date(c.start_time).toLocaleTimeString()}
+                                {new Date(c.start_time).toLocaleTimeString()}<br/>
+                                <span style={{color: 'lightgray'}}>{moment(c.start_time).format('LT')}</span>
                             </Table.Cell>
                             <Table.Cell>
-                                {new Date(c.end_time).toLocaleTimeString()}
+                                {new Date(c.end_time).toLocaleTimeString()}<br/>
+                                <span style={{color: 'lightgray'}}>{moment(c.end_time).format('LT')}</span>
                             </Table.Cell>
-                            <Table.Cell>
+                            <Table.Cell style={{whiteSpace: 'normal', wordWrap: 'break-word'}}>
                                 {c.room_url}
                             </Table.Cell>
                             <Table.Cell>
@@ -449,6 +457,7 @@ export default class ClassList extends React.Component {
                     <Table.Row>
                         <BuzzPagination pagination={this.state.pagination} gotoPage={this.gotoPage}
                                         paginationChanged={(newPagination) => {
+                                            console.log('new = ', newPagination);
                                             window.localStorage.setItem('pagination.per_page', newPagination.per_page);
                                             this.setState({pagination: newPagination}, async () => {
                                                 await this.searchClasses();
@@ -491,7 +500,7 @@ export default class ClassList extends React.Component {
         }
     }
 
-    async gotoPage({activePage}) {
+    async gotoPage(e, {activePage}) {
         let p = this.state.pagination;
         p.current_page = activePage;
 
