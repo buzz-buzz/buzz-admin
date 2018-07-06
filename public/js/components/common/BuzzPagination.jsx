@@ -24,8 +24,6 @@ export default class BuzzPagination extends React.Component {
             <Table.HeaderCell colSpan={this.props.colSpan}>
                 <label>每页条数：</label>
                 <Dropdown compact search searchInput={{type: 'number'}} selection options={[{
-                    key: 1, text: '1', value: 1
-                }, {
                     key: 10, text: '10', value: 10
                 }, {
                     key: 20, text: '20', value: 20
