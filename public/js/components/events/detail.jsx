@@ -184,9 +184,12 @@ export default class EventDetail extends React.Component {
                                         <Form.Field>
                                             <DatePicker
                                                 selected={moment(this.state.event.start_time, moment.HTML5_FMT.DATETIME_LOCAL)}
-                                                onChange={date => this.handleDateChange('start_time', date)}
+                                                onChange={date => {
+                                                    this.handleDateChange('start_time', date)
+                                                    this.handleDateChange('end_time', date)
+                                                }}
                                                 dateFormat={"YYYY-MM-DD"} placeholderText="开始日期"
-                                                isClearable={false} disabled={this.state.event.saved}></DatePicker>
+                                                isClearable={false} disabled={this.state.event.saved}/>
                                         </Form.Field>
                                     </Form.Group>
                                     <Form.Group inline>
@@ -200,7 +203,7 @@ export default class EventDetail extends React.Component {
                                                 showTimeSelect showTimeSelectOnly timeIntervals={30} dateFormat="HH:mm"
                                                 timeCaption="上课开始时间" placeholderText="上课开始时间" isClearable={false}
                                                 selectsStart disabled={this.state.event.saved}
-                                                timeFormat="HH:mm"></DatePicker>
+                                                timeFormat="HH:mm"/>
                                         </Form.Field>
                                         <Form.Field>
                                             --
@@ -212,7 +215,7 @@ export default class EventDetail extends React.Component {
                                                 showTimeSelect showTimeSelectOnly timeIntervals={30} dateFormat="HH:mm"
                                                 timeCaption="上课结束时间" placeholderText="上课结束时间" isClearable={false}
                                                 selectsEnd disabled={this.state.event.saved}
-                                                timeFormat="HH:mm"></DatePicker>
+                                                timeFormat="HH:mm"/>
                                         </Form.Field>
                                     </Form.Group>
                                     <Form.Group inline>
@@ -223,7 +226,7 @@ export default class EventDetail extends React.Component {
                                                onChange={this.handleEventChange}
                                                readOnly={this.state.event.saved !== false}
                                                type="number" min={1}
-                                               max={this.state.event.maxOccurence}></Input>
+                                               max={this.state.event.maxOccurence}/>
                                     </Form.Group>
                                 </Form>
                                 <div>
