@@ -21,8 +21,8 @@ export default class ClassEvaluation extends React.Component {
     }
 
     async componentWillReceiveProps(nextProps) {
-        if (nextProps.classInfo && nextProps.classInfo.class_id) {
-            await this.searchClassesEvaluation(nextProps.classInfo.class_id);
+        if (nextProps.classes && nextProps.classes.class_id) {
+            await this.searchClassesEvaluation(nextProps.classes.class_id);
         }
     }
 

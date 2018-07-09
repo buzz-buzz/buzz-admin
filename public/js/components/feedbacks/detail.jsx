@@ -9,13 +9,14 @@ class FeedbackDetail extends React.Component {
     }
 
     render() {
-        const {classInfo} = this.props;
+        const classInfo = this.props.classes[this.props.match.params.class_id];
 
         return <Container>
             <ClassDetail match={this.props.match}/>
             <h2>外籍语伴对中方学生的评价</h2>
             <Card.Group>
                 {
+                    classInfo &&
                     classInfo.student_ids &&
                     classInfo.student_ids.map(id => <FeedbackCard key={id} fromUserId={classInfo.companion_id}
                                                                   toUserId={id}
@@ -25,6 +26,7 @@ class FeedbackDetail extends React.Component {
             <h2>中方学生对外籍语伴的评价</h2>
             <Card.Group>
                 {
+                    classInfo &&
                     classInfo.student_ids &&
                     classInfo.student_ids.map(id => <FeedbackCard key={id} fromUserId={id}
                                                                   toUserId={classInfo.companion_id}
@@ -35,4 +37,4 @@ class FeedbackDetail extends React.Component {
     }
 }
 
-export default connect(store => ({classInfo: store.classState}))(FeedbackDetail)
+export default connect(store => ({classes: store.classes}))(FeedbackDetail)

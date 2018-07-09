@@ -1,30 +1,27 @@
 import React from "react";
 import ServiceProxy from "../../service-proxy";
-import {LOAD_CLASS} from "../../redux/actions/index";
 import store from '../../redux/store/index';
 import {connect} from 'react-redux';
 import {Breadcrumb, Card, Image} from "semantic-ui-react";
 import moment from 'moment';
+import {loadClass} from "../../redux/actions";
 
 moment.locale('zh-cn');
 
 class ClassDetail extends React.Component {
-    async componentDidMount() {
+    async componentWillMount() {
         let classInfo = await ServiceProxy.proxyTo({
             body: {
                 uri: `{buzzService}/api/v2/class-schedule/${this.props.match.params.class_id}`
             }
         });
 
-        store.dispatch({
-            type: LOAD_CLASS,
-            classInfo: classInfo
-        })
+        store.dispatch(loadClass(classInfo))
     }
 
     render() {
-        const {classInfo} = this.props;
         const {class_id} = this.props.match.params;
+        const classInfo = this.props.classes[class_id];
 
         if (!classInfo) {
             return null
@@ -68,4 +65,4 @@ class ClassDetail extends React.Component {
 }
 
 
-export default connect(store => ({classInfo: store.classState}))(ClassDetail)
+export default connect(store => ({classes: store.classes}))(ClassDetail)
