@@ -373,6 +373,11 @@ export default class ClassList extends React.Component {
                                 <Button onClick={() => this.openFeedback(c)}>
                                     <span style={{whiteSpace: 'nowrap'}}>查看评价</span>
                                 </Button>
+                                <br/>
+                                <a className="ui green button" target="_blank" href={`/feedbacks/${c.class_id}`}
+                                   style={{whiteSpace: 'nowrap'}}>
+                                    查看评价(新)
+                                </a>
                             </Table.Cell>
                         </Table.Row>
                     )

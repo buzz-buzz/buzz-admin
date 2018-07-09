@@ -5,6 +5,9 @@ import CompanionList from "./components/companions/list";
 import history from './components/common/history.js';
 import {configureUrlQuery} from 'react-url-query';
 import AllUserList from "./components/users/all-list";
+import FeedbackDetail from "./components/feedbacks/detail";
+import {Provider} from "react-redux";
+import store from './redux/store';
 
 var React = require('react');// Don't delete this line!
 var ReactDOM = require('react-dom');
@@ -16,14 +19,17 @@ function initApp() {
 
     // reuse server side render result
     ReactDOM.render(
-        <BrowserRouter>
-            <Switch>
-                <Route path='/users/:userId?' component={AllUserList}/>
-                <Route path='/students/:userId?' component={StudentList}/>
-                <Route path="/companions/:userId?" component={CompanionList}/>
-                <Route path="/classes" component={ClassList}/>
-            </Switch>
-        </BrowserRouter>
+        <Provider store={store}>
+            <BrowserRouter>
+                <Switch>
+                    <Route path='/users/:userId?' component={AllUserList}/>
+                    <Route path='/students/:userId?' component={StudentList}/>
+                    <Route path="/companions/:userId?" component={CompanionList}/>
+                    <Route path="/classes" component={ClassList}/>
+                    <Route path="/feedbacks/:class_id" component={FeedbackDetail}/>`
+                </Switch>
+            </BrowserRouter>
+        </Provider>
         ,
         container
     );

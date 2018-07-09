@@ -103,7 +103,7 @@ router
     .get('/students/:userId?', clientPage)
     .get('/companions/:userId?', clientPage)
     .get('/classes', clientPage)
-
+    .get('/feedbacks/:class_id', clientPage)
     .get('/avatar/:userId', async ctx => {
         let profile = await request(`${config.endPoints.buzzService}/api/v1/users/${ctx.params.userId}`, {
             headers: {
@@ -113,11 +113,6 @@ router
 
         profile = JSON.parse(profile);
         if (profile.avatar) {
-            // if (profile.avatar.startsWith('//')) {
-            //     profile.avatar = 'https:' + profile.avatar;
-            // }
-            //
-            // ctx.body = await oldRequest(profile.avatar);
             ctx.redirect(profile.avatar)
         } else {
             await koaSend(ctx, '/images/empty_avatar.jpg', {
