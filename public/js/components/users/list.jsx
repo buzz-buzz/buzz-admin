@@ -283,7 +283,7 @@ export default class UserList extends React.Component {
                                             <Label floating
                                                    color={user.role === MemberType.Student ? 'yellow' : 'black'}>
                                                 <span
-                                                    style={{whiteSpace: 'nowrap'}}>{MemberTypeChinese[user.role].substr(0, 1)}</span>
+                                                    style={{whiteSpace: 'nowrap'}}>{MemberTypeChinese[user.role] ? MemberTypeChinese[user.role].substr(0, 1) : ''}</span>
                                             </Label>
                                         }
                                     </Menu.Item>
