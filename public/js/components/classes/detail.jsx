@@ -67,10 +67,5 @@ class ClassDetail extends React.Component {
     }
 }
 
-const mapStateToProps = (theStore) => {
-    return {
-        classInfo: theStore.classState
-    }
-};
 
-export default connect(mapStateToProps)(ClassDetail)
+export default connect(store => ({classInfo: store.classState}))(ClassDetail)

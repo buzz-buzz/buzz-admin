@@ -1,24 +1,38 @@
 import React from "react";
-import ServiceProxy from "../../service-proxy";
-import {LOAD_CLASS} from "../../redux/actions/index";
-import store from '../../redux/store/index';
 import {connect} from 'react-redux';
-import {Breadcrumb, Card, Container, Image} from "semantic-ui-react";
-import moment from 'moment';
+import {Card, Container} from "semantic-ui-react";
 import ClassDetail from "../classes/detail";
-
-moment.locale('zh-cn');
+import FeedbackCard from './feedback-card';
 
 class FeedbackDetail extends React.Component {
     async componentDidMount() {
     }
 
     render() {
+        const {classInfo} = this.props;
 
         return <Container>
             <ClassDetail match={this.props.match}/>
+            <h2>外籍语伴对中方学生的评价</h2>
+            <Card.Group>
+                {
+                    classInfo.student_ids &&
+                    classInfo.student_ids.map(id => <FeedbackCard key={id} fromUserId={classInfo.companion_id}
+                                                                  toUserId={id}
+                                                                  classId={classInfo.class_id}/>)
+                }
+            </Card.Group>
+            <h2>中方学生对外籍语伴的评价</h2>
+            <Card.Group>
+                {
+                    classInfo.student_ids &&
+                    classInfo.student_ids.map(id => <FeedbackCard key={id} fromUserId={id}
+                                                                  toUserId={classInfo.companion_id}
+                                                                  classId={classInfo.class_id}/>)
+                }
+            </Card.Group>
         </Container>
     }
 }
 
-export default connect(null)(FeedbackDetail)
+export default connect(store => ({classInfo: store.classState}))(FeedbackDetail)
