@@ -5,6 +5,7 @@ import store from '../../redux/store/index';
 import ServiceProxy from "../../service-proxy";
 import {loadFeedbacks} from "../../redux/actions";
 import moment from "moment";
+import {Avatar} from "../../common/Avatar";
 
 class FeedbackCard extends React.Component {
     async componentWillMount() {
@@ -22,9 +23,9 @@ class FeedbackCard extends React.Component {
         const feedback = feedbacks[`${classId}-${fromUserId}-${toUserId}`];
         return <Dimmer.Dimmable as={Card} dimmed={!feedback}>
             <Card.Content>
-                <Image floated="right" size="mini" src={`/avatar/${toUserId}`} as='a' href={`/users/${toUserId}`}
-                       target="_blank"/>
-                <Card.Header>给 {feedback && feedback.to_name}</Card.Header>
+                <a href={`/users/${toUserId}`} target="_blank">
+                    <Avatar floated="right" userId={toUserId} href={`/users/${toUserId}`}/>
+                </a>
                 <Card.Meta>
                     {feedback && feedback.feedback_time ? moment(feedback.feedback_time).format('llll') : null}
                 </Card.Meta>
@@ -35,8 +36,7 @@ class FeedbackCard extends React.Component {
             <Card.Content extra>
                 <a href={`/users/${fromUserId}`} target="_blank">
                     <span>来自</span>
-                    <Image avatar src={`/avatar/${fromUserId}`}/>
-                    <span>{feedback && feedback.from_name}</span>
+                    <Avatar userId={fromUserId}/>
                 </a>
             </Card.Content>
             <Dimmer active={!feedback} inverted/>
