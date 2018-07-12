@@ -6,6 +6,7 @@ import ServiceProxy from "../../service-proxy";
 import {loadFeedbacks} from "../../redux/actions";
 import moment from "moment";
 import {Avatar} from "../../common/Avatar";
+import BarChart from "./bar-chart";
 
 class FeedbackCard extends React.Component {
     async componentWillMount() {
@@ -20,7 +21,8 @@ class FeedbackCard extends React.Component {
 
     render() {
         const {fromUserId, toUserId, classId, feedbacks} = this.props;
-        const feedback = feedbacks[`${classId}-${fromUserId}-${toUserId}-`];
+        let key = `${classId}-${fromUserId}-${toUserId}-`;
+        const feedback = feedbacks[key];
         const otherFeedbacks = Object.keys(feedbacks).filter(f => feedbacks[f].type).map(f => feedbacks[f]);
         return <Dimmer.Dimmable as={Card} dimmed={!feedbacks}>
             <Card.Content>
@@ -56,6 +58,12 @@ class FeedbackCard extends React.Component {
                                     </div>
                                 ))
                             }
+                        </Segment>
+                    }
+                    {
+                        otherFeedbacks.length > 0 && false &&
+                        <Segment>
+                            <BarChart id={key} feedbacks={otherFeedbacks} size={[500, 500]}/>
                         </Segment>
                     }
                 </Card.Description>
