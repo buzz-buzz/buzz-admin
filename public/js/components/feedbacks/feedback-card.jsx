@@ -1,6 +1,6 @@
 import React from "react";
 import {connect} from 'react-redux';
-import {Card, Image, Dimmer, Rating} from "semantic-ui-react";
+import {Card, Image, Dimmer, Rating, Segment} from "semantic-ui-react";
 import store from '../../redux/store/index';
 import ServiceProxy from "../../service-proxy";
 import {loadFeedbacks} from "../../redux/actions";
@@ -21,6 +21,7 @@ class FeedbackCard extends React.Component {
     render() {
         const {fromUserId, toUserId, classId, feedbacks} = this.props;
         const feedback = feedbacks[`${classId}-${fromUserId}-${toUserId}-`];
+        const otherFeedbacks = Object.keys(feedbacks).filter(f => feedbacks[f].type).map(f => feedbacks[f]);
         return <Dimmer.Dimmable as={Card} dimmed={!feedbacks}>
             <Card.Content>
                 <a href={`/users/${toUserId}`} target="_blank">
@@ -32,28 +33,30 @@ class FeedbackCard extends React.Component {
                 <Card.Description>
                     {
                         feedback &&
-                        <div>
-                            <span>课堂表现：</span>
+                        <Segment>
+                            <span>总体评分：</span>
                             <Rating icon='star' defaultRating={feedback.score} maxRating={5} disabled/>
                             （{feedback.score}）
-                        </div>
+                        </Segment>
                     }
-                </Card.Description>
-                <Card.Description style={{fontWeight: 'bold'}}>
-                    {feedback && feedback.comment}
-                </Card.Description>
-                <Card.Description>
+                    <Segment>
+                        {feedback && feedback.comment}
+                    </Segment>
                     {
-                        feedbacks &&
-                        Object.keys(feedbacks).filter(f => feedbacks[f].type).map(f => (
-                            <div key={f} style={{display: 'flex', justifyContent: 'space-between'}}>
-                                <span>{feedbacks[f].type}：</span>
-                                <Rating icon="star"
-                                        defaultRating={feedbacks[f].score}
-                                        maxRating={5} disabled/>
-                                （{feedbacks[f].score}）
-                            </div>
-                        ))
+                        otherFeedbacks.length > 0 &&
+                        <Segment>
+                            {
+                                otherFeedbacks.map(f => (
+                                    <div key={f.type} style={{display: 'flex', justifyContent: 'space-between'}}>
+                                        <span>{f.type}：</span>
+                                        <Rating icon="star"
+                                                defaultRating={f.score}
+                                                maxRating={5} disabled/>
+                                        （{f.score}）
+                                    </div>
+                                ))
+                            }
+                        </Segment>
                     }
                 </Card.Description>
             </Card.Content>

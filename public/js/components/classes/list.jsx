@@ -370,14 +370,12 @@ export default class ClassList extends React.Component {
                                        href={`/admin-neue/classDetail/${c.class_id}`}
                                        style={{whiteSpace: 'nowrap'}}>编辑详情</a>
                                 </p>
-                                <Button onClick={() => this.openFeedback(c)}>
-                                    <span style={{whiteSpace: 'nowrap'}}>查看评价</span>
-                                </Button>
-                                <br/>
-                                <a className="ui green button" target="_blank" href={`/feedbacks/${c.class_id}`}
-                                   style={{whiteSpace: 'nowrap'}}>
-                                    查看评价(新)
-                                </a>
+                                <p>
+                                    <a className="ui green button" target="_blank" href={`/feedbacks/${c.class_id}`}
+                                       style={{whiteSpace: 'nowrap'}}>
+                                        查看评价
+                                    </a>
+                                </p>
                             </Table.Cell>
                         </Table.Row>
                     )
