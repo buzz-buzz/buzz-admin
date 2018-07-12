@@ -22,8 +22,9 @@ function classReducer(state = {}, action) {
 function feedbackReducer(state = {}, action) {
     switch (action.type) {
         case LOAD_FEEDBACK:
+            console.log('action =', action);
             let result = {...state};
-            action.feedbacks && action.feedbacks.map(f => result[`${f.class_id}-${f.from_user_id}-${f.to_user_id}`] = f);
+            action.feedbacks && action.feedbacks.map(f => result[`${f.class_id}-${f.from_user_id}-${f.to_user_id}-${f.type}`] = f);
             return result;
 
         default:
