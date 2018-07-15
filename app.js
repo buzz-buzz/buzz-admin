@@ -149,6 +149,12 @@ router
     .get('/admin-neue/content-list', async ctx => {
         ctx.redirect(`${config.endPoints.adminNeue}/contentList`);
     })
+    .get('/admin-neue/bannerList', async ctx => {
+        ctx.redirect(`${config.endPoints.adminNeue}/bannerList`);
+    })
+    .get('/admin-neue/faq-list', async ctx => {
+        ctx.redirect(`${config.endPoints.adminNeue}/faqList`);
+    })
     .get('/current-user', membership.ensureAuthenticated, membership.ensureSystemUsers, async ctx => {
         ctx.body = ctx.state.user;
     })

@@ -20,6 +20,10 @@ export default class Header extends React.Component {
                                href="/classes">班级课程列表</Menu.Item>
                     <Menu.Item name="content-list" active={activeItem === '/content-list'}
                                href="/admin-neue/content-list" target="_blank">内容管理</Menu.Item>
+                    <Menu.Item name="banner-list" active={activeItem === '/banner-list'} href="/admin-neue/bannerList"
+                               target="_blank">运营位管理</Menu.Item>
+                    <Menu.Item name="faq-list" active={activeItem === '/faq-list'} href="/admin-neue/faq-list"
+                               target="_blank">常见问题管理</Menu.Item>
                     <Menu.Menu position="right">
                         <Menu.Item href={`/users/${this.props.user.profile.user_id}`}>
                             <object data={this.props.user.profile.avatar} type="image/png" className="ui image avatar"
@@ -32,7 +36,7 @@ export default class Header extends React.Component {
                                            corner: 'right',
                                            icon: 'heart'
                                        } : {}}
-                                ></Image>
+                                />
                             </object>
                         </Menu.Item>
                         <Menu.Item
