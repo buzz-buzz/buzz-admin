@@ -23,7 +23,7 @@ class FeedbackCard extends React.Component {
         const {fromUserId, toUserId, classId, feedbacks} = this.props;
         let key = `${classId}-${fromUserId}-${toUserId}-`;
         const feedback = feedbacks[key];
-        const otherFeedbacks = Object.keys(feedbacks).filter(f => feedbacks[f].type).map(f => feedbacks[f]);
+        const otherFeedbacks = Object.keys(feedbacks).filter(f => f.startsWith(key) && feedbacks[f].type).map(f => feedbacks[f]);
         return <Dimmer.Dimmable as={Card} dimmed={!feedbacks}>
             <Card.Content>
                 <a href={`/users/${toUserId}`} target="_blank">
