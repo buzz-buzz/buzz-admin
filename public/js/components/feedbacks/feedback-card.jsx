@@ -7,6 +7,7 @@ import {loadFeedbacks} from "../../redux/actions";
 import moment from "moment";
 import {Avatar} from "../../common/Avatar";
 import BarChart from "./bar-chart";
+import {Legend, PolarAngleAxis, PolarGrid, PolarRadiusAxis, Radar, RadarChart} from "recharts";
 
 class FeedbackCard extends React.Component {
     async componentWillMount() {
@@ -24,7 +25,7 @@ class FeedbackCard extends React.Component {
         let key = `${classId}-${fromUserId}-${toUserId}-`;
         const feedback = feedbacks[key];
         const otherFeedbacks = Object.keys(feedbacks).filter(f => f.startsWith(key) && feedbacks[f].type).map(f => feedbacks[f]);
-        return <Dimmer.Dimmable as={Card} dimmed={!feedbacks}>
+        return <Dimmer.Dimmable as={Card} dimmed={!feedbacks} fluid>
             <Card.Content>
                 <a href={`/users/${toUserId}`} target="_blank">
                     <Avatar floated="right" userId={toUserId} href={`/users/${toUserId}`}/>
@@ -64,6 +65,20 @@ class FeedbackCard extends React.Component {
                         otherFeedbacks.length > 0 && false &&
                         <Segment>
                             <BarChart id={key} feedbacks={otherFeedbacks} size={[500, 500]}/>
+                        </Segment>
+                    }
+                    {
+                        otherFeedbacks.length > 0 &&
+                        <Segment>
+                            <RadarChart cx={125} cy={125} outerRadius={50} width={250} height={250}
+                                        data={otherFeedbacks}>
+
+                                <PolarGrid/>
+                                <PolarAngleAxis dataKey="type"/>
+                                <PolarRadiusAxis angle={45} domain={[0, 5]}/>
+                                <Radar name="to_user" dataKey="score" stroke="#000" fill="#fbbd08"
+                                       fillOpacity={0.6}/>
+                            </RadarChart>
                         </Segment>
                     }
                 </Card.Description>
