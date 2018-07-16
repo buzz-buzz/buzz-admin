@@ -260,7 +260,7 @@ export default class Profile extends React.Component {
                         </Form.Group>
                         <Form.Group widths="equal">
                             <Form.Field>
-                                <label>国籍</label>
+                                <label>国籍：{this.state.country}</label>
                                 <Dropdown selection multiple={false} search={true} name="country"
                                           options={Countries.list}
                                           value={this.state.country} placeholder="国籍" onChange={this.handleChange}

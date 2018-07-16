@@ -1,5 +1,18 @@
 import * as React from "react";
-import {Button, Container, Dropdown, Form, Icon, Input, Label, Menu, Popup, Segment, Table} from "semantic-ui-react";
+import {
+    Button,
+    Container,
+    Dropdown,
+    Flag,
+    Form,
+    Icon,
+    Input,
+    Label,
+    Menu,
+    Popup,
+    Segment,
+    Table
+} from "semantic-ui-react";
 import ServiceProxy from "../../service-proxy";
 import Profile from "./profile";
 import SchedulePreference from "./schedule-preference";
@@ -271,7 +284,11 @@ export default class UserList extends React.Component {
                                    onClick={() => this.setState({activeIndex: this.state.activeIndex === i ? null : i})}
                                    active={this.state.activeIndex === i}>
                             <Table.Cell onClick={() => this.openProfile(user)}>
-                                {user.user_id}
+                                <p>{user.user_id}</p>
+                                <p style={{color: 'gainsboro'}}>
+                                    <Flag name={user.country}/>
+                                    {user.country} {user.city}
+                                </p>
                             </Table.Cell>
                             <Table.Cell onClick={() => this.openProfile(user)}>
                                 <Menu text compact>
