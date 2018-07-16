@@ -370,7 +370,7 @@ export default class UserList extends React.Component {
                                 <span>{user.tags}</span>
                             </Table.Cell>
                             <Table.Cell>
-                                <a href={`/classes/?userIds=${user.user_id}&statuses=${ClassStatusCode.Opened}&statuses=${ClassStatusCode.Cancelled}&statuses=${ClassStatusCode.Ended}`}
+                                <a href={`/classes/?userIds=${user.user_id}&statuses=${ClassStatusCode.Opened}&statuses=${ClassStatusCode.Cancelled}&statuses=${ClassStatusCode.Ended}&start_time=1990-1-1`}
                                    target="_blank">课程历史</a>
                             </Table.Cell>
                         </Table.Row>

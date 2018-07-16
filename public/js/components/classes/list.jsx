@@ -59,7 +59,7 @@ export default class ClassList extends React.Component {
             classes: [],
             loading: false,
             searchParams: {
-                start_time: moment().subtract(30, 'days'),
+                start_time: query.get('start_time') || moment().subtract(30, 'days'),
                 end_time: '',
                 statuses: statuses,
                 user_ids: query.getAll('userIds').map(id => Number(id)),
@@ -77,8 +77,6 @@ export default class ClassList extends React.Component {
             currentUser: {},
             allUsers: []
         };
-
-        console.log('pagination = ', this.state.pagination);
 
         this.openClassDetail = this.openClassDetail.bind(this);
         this.onClassDetailClosed = this.onClassDetailClosed.bind(this);
