@@ -80,7 +80,7 @@ export default class Profile extends React.Component {
                 date_of_birth: this.state.user.date_of_birth && TimeHelper.toLocalDateTime(new Date(this.state.user.date_of_birth)),
                 display_name: this.state.user.display_name || '',
                 theOtherRole: Profile.theOtherRole(this.state.user.role),
-                weekly_schedule_requirements: this.state.user.weekly_schedule_requirements || 1,
+                weekly_schedule_requirements: this.state.user.weekly_schedule_requirements,
                 password: this.state.user.password || ''
             });
         })
