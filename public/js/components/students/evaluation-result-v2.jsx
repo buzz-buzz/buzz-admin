@@ -40,9 +40,9 @@ export default class EvaluationV2 extends React.Component {
 
                 <Table.Body>
                     {
-                        result && result.questions && result.answers &&
-                        result.questions.length && result.answers.length &&
-                        result.questions.map((item, index) => {
+                        this.props.data && this.props.data.questions && this.props.data.answers &&
+                        this.props.data.questions.length && this.props.data.answers.length ?
+                        this.props.data.questions.map((item, index) => {
                             <Table.Row key={index}>
                                 <Table.Cell>
                                     <h3>{item.title}</h3>
@@ -59,14 +59,14 @@ export default class EvaluationV2 extends React.Component {
                                 </Table.Cell>
                                 <Table.Cell>
                                     {
-                                        result.answers[index] && typeof (result.answers[index]) === 'string' && result.answers[index].indexOf('//') === -1 ?
-                                            result.answers[index]
+                                        this.props.data.answers[index] && typeof (this.props.data.answers[index]) === 'string' && this.props.data.answers[index].indexOf('//') === -1 ?
+                                        this.props.data.answers[index]
                                             :
-                                            ( result.answers[index] ? this.renderMedia(result.answers, index) : '')
+                                            ( this.props.data.answers[index] ? this.renderMedia(this.props.data.answers, index) : '')
                                     }
                                 </Table.Cell>
                             </Table.Row>
-                        })
+                        }) : '----'
                     }
                 </Table.Body>
             </Table>
@@ -74,6 +74,10 @@ export default class EvaluationV2 extends React.Component {
     }
 
     renderMedia(answers, index) {
+        if(index === 3){
+
+        }
+
         return answers[index] + '----media';
     }
 }
