@@ -39,7 +39,7 @@ export default class EvaluationV2 extends React.Component {
                                 this.props.result.answers[index] && typeof (this.props.result.answers[index]) === 'string' && this.props.result.answers[index].indexOf('//') === -1 ?
                                 this.props.result.answers[index]
                                     :
-                                    ( this.props.result.answers[index] ? this.renderMedia(this.props.result.answers, index) : '')
+                                    ( this.props.result.answers[index] ? this.renderMedia(this.props.result.answers, index) : '--未作答--')
                             }
                         </Table.Cell>
                     </Table.Row>)
