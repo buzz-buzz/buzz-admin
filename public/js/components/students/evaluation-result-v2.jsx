@@ -8,20 +8,26 @@ export default class EvaluationV2 extends React.Component {
         this.renderMedia = this.renderMedia.bind(this);
     }
 
-    componentWillReceiveProps(nextProps){
-        console.log('-receive -props');
-        console.log(nextProps.data.questions.length);
-        console.log(nextProps.data.answers.length);
-
-        this.setState({
-            data: nextProps.data
-        });
-    }
-
     render() {
-        let result = this.state.data;
-        console.log(result.questions.length);
-        console.log(result.answers.length);
+        let result = {
+            "questions": [
+                { "title": "亲爱的学员，你已经学了多久的英语?", "items": ["没有学过", "少于一年", "1-2年", "2-3年", "3年以上"] },
+                { "title": "在英语会话过程中，以下哪种描述情况与你相似?", "items": ["需要翻译听懂常用指令,能简短介绍个人和兴趣爱好", "能听懂常用指令对话并做出反应，能清楚地介绍自己，能简单描述一件事", "能简单描述一件事或事物", "能比较有条理地描述个人体验和表达个人想法"] },
+                { "title": "与首次相识的人交流中，你是否是容易或热衷于的与人沟通。", "items": ["是的，我就是", "有时候是", "完全不是"] },
+                { "title": "挑选2张你善于描述的场景并进行各不少于30秒的描述。" },
+                { "title": "请根据下图，进行30秒 - 60秒的描述。" },
+                { "title": "请根据下图，进行30秒 - 60秒的描述。" }
+            ],
+            "answers": [
+                "2-3年",
+                "能简单描述一件事或事物",
+                "完全不是",
+                ["//cdn-corner.resource.buzzbuzzenglish.com/placement/6.jpg", "//cdn-corner.resource.buzzbuzzenglish.com/placement/5.jpg"],
+                "https://buzz-corner.user.resource.buzzbuzzenglish.com/FjPE9M_GnqOxWRClpAt-e0L0pkwj",
+                "https://buzz-corner.user.resource.buzzbuzzenglish.com/FhCjuMPjQKRKzJefhcBSWheB263z"
+            ],
+            "version": 2
+        };
 
         return (
             <Table compact>
@@ -44,7 +50,7 @@ export default class EvaluationV2 extends React.Component {
                                         item.items && item.items.length &&
                                         <ol>
                                             {
-                                                item.items.map((m, n)=>{
+                                                item.items.map((m, n) => {
                                                     <li key={n}>{m}</li>
                                                 })
                                             }
@@ -53,10 +59,10 @@ export default class EvaluationV2 extends React.Component {
                                 </Table.Cell>
                                 <Table.Cell>
                                     {
-                                        result.answers[index] && typeof(result.answers[index]) === 'string' && result.answers[index].indexOf('//') === -1 ?
-                                        result.answers[index] 
-                                        :
-                                        this.renderMedia(result.answers, index)
+                                        result.answers[index] && typeof (result.answers[index]) === 'string' && result.answers[index].indexOf('//') === -1 ?
+                                            result.answers[index]
+                                            :
+                                            ( result.answers[index] ? this.renderMedia(result.answers, index) : '')
                                     }
                                 </Table.Cell>
                             </Table.Row>
@@ -67,7 +73,7 @@ export default class EvaluationV2 extends React.Component {
         )
     }
 
-    renderMedia(answers, index){
+    renderMedia(answers, index) {
         return answers[index] + '----media';
     }
 }
