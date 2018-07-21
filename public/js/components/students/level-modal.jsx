@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Form, Header, Icon, Message, Modal, TextArea, Dropdown } from "semantic-ui-react";
 import ServiceProxy from "../../service-proxy";
+import EvaluationVersion from './evaluation-result-v2';
 
 export default class LevelModal extends React.Component {
     constructor(props) {
@@ -179,9 +180,7 @@ export default class LevelModal extends React.Component {
                     }
                     {
                         this.state.jsonDetail && this.state.jsonDetail.version ?
-                            <div>
-                                {JSON.stringify(this.state.jsonDetail)}
-                            </div> : ''
+                        <EvaluationVersion data={this.state.jsonDetail} /> : ''
                     }
                 </Modal.Content>
             </Modal>
