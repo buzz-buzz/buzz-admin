@@ -180,7 +180,7 @@ export default class LevelModal extends React.Component {
                     }
                     {
                         this.state.jsonDetail && this.state.jsonDetail.version ?
-                        <EvaluationVersion data={this.state.jsonDetail} /> : ''
+                        <EvaluationVersion result={this.state.jsonDetail} /> : ''
                     }
                 </Modal.Content>
             </Modal>
