@@ -8,8 +8,20 @@ export default class EvaluationV2 extends React.Component {
         this.renderMedia = this.renderMedia.bind(this);
     }
 
+    componentWillReceiveProps(nextProps){
+        console.log('-receive -props');
+        console.log(nextProps.data.questions.length);
+        console.log(nextProps.data.answers.length);
+
+        this.setState({
+            data: nextProps.data
+        });
+    }
+
     render() {
-        let result = this.props.data;
+        let result = this.state.data;
+        console.log(result.questions.length);
+        console.log(result.answers.length);
 
         return (
             <Table compact>
@@ -56,6 +68,6 @@ export default class EvaluationV2 extends React.Component {
     }
 
     renderMedia(answers, index){
-        return answers[index] + '----media'
+        return answers[index] + '----media';
     }
 }
