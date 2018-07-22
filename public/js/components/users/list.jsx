@@ -31,6 +31,7 @@ import UserTags from "./user-tags";
 import {ClassStatusCode} from "../../common/ClassStatus";
 import {Avatar} from "../../common/Avatar";
 import {Grades} from '../../common/Grades';
+import DatePicker from "react-datepicker/es/index";
 
 moment.locale('zh-CN');
 BigCalendar.setLocalizer(BigCalendar.momentLocalizer(moment))
@@ -246,6 +247,15 @@ export default class UserList extends React.Component {
         });
     }
 
+    handleDateChange = (attr, date) => {
+        this.setState({
+            searchParams: {
+                ...this.state.searchParams,
+                [attr]: date || ''
+            }
+        })
+    };
+
     render() {
         return (
             <Container>
@@ -441,25 +451,44 @@ export default class UserList extends React.Component {
                             name="email" onChange={this.handleTextChange}/>
             </Form.Group>
             <Form.Group widths="equal">
-                <Form.Field control={Input} label="预约/排课时间段 开始时间"
-                            name="start_time"
-                            value={this.state.searchParams.start_time}
-                            onChange={this.handleTextChange}
-                            type="datetime-local"/>
-                <Form.Field control={Input} label="结束时间" name="end_time"
-                            value={this.state.searchParams.end_time}
-                            onChange={this.handleTextChange}
-                            type="datetime-local"/>
-                <Form.Field control={Input} label="注册时间段 开始时间"
-                            name="create_start_time"
-                            value={this.state.searchParams.create_start_time}
-                            onChange={this.handleTextChange}
-                            type="datetime-local"/>
-                <Form.Field control={Input} label="结束时间"
-                            name="create_end_time"
-                            value={this.state.searchParams.create_end_time}
-                            onChange={this.handleTextChange}
-                            type="datetime-local"/>
+                <Form.Field>
+                    <label>预约/排课时间段 开始时间</label>
+                    <DatePicker showTimeSelect
+                                selected={this.state.searchParams.start_time ? moment(this.state.searchParams.start_time) : null}
+                                name="start_time" isClearable={true}
+                                dateFormat={'YYYY-MM-DD HH:mm'}
+                                placeholderText={"开始时间"}
+                                onChange={date => this.handleDateChange('start_time', date)}/>
+                </Form.Field>
+
+                <Form.Field>
+                    <label>结束时间</label>
+                    <DatePicker showTimeSelect
+                                selected={this.state.searchParams.end_time ? moment(this.state.searchParams.end_time) : null}
+                                name="end_time" isClearable={true}
+                                dateFormat={"YYYY-MM-DD HH:mm"}
+                                placeholderText={"结束时间"}
+                                onChange={date => this.handleDateChange('end_time', date)}/>
+                </Form.Field>
+
+                <Form.Field>
+                    <label>注册开始时间段 开始时间</label>
+                    <DatePicker
+                        selected={this.state.searchParams.create_start_time ? moment(this.state.searchParams.create_start_time) : null}
+                        name="create_start_time" isClearable={true}
+                        dateFormat={"YYYY-MM-DD HH:mm"}
+                        placeholderText={"注册开始时间段 开始时间"}
+                        onChange={date => this.handleDateChange('create_start_time', date)}/>
+                </Form.Field>
+                <Form.Field>
+                    <label>结束时间</label>
+                    <DatePicker showTimeSelect
+                                selected={this.state.searchParams.create_end_time ? moment(this.state.searchParams.create_end_time) : null}
+                                name="create_end_time" isClearable={true}
+                                dateFormat={"YYYY-MM-DD HH:mm"}
+                                placeholderText={"结束时间"}
+                                onChange={date => this.handleDateChange('create_end_time', date)}/>
+                </Form.Field>
                 <Form.Field control={Dropdown} label="用户标签" name="tags"
                             value={this.state.searchParams.tags} multiple
                             options={this.state.allTags}
