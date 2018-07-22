@@ -52,8 +52,8 @@ export default class BookingTable extends React.Component {
                                                 5: '五',
                                                 6: '六',
                                                 7: '日',
-                                                0: '日'
-                                            }[moment(evt.start_time).weekday()]}</strong>
+                                                0: '日',
+                                            }[moment(evt.start_time).isoWeekday()]}</strong>
                                             &nbsp;&nbsp;
                                             {moment(evt.start_time).format(moment.HTML5_FMT.TIME)}
                                             -
