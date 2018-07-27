@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Form, Header, Icon, Message, Modal, TextArea, Dropdown } from "semantic-ui-react";
 import ServiceProxy from "../../service-proxy";
+import EvaluationVersion from './evaluation-result-v2';
 
 export default class LevelModal extends React.Component {
     constructor(props) {
@@ -128,52 +129,59 @@ export default class LevelModal extends React.Component {
                             <Form.Button className="right floated" content="关闭" type="button" onClick={this.close} />
                         </Form.Group>
                     </Form>
-                    <ol>
-                        {
-                            this.state.jsonDetail && this.state.jsonDetail.questions && this.state.jsonDetail.questions.map((q, k) =>
-                                <li key={k}>
-                                    <h3>{q.title}</h3>
-                                    <ul>
-                                        {
-                                            q.items.map((item, i) =>
-                                                <li key={i}>
-                                                    {/* {
+                    {
+                        this.state.jsonDetail && !this.state.jsonDetail.version ?
+                            <ol>
+                                {
+                                    this.state.jsonDetail && this.state.jsonDetail.questions && this.state.jsonDetail.questions.map((q, k) =>
+                                        <li key={k}>
+                                            <h3>{q.title}</h3>
+                                            <ul>
+                                                {
+                                                    q.items.map((item, i) =>
+                                                        <li key={i}>
+                                                            {/* {
                                                         this.state.jsonDetail.answers[i].charCodeAt(0) + i - 'A'.charCodeAt(0) === 0 &&
                                                         <Icon name="checkmark box" />
                                                     } */}
-                                                    {
-                                                        ((i === 0  && this.state.jsonDetail.answers[k] === 'A') || (i === 1 && this.state.jsonDetail.answers[k] === 'B') || (i === 2 && this.state.jsonDetail.answers[k] === 'C')  ) &&
-                                                        <Icon name="checkmark box" />
-                                                    }
-                                                    {item}
-                                                </li>
-                                            )
-                                        }
-                                    </ul>
-                                </li>
-                            )
-                        }
-                        {
-                            this.state.jsonDetail.answers &&
-                            <li>
-                                <div style={{ marginTop: '15px', display: 'flex', alignItems: 'center' }}>
-                                    <span>录音题答案:</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                            {
+                                                                ((i === 0 && this.state.jsonDetail.answers[k] === 'A') || (i === 1 && this.state.jsonDetail.answers[k] === 'B') || (i === 2 && this.state.jsonDetail.answers[k] === 'C')) &&
+                                                                <Icon name="checkmark box" />
+                                                            }
+                                                            {item}
+                                                        </li>
+                                                    )
+                                                }
+                                            </ul>
+                                        </li>
+                                    )
+                                }
+                                {
+                                    this.state.jsonDetail.answers &&
+                                    <li>
+                                        <div style={{ marginTop: '15px', display: 'flex', alignItems: 'center' }}>
+                                            <span>录音题答案:</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                     <audio controls style={(typeof this.state.jsonDetail.answers[this.state.jsonDetail.questions.length] === 'object' ? this.state.jsonDetail.answers[this.state.jsonDetail.questions.length].url : this.state.jsonDetail.answers[this.state.jsonDetail.questions.length]).indexOf('m3u8') > -1 ? { display: 'none' } : {}}
-                                        src={typeof this.state.jsonDetail.answers[this.state.jsonDetail.questions.length] === 'object' ? this.state.jsonDetail.answers[this.state.jsonDetail.questions.length].url : this.state.jsonDetail.answers[this.state.jsonDetail.questions.length]}>
-                                    </audio>
-                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                src={typeof this.state.jsonDetail.answers[this.state.jsonDetail.questions.length] === 'object' ? this.state.jsonDetail.answers[this.state.jsonDetail.questions.length].url : this.state.jsonDetail.answers[this.state.jsonDetail.questions.length]}>
+                                            </audio>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                     <a href={`https://buzz-corner.user.resource.buzzbuzzenglish.com/amr/index.html?url=${encodeURIComponent(typeof this.state.jsonDetail.answers[this.state.jsonDetail.questions.length] === 'object' ? this.state.jsonDetail.answers[this.state.jsonDetail.questions.length].url : this.state.jsonDetail.answers[this.state.jsonDetail.questions.length]).replace('%3Favvod%2Fm3u8', '')}`}
-                                        target="_blank" rel="no-opener">在线播放</a>
-                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                target="_blank" rel="no-opener">在线播放</a>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                     <a href={`/m3u8/index.html?url=${encodeURIComponent(typeof this.state.jsonDetail.answers[this.state.jsonDetail.questions.length] === 'object' ? this.state.jsonDetail.answers[this.state.jsonDetail.questions.length].url : this.state.jsonDetail.answers[this.state.jsonDetail.questions.length])}`}
-                                        target="_blank" rel="no-opener">在线播放二</a>
-                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                target="_blank" rel="no-opener">在线播放二</a>
+                                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                     <a href={typeof this.state.jsonDetail.answers[this.state.jsonDetail.questions.length] === 'object' ? this.state.jsonDetail.answers[this.state.jsonDetail.questions.length].url : this.state.jsonDetail.answers[this.state.jsonDetail.questions.length]}
-                                        target="_blank" rel="no-opener">原始音频文件下载</a>
-                                </div>
-                            </li>
-                        }
-                    </ol>
+                                                target="_blank" rel="no-opener">原始音频文件下载</a>
+                                        </div>
+                                    </li>
+                                }
+                            </ol> : ''
+                    }
+                    {
+                        this.state.jsonDetail && this.state.jsonDetail.version ?
+                        <EvaluationVersion result={this.state.jsonDetail} /> : ''
+                    }
                 </Modal.Content>
             </Modal>
         );
