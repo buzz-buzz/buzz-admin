@@ -1,5 +1,15 @@
 import * as React from "react";
-import {Button, Container, Dropdown, Form, Input, Menu, Segment, Table, Message} from "semantic-ui-react";
+import {
+    Button,
+    Container,
+    Dropdown,
+    Form,
+    Input,
+    Menu,
+    Segment,
+    Table,
+    Message
+} from "semantic-ui-react";
 import ServiceProxy from "../../service-proxy";
 import ClassDetail from "./class-detail-modal";
 import ClassEvaluation from "./class-evaluation-modal";
@@ -99,6 +109,14 @@ export default class ClassList extends React.Component {
     async updateStatus() {
         this.setState({loading: true});
         try {
+            await ServiceProxy.proxyTo({
+                body: {
+                    uri: `{buzzService}/api/v1/class-schedule`,
+                    method: 'PUT'
+                }
+            });
+
+            this.setState({error: false});
             this.setState({error: false});
             await this.searchClasses();
         } catch (error) {
@@ -270,14 +288,18 @@ export default class ClassList extends React.Component {
                 {
                     (process.env.NODE_NEV !== 'production') &&
 
-                    <ClassDetail open={this.state.detailOpen} onClose={this.onClassDetailClosed}
-                                 onClassSaved={this.onClassSaved} class={this.state.currentClass}
+                    <ClassDetail open={this.state.detailOpen}
+                                 onClose={this.onClassDetailClosed}
+                                 onClassSaved={this.onClassSaved}
+                                 class={this.state.currentClass}
                                  buttonDisabled={this.state.buttonDisabled}/>
                 }
 
 
-                <ClassEvaluation open={this.state.evaluationOpen} onClose={this.onClassEvaluationClosed}
-                                 evaluation={this.state.currentClass} classInfo={this.state.currentClass}/>
+                <ClassEvaluation open={this.state.evaluationOpen}
+                                 onClose={this.onClassEvaluationClosed}
+                                 evaluation={this.state.currentClass}
+                                 classInfo={this.state.currentClass}/>
             </Container>
         );
     }
@@ -286,26 +308,36 @@ export default class ClassList extends React.Component {
         return <Table celled sortable selectable striped>
             <Table.Header>
                 <Table.Row>
-                    <Table.HeaderCell sorted={this.state.column === 'class_id' ? this.state.direction : null}
-                                      onClick={() => this.handleSort('class_id')}>班级ID</Table.HeaderCell>
-                    <Table.HeaderCell sorted={this.state.column === 'name' ? this.state.direction : null}
-                                      onClick={() => this.handleSort('name')}>班级名称</Table.HeaderCell>
-                    <Table.HeaderCell sorted={this.state.column === 'topic' ? this.state.direction : null}
-                                      onClick={() => this.handleSort('topic')}>主题名</Table.HeaderCell>
-                    <Table.HeaderCell sorted={this.state.column === 'topic_level' ? this.state.direction : null}
-                                      onClick={() => this.handleSort('topic_level')}>级别 </Table.HeaderCell>
-                    <Table.HeaderCell sorted={this.state.column === 'start_time' ? this.state.direction : null}
-                                      onClick={() => this.handleSort('start_time')}>开课日期</Table.HeaderCell>
-                    <Table.HeaderCell sorted={this.state.column === 'start_time' ? this.state.direction : null}
-                                      onClick={() => this.handleSort('start_time')}>开始时间</Table.HeaderCell>
-                    <Table.HeaderCell sorted={this.state.column === 'end_time' ? this.state.direction : null}
-                                      onClick={() => this.handleSort('end_time')}>结束时间</Table.HeaderCell>
-                    <Table.HeaderCell sorted={this.state.column === 'room_url' ? this.state.direction : null}
-                                      onClick={() => this.handleSort('room_url')}>教室（链接）</Table.HeaderCell>
-                    <Table.HeaderCell sorted={this.state.column === 'companions' ? this.state.direction : null}
-                                      onClick={() => this.handleSort('companions')}>外籍伙伴</Table.HeaderCell>
-                    <Table.HeaderCell sorted={this.state.column === 'students' ? this.state.direction : null}
-                                      onClick={() => this.handleSort('students')}>中方用户</Table.HeaderCell>
+                    <Table.HeaderCell
+                        sorted={this.state.column === 'class_id' ? this.state.direction : null}
+                        onClick={() => this.handleSort('class_id')}>班级ID</Table.HeaderCell>
+                    <Table.HeaderCell
+                        sorted={this.state.column === 'name' ? this.state.direction : null}
+                        onClick={() => this.handleSort('name')}>班级名称</Table.HeaderCell>
+                    <Table.HeaderCell
+                        sorted={this.state.column === 'topic' ? this.state.direction : null}
+                        onClick={() => this.handleSort('topic')}>主题名</Table.HeaderCell>
+                    <Table.HeaderCell
+                        sorted={this.state.column === 'topic_level' ? this.state.direction : null}
+                        onClick={() => this.handleSort('topic_level')}>级别 </Table.HeaderCell>
+                    <Table.HeaderCell
+                        sorted={this.state.column === 'start_time' ? this.state.direction : null}
+                        onClick={() => this.handleSort('start_time')}>开课日期</Table.HeaderCell>
+                    <Table.HeaderCell
+                        sorted={this.state.column === 'start_time' ? this.state.direction : null}
+                        onClick={() => this.handleSort('start_time')}>开始时间</Table.HeaderCell>
+                    <Table.HeaderCell
+                        sorted={this.state.column === 'end_time' ? this.state.direction : null}
+                        onClick={() => this.handleSort('end_time')}>结束时间</Table.HeaderCell>
+                    <Table.HeaderCell
+                        sorted={this.state.column === 'room_url' ? this.state.direction : null}
+                        onClick={() => this.handleSort('room_url')}>教室（链接）</Table.HeaderCell>
+                    <Table.HeaderCell
+                        sorted={this.state.column === 'companions' ? this.state.direction : null}
+                        onClick={() => this.handleSort('companions')}>外籍伙伴</Table.HeaderCell>
+                    <Table.HeaderCell
+                        sorted={this.state.column === 'students' ? this.state.direction : null}
+                        onClick={() => this.handleSort('students')}>中方用户</Table.HeaderCell>
                     <Table.HeaderCell>操作</Table.HeaderCell>
                 </Table.Row>
             </Table.Header>
@@ -319,7 +351,8 @@ export default class ClassList extends React.Component {
                             </Table.Cell>
                             <Table.Cell>
                                 <strong>{c.name}</strong><br/>
-                                <span style={{color: 'gainsboro'}}>{c.status}</span>
+                                <span
+                                    style={{color: 'gainsboro'}}>{c.status}</span>
                             </Table.Cell>
                             <Table.Cell>
                                 {c.topic}
@@ -328,34 +361,47 @@ export default class ClassList extends React.Component {
                                 {c.topic_level}
                             </Table.Cell>
                             <Table.Cell>
-                                <span style={{whiteSpace: 'nowrap'}}>{moment(c.start_time).format('LL')}</span><br/>
-                                <span style={{color: 'lightgray'}}>{moment(c.start_time).calendar()}</span><br/>
+                                <span
+                                    style={{whiteSpace: 'nowrap'}}>{moment(c.start_time).format('LL')}</span><br/>
+                                <span
+                                    style={{color: 'lightgray'}}>{moment(c.start_time).calendar()}</span><br/>
                                 {moment(c.start_time).format('dddd')}<br/>
-                                <span style={{color: 'lightgray'}}>{moment(c.start_time).fromNow()}</span>
+                                <span
+                                    style={{color: 'lightgray'}}>{moment(c.start_time).fromNow()}</span>
                             </Table.Cell>
                             <Table.Cell>
                                 {new Date(c.start_time).toLocaleTimeString()}<br/>
-                                <span style={{color: 'lightgray'}}>{moment(c.start_time).format('LT')}</span>
+                                <span
+                                    style={{color: 'lightgray'}}>{moment(c.start_time).format('LT')}</span>
                             </Table.Cell>
                             <Table.Cell>
                                 {new Date(c.end_time).toLocaleTimeString()}<br/>
-                                <span style={{color: 'lightgray'}}>{moment(c.end_time).format('LT')}</span>
+                                <span
+                                    style={{color: 'lightgray'}}>{moment(c.end_time).format('LT')}</span>
                             </Table.Cell>
-                            <Table.Cell style={{whiteSpace: 'normal', wordWrap: 'break-word'}}>
+                            <Table.Cell style={{
+                                whiteSpace: 'normal',
+                                wordWrap: 'break-word'
+                            }}>
                                 {c.room_url}
                             </Table.Cell>
                             <Table.Cell>
                                 {
-                                    c.companions.map(userId => <a href={`/companions/${userId}`} target="_blank"
-                                                                  key={userId}>
+                                    c.companions.map(userId => <a
+                                        href={`/companions/${userId}`}
+                                        target="_blank"
+                                        key={userId}>
                                         <Avatar userId={userId}/>
                                     </a>)
                                 }
                             </Table.Cell>
-                            <Table.Cell onClick={(event) => event.stopPropagation()}>
+                            <Table.Cell
+                                onClick={(event) => event.stopPropagation()}>
                                 {
-                                    c.students.map(userId => <a href={`/students/${userId}`} target="_blank"
-                                                                key={userId}>
+                                    c.students.map(userId => <a
+                                        href={`/students/${userId}`}
+                                        target="_blank"
+                                        key={userId}>
                                         <Avatar userId={userId}/>
                                     </a>)
                                 }
@@ -364,12 +410,15 @@ export default class ClassList extends React.Component {
                                 e.stopPropagation();
                             }}>
                                 <p>
-                                    <a className="ui green button" target="_blank"
+                                    <a className="ui green button"
+                                       target="_blank"
                                        href={`/admin-neue/classDetail/${c.class_id}`}
                                        style={{whiteSpace: 'nowrap'}}>编辑详情</a>
                                 </p>
                                 <p>
-                                    <a className="ui green button" target="_blank" href={`/feedbacks/${c.class_id}`}
+                                    <a className="ui green button"
+                                       target="_blank"
+                                       href={`/feedbacks/${c.class_id}`}
                                        style={{whiteSpace: 'nowrap'}}>
                                         查看评价
                                     </a>
@@ -408,7 +457,8 @@ export default class ClassList extends React.Component {
                         <label>开班开始时间</label>
                         <DatePicker showTimeSelect
                                     selected={this.state.searchParams.start_time ? moment(this.state.searchParams.start_time) : null}
-                                    name="start_time" isClearable={true} dateFormat={"YYYY-MM-DD HH:mm"}
+                                    name="start_time" isClearable={true}
+                                    dateFormat={"YYYY-MM-DD HH:mm"}
                                     placeholderText={"开班开始时间"}
                                     onChange={date => this.handleDateChange('start_time', date)}/>
                     </Form.Field>
@@ -417,20 +467,32 @@ export default class ClassList extends React.Component {
                         <DatePicker showTimeSelect
                                     selected={this.state.searchParams.end_time ? moment(this.state.searchParams.end_time) : null}
                                     name="end_time"
-                                    isClearable={true} dateFormat={"YYYY-MM-DD HH:mm"} placeholderText={"开班结束时间"}
+                                    isClearable={true}
+                                    dateFormat={"YYYY-MM-DD HH:mm"}
+                                    placeholderText={"开班结束时间"}
                                     onChange={date => this.handleDateChange('end_time', date)}/>
                     </Form.Field>
                     <Form.Field control={Dropdown} label="状态" name="status"
                                 value={this.state.searchParams.statuses}
-                                onChange={this.handleStatusChange} multiple search selection
+                                onChange={this.handleStatusChange} multiple
+                                search selection
                                 options={this.state.allStatuses}/>
                     <Form.Field control={Dropdown} label="参与者" name="users"
-                                value={this.state.searchParams.user_ids} onChange={this.handleUsersChange}
-                                multiple search selection options={this.state.allUsers}/>
+                                value={this.state.searchParams.user_ids}
+                                onChange={this.handleUsersChange}
+                                multiple search selection
+                                options={this.state.allUsers}/>
                     <Form.Field control={Dropdown} label="排序方式" name="orderby"
-                                value={this.state.searchParams.orderby} onChange={this.handleChange}
-                                options={[{key: 'diff ASC', value: 'diff ASC', text: '开课时间越近越靠前'}, {
-                                    key: 'start_time DESC', value: 'start_time DESC', text: '开课时间倒序'
+                                value={this.state.searchParams.orderby}
+                                onChange={this.handleChange}
+                                options={[{
+                                    key: 'diff ASC',
+                                    value: 'diff ASC',
+                                    text: '开课时间越近越靠前'
+                                }, {
+                                    key: 'start_time DESC',
+                                    value: 'start_time DESC',
+                                    text: '开课时间倒序'
                                 }]} selection/>
                 </Form.Group>
             </Form>
@@ -438,14 +500,16 @@ export default class ClassList extends React.Component {
                 <Button type="submit" onClick={this.searchClasses}>查询</Button>
                 {
                     process.env.NODE_ENV !== 'production' &&
-                    <Button onClick={() => this.openClassDetail()} type="button">创建班级</Button>
+                    <Button onClick={() => this.openClassDetail()}
+                            type="button">创建班级</Button>
                 }
                 <a className="ui button green"
                    href={`/admin-neue/classDetail/create`}
                    target="_blank">创建班级</a>
                 {
                     this.state.currentUser.super &&
-                    <Button onClick={this.updateStatus} type="button">批量更新班级结束状态</Button>
+                    <Button onClick={this.updateStatus}
+                            type="button">批量更新班级结束状态</Button>
                 }
             </Form.Group>
         </Segment>;
@@ -456,7 +520,8 @@ export default class ClassList extends React.Component {
             <Table>
                 <Table.Header>
                     <Table.Row>
-                        <BuzzPagination pagination={this.state.pagination} gotoPage={this.gotoPage}
+                        <BuzzPagination pagination={this.state.pagination}
+                                        gotoPage={this.gotoPage}
                                         paginationChanged={(newPagination) => {
                                             console.log('new = ', newPagination);
                                             window.localStorage.setItem('pagination.per_page', newPagination.per_page);
@@ -514,7 +579,10 @@ export default class ClassList extends React.Component {
         let searchParams = this.state.searchParams
         searchParams.statuses = [status]
 
-        this.setState({searchParams, pagination: BuzzPaginationData}, async () => {
+        this.setState({
+            searchParams,
+            pagination: BuzzPaginationData
+        }, async () => {
             await this.searchClasses()
         })
     }
