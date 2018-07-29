@@ -190,6 +190,7 @@ export default class ClassList extends React.Component {
                     let uniqueFilter = (value, index, self) => self.indexOf(value) === index;
                     c.companions = (c.companions || '').split(',').filter(uniqueFilter);
                     c.students = (c.students || '').split(',').filter(uniqueFilter);
+                    c.subscribers = (c.subscribers || '').split(',').filter(uniqueFilter);
                     return c;
                 }),
                 currentStatuses: this.state.searchParams.statuses,
@@ -338,6 +339,9 @@ export default class ClassList extends React.Component {
                     <Table.HeaderCell
                         sorted={this.state.column === 'students' ? this.state.direction : null}
                         onClick={() => this.handleSort('students')}>中方用户</Table.HeaderCell>
+                    <Table.HeaderCell
+                        sorted={this.state.column === 'subscribers' ? this.state.direction : null}
+                        onClick={() => this.handleSort('subscribers')}>运营人员</Table.HeaderCell>
                     <Table.HeaderCell>操作</Table.HeaderCell>
                 </Table.Row>
             </Table.Header>
@@ -402,6 +406,16 @@ export default class ClassList extends React.Component {
                                         href={`/students/${userId}`}
                                         target="_blank"
                                         key={userId}>
+                                        <Avatar userId={userId}/>
+                                    </a>)
+                                }
+                            </Table.Cell>
+                            <Table.Cell
+                                onClick={event => event.stopPropagation()}>
+                                {
+                                    c.subscribers.map(userId => <a
+                                        href={`/users/${userId}`}
+                                        target="_blank" key={userId}>
                                         <Avatar userId={userId}/>
                                     </a>)
                                 }
