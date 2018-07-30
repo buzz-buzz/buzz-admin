@@ -367,8 +367,15 @@ export default class UserList extends React.Component {
                                 <div
                                     style={{whiteSpace: 'nowrap'}}>
                                     <a title="可用课时数">{user.class_hours || 0}</a>
-                                    （<a
-                                    title="冻结课时数">{user.booked_class_hours || 0}</a>）
+                                    {
+                                        user.booked_class_hours &&
+                                        <a style={{color: 'gray'}}
+                                           href={`/classes/?userIds=${user.user_id}&statuses=${ClassStatusCode.Opened}&statuses=${ClassStatusCode.Cancelled}&start_time=1990-1-1`}
+                                           target="_blank"
+                                           title="冻结课时数，点击查看详情"
+                                           onClick={(event) => event.stopPropagation()}
+                                        >（{user.booked_class_hours || 0}）</a>
+                                    }
                                 </div>
                             </Table.Cell>
                             {
