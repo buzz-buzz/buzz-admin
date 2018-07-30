@@ -356,7 +356,10 @@ export default class ClassList extends React.Component {
                             <Table.Cell>
                                 <strong>{c.name}</strong><br/>
                                 <span
-                                    style={{color: 'gainsboro'}}>{c.status}</span>
+                                    style={{color: 'gainsboro'}}>{c.status}</span><br/>
+                                <span style={{color: 'lightgray'}}>$</span>
+                                <span
+                                    style={{color: c.class_hours > 1 ? 'red' : c.class_hours < 1 ? 'gray' : 'black'}}>{c.class_hours}</span>
                             </Table.Cell>
                             <Table.Cell>
                                 {c.topic}
