@@ -354,8 +354,15 @@ export default class UserList extends React.Component {
                                 style={{cursor: 'pointer'}}>
                                 <div><a
                                     title="总课时数"><strong>{(user.class_hours + user.booked_class_hours) || 0}</strong></a>
-                                    <a title="已消费课时"
-                                       style={{color: 'lightgray'}}>（{user.consumed_class_hours || 0}）</a>
+                                    {
+                                        user.consumed_class_hours &&
+
+                                        <a title="已消费课时，点击查看消费详情"
+                                           style={{color: 'lightgray'}}
+                                           href={`/classes/?userIds=${user.user_id}&statuses=${ClassStatusCode.Ended}&start_time=1990-1-1`}
+                                           target="_blank"
+                                           onClick={(event) => event.stopPropagation()}>（{user.consumed_class_hours || 0}）</a>
+                                    }
                                 </div>
                                 <div
                                     style={{whiteSpace: 'nowrap'}}>
@@ -557,7 +564,7 @@ export default class UserList extends React.Component {
                 <Table.HeaderCell>联系信息<br/>手机号<br/>邮箱</Table.HeaderCell>
                 <Table.HeaderCell>年级</Table.HeaderCell>
                 <Table.HeaderCell>
-                    总课时 <span style={{color: 'lightgray'}}> (已消费) < /span>
+                    总课时 <span style={{color: 'lightgray'}}> (已消费) </span>
                     <br/>
                     可用(冻结)
                 </Table.HeaderCell>
@@ -583,7 +590,7 @@ export default class UserList extends React.Component {
                 </Table.HeaderCell>
             </Table.Row>
         </Table.Header>
-    ;
+            ;
     }
 
     openClassHours(student) {
@@ -632,18 +639,18 @@ export default class UserList extends React.Component {
 
     closeSchedulePreferenceModal(user) {
         let users = this.state.users.map(u => {
-        if (u.user_id === user.user_id) {
-        return user;
-    }
+            if (u.user_id === user.user_id) {
+                return user;
+            }
 
-        return u;
-    });
+            return u;
+        });
 
         this.setState({
-        schedulePreferenceModalOpen: false,
-        currentUser: user,
-        users: users
-    })
+            schedulePreferenceModalOpen: false,
+            currentUser: user,
+            users: users
+        })
     }
 
     profileUpdated(newProfile) {
@@ -666,52 +673,52 @@ export default class UserList extends React.Component {
         selectedUser.password = newProfile.password;
 
         let newUsers = this.state.users.map(s => {
-        if (s.user_id === selectedUser.user_id) {
-        return selectedUser;
-    }
+            if (s.user_id === selectedUser.user_id) {
+                return selectedUser;
+            }
 
-        return s;
-    })
+            return s;
+        })
 
         this.setState({
-        currentUser: selectedUser,
-        users: newUsers
-    })
+            currentUser: selectedUser,
+            users: newUsers
+        })
     }
 
     async userCreated(newUserId) {
         let newUser = await ServiceProxy.proxyTo({
-        body: {
-        uri: `{buzzService}/api/v1/users/${newUserId}`,
-        method: 'GET'
-    }
-    })
+            body: {
+                uri: `{buzzService}/api/v1/users/${newUserId}`,
+                method: 'GET'
+            }
+        })
 
         let users = this.state.users;
         users.unshift(newUser);
 
         this.setState({
-        currentUser: newUser,
-        users: await attachEvents.call(this, users)
-    });
+            currentUser: newUser,
+            users: await attachEvents.call(this, users)
+        });
     }
 
     async onUserDeleted(userId) {
         let users = this.state.users.filter(u => String(u.user_id) !== String(userId));
 
         this.setState({
-        users: await attachEvents.call(this, users),
-        currentUser: null
-    })
+            users: await attachEvents.call(this, users),
+            currentUser: null
+        })
     }
 
     openLevelModal(student) {
         if (student.placement_test) {
-        this.setState({
-        currentUser: student,
-        levelModalOpen: true
-    })
-    }
+            this.setState({
+                currentUser: student,
+                levelModalOpen: true
+            })
+        }
     }
 
     onCloseLevelModal() {
@@ -724,12 +731,12 @@ export default class UserList extends React.Component {
         let currentUser = this.state.currentUser;
         currentUser.level = placementTestResult.level;
         let newUsers = this.state.users.map(s => {
-        if (s.user_id === currentUser.user_id) {
-        return currentUser;
-    }
+            if (s.user_id === currentUser.user_id) {
+                return currentUser;
+            }
 
-        return s;
-    });
+            return s;
+        });
         this.setState({currentUser: currentUser, users: newUsers})
     }
 
@@ -742,46 +749,46 @@ export default class UserList extends React.Component {
         p.current_page = activePage;
 
         this.setState({pagination: p}, async () => {
-        await this.searchUsers();
-    })
+            await this.searchUsers();
+        })
     }
 
     generateCSV() {
         const columnNames = {
-        user_id: '用户编号',
-        avatar: '用户头像',
-        name: '小孩英文名',
-        created_at: '注册时间',
-        role: '角色',
-        remark: '备注',
-        display_name: '备注名',
-        school_name: '学校',
-        time_zone: '时区',
-        order_remark: '订单备注',
-        youzan_mobile: '有赞手机号',
-        intro_done: '是否已完成新用户引导',
-        weekly_schedule_requirements: '周上课频率需求',
-        gender: '性别',
-        date_of_birth: '生日',
-        mobile: '手机号',
-        email: '邮箱',
-        language: '语言设置',
-        location: '地址',
-        description: '介绍',
-        grade: '年级',
-        parent_name: '父母姓名',
-        country: '国家',
-        city: '城市',
-        facebook_id: 'Facebook 编号',
-        wechat_name: '微信昵称',
-        wechat_openid: '微信 openid',
-        class_hours: '可用课时数',
-        integral: '积分',
-        level: '级别',
-        interests: '兴趣',
-        tags: '标签',
-        locked_class_hours: '冻结课时数'
-    }
+            user_id: '用户编号',
+            avatar: '用户头像',
+            name: '小孩英文名',
+            created_at: '注册时间',
+            role: '角色',
+            remark: '备注',
+            display_name: '备注名',
+            school_name: '学校',
+            time_zone: '时区',
+            order_remark: '订单备注',
+            youzan_mobile: '有赞手机号',
+            intro_done: '是否已完成新用户引导',
+            weekly_schedule_requirements: '周上课频率需求',
+            gender: '性别',
+            date_of_birth: '生日',
+            mobile: '手机号',
+            email: '邮箱',
+            language: '语言设置',
+            location: '地址',
+            description: '介绍',
+            grade: '年级',
+            parent_name: '父母姓名',
+            country: '国家',
+            city: '城市',
+            facebook_id: 'Facebook 编号',
+            wechat_name: '微信昵称',
+            wechat_openid: '微信 openid',
+            class_hours: '可用课时数',
+            integral: '积分',
+            level: '级别',
+            interests: '兴趣',
+            tags: '标签',
+            locked_class_hours: '冻结课时数'
+        }
 
         let headers = Object.keys(this.state.users[0]).filter(key => ['wechat_data', 'events', 'password', 'placement_test'].indexOf(key) < 0)
 
@@ -789,14 +796,14 @@ export default class UserList extends React.Component {
         result.push(headers.map(h => columnNames[h] || h).join(','))
 
         this.state.users.forEach(u => {
-        let line = []
-        headers.forEach(key => {
-        line.push(encodeURIComponent(String(u[key]).replace(/,/g, '|').replace(/[\r?\n]/g, '<br />')))
-    })
+            let line = []
+            headers.forEach(key => {
+                line.push(encodeURIComponent(String(u[key]).replace(/,/g, '|').replace(/[\r?\n]/g, '<br />')))
+            })
 
-        result.push(line.join(','))
-    })
+            result.push(line.join(','))
+        })
 
         return result.join('\n')
     }
-    }
+}
