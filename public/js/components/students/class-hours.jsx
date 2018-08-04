@@ -6,7 +6,6 @@ export default class ClassHours extends React.Component {
     constructor(props) {
         super(props);
 
-        console.log('props', props);
         this.state = {
             charge: 0,
             consume: 0,
@@ -47,14 +46,12 @@ export default class ClassHours extends React.Component {
                 }
             });
 
-            console.log('result = ', result);
             this.setState({
                 classHours: result.class_hours
             })
 
             this.props.classHoursUpdateCallback(result.class_hours);
         } catch (error) {
-            console.log('charge error = ', error);
             this.setState({
                 error: true,
                 message: JSON.stringify(error.result)
@@ -77,13 +74,11 @@ export default class ClassHours extends React.Component {
                 }
             });
 
-            console.log('consume result = ', result);
             this.setState({
                 classHours: result.class_hours
             })
             this.props.classHoursUpdateCallback(result.class_hours);
         } catch (error) {
-            console.log('error = ', error);
             this.setState({
                 error: true,
                 message: JSON.stringify(error.result)
@@ -100,24 +95,32 @@ export default class ClassHours extends React.Component {
     render() {
         const {charge, consume} = this.state;
         return (
-            <Modal open={this.props.open} closeOnEscape={true} closeOnRootNodeClick={true} onClose={this.close}>
-                <Header content="课时明细"></Header>
+            <Modal open={this.props.open} closeOnEscape={true}
+                   closeOnRootNodeClick={true} onClose={this.close} closeIcon>
+                <Header content={`课时明细 —— 当前明细：${this.state.classHours}`}/>
                 <Modal.Content>
-                    <p>当前余额：{this.state.classHours}</p>
                     <Form error={this.state.error} loading={this.state.loading}>
-                        <Message error header="出错了" content={this.state.message}/>
+                        <Message error header="出错了"
+                                 content={this.state.message}/>
                         <Form.Group>
-                            <Form.Input placeholder="课时数" name="charge" value={charge} onChange={this.handleChange}
+                            <Form.Input placeholder="课时数" name="charge"
+                                        value={charge}
+                                        onChange={this.handleChange}
                                         type="number"/>
-                            <Form.Button content="充值" type="button" onClick={this.charge}/>
-                        </Form.Group>
-                        <Form.Group>
-                            <Form.Input placeholder="课时数" name="consume" value={consume} onChange={this.handleChange}
+                            <Form.Button
+                                content="充值"
+                                type="button"
+                                onClick={this.charge}/>
+                            <Form.Input placeholder="课时数" name="consume"
+                                        value={consume}
+                                        onChange={this.handleChange}
                                         type="number"/>
-                            <Form.Button content="消费" type="button" onClick={this.consume}/>
+                            <Form.Button content="消费" type="button"
+                                         onClick={this.consume}/>
                         </Form.Group>
                     </Form>
-                    <p>Here you can check class hour details (Under development)</p>
+                    <p>Here you can check class hour details (Under
+                        development)</p>
                 </Modal.Content>
             </Modal>
         );
