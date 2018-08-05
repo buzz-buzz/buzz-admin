@@ -1,6 +1,9 @@
 import * as React from 'react';
 import {Form, Header, Message, Modal} from "semantic-ui-react";
 import ServiceProxy from "../../service-proxy";
+import ClassHourHistory from './class-hour-history'
+import {loadClassHourHistory} from "../../redux/actions";
+import store from "../../redux/store/index";
 
 export default class ClassHours extends React.Component {
     constructor(props) {
@@ -23,14 +26,28 @@ export default class ClassHours extends React.Component {
         })
     }
 
-    componentDidMount() {
+    async componentWillMount() {
     }
 
-    componentWillReceiveProps(nextProps) {
+    async componentWillReceiveProps(nextProps) {
         this.setState({
             classHours: nextProps.student ? (nextProps.student.class_hours || 0) : 0,
             userId: nextProps.student ? nextProps.student.user_id : 0
+        }, async () => {
+            if (this.state.userId) {
+                let history = await ServiceProxy.proxyTo({
+                    body: {
+                        uri: `{buzzService}/api/v1/class-hours/history/${this.state.userId}`,
+                        method: 'GET'
+                    }
+                })
+
+                store.dispatch(loadClassHourHistory(this.state.userId, history))
+            }
         })
+    }
+
+    componentDidMount() {
     }
 
     async charge() {
@@ -97,7 +114,7 @@ export default class ClassHours extends React.Component {
         return (
             <Modal open={this.props.open} closeOnEscape={true}
                    closeOnRootNodeClick={true} onClose={this.close} closeIcon>
-                <Header content={`课时明细 —— 当前明细：${this.state.classHours}`}/>
+                <Header content={`课时明细 —— 当前可用余额：${this.state.classHours}`}/>
                 <Modal.Content>
                     <Form error={this.state.error} loading={this.state.loading}>
                         <Message error header="出错了"
@@ -119,8 +136,8 @@ export default class ClassHours extends React.Component {
                                          onClick={this.consume}/>
                         </Form.Group>
                     </Form>
-                    <p>Here you can check class hour details (Under
-                        development)</p>
+                    <h3>课时变化历史</h3>
+                    <ClassHourHistory userId={this.state.userId}/>
                 </Modal.Content>
             </Modal>
         );

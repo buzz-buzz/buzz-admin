@@ -1,5 +1,5 @@
 import {combineReducers} from 'redux'
-import {LOAD_CLASS, LOAD_FEEDBACK} from '../actions'
+import {LOAD_CLASS, LOAD_CLASS_HOUR_HISTORY, LOAD_FEEDBACK} from '../actions'
 
 function classReducer(state = {}, action) {
     switch (action.type) {
@@ -22,7 +22,6 @@ function classReducer(state = {}, action) {
 function feedbackReducer(state = {}, action) {
     switch (action.type) {
         case LOAD_FEEDBACK:
-            console.log('action =', action);
             let result = {...state};
             action.feedbacks && action.feedbacks.map(f => result[`${f.class_id}-${f.from_user_id}-${f.to_user_id}-${f.type}`] = f);
             return result;
@@ -32,7 +31,17 @@ function feedbackReducer(state = {}, action) {
     }
 }
 
+function classHourHistory(state = {}, action) {
+    switch (action.type) {
+        case LOAD_CLASS_HOUR_HISTORY:
+            return {...state, [action.userId]: action.history}
+        default:
+            return state
+    }
+}
+
 export default combineReducers({
     classes: classReducer,
     feedbacks: feedbackReducer,
+    classHourHistory: classHourHistory
 })
