@@ -9,7 +9,8 @@ let config = {
         },
         superUsers: [532],
         signInUrl: `http://corner-test.buzzbuzzenglish.com/select-role?return_url=%s`,
-        origin: 'http://heroku.buzzbuzzenglish.com:16666'
+        origin: 'http://heroku.buzzbuzzenglish.com:16666',
+        rootDomain: '.buzzbuzzenglish.com'
     },
     qa: {
         endPoints: {
@@ -18,7 +19,8 @@ let config = {
         },
         superUsers: [56],
         signInUrl: 'http://corner-test.buzzbuzzenglish.com/select-role?return_url=%s',
-        origin: 'http://admin-test.buzzbuzzenglish.com'
+        origin: 'http://admin-test.buzzbuzzenglish.com',
+        rootDomain: '.buzzbuzzenglish.com'
     },
     production: {
         endPoints: {
@@ -27,7 +29,8 @@ let config = {
         },
         superUsers: [3],
         signInUrl: 'http://live.buzzbuzzenglish.com/select-role?return_url=%s',
-        origin: 'http://admin.buzzbuzzenglish.com'
+        origin: 'http://admin.buzzbuzzenglish.com',
+        rootDomain: '.buzzbuzzenglish.com'
     }
 };
 
