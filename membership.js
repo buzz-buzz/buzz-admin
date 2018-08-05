@@ -55,13 +55,8 @@ membership.ensureAuthenticated = async function (context, next) {
 
     if (!context.state.user) {
         if (context.request.get('X-Request-With') === 'XMLHttpRequest') {
-            let returnUrl = context.headers.referer;
-            let result = {};
-            result.isSuccess = false;
-            result.code = 302;
-            result.message = returnUrl || '/';
-
-            return context.body = result;
+            context.status = 401;
+            context.body = membership.getSignInUrl(context.request.referer);
         } else {
             return context.redirect(membership.getSignInUrl(context.request.url));
         }

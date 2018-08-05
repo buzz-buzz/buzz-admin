@@ -21,6 +21,7 @@ let o = {
             ...clearCookieOption,
             domain: config.rootDomain
         })
+        console.log('cleared all')
     }
 };
 

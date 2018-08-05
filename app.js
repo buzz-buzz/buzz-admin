@@ -41,6 +41,12 @@ app.use(async (ctx, next) => {
     if (ctx.request.path === '/sign-out') {
         await membership.signOut(ctx, next);
         return ctx.redirect(membership.getSignInUrl('/'));
+    } else if (ctx.request.path === '/ping') {
+        return ctx.body = Object.assign(ctx.state, {
+            NODE_ENV: process.env.NODE_ENV,
+            version: pkg.version,
+            rootDomain: config.rootDomain
+        });
     }
 
     await next();
@@ -90,12 +96,6 @@ let clientPage = async ctx => {
     }));
 };
 router
-    .get('/ping', async ctx => {
-        ctx.body = Object.assign(ctx.state, {
-            NODE_ENV: process.env.NODE_ENV,
-            version: pkg.version
-        });
-    })
     .get('/', async ctx => {
         ctx.redirect('/classes');
     })
