@@ -4,7 +4,7 @@ import {connect} from 'react-redux';
 import TimeDisplay from '../common/time-display';
 import BuzzPagination from "../common/BuzzPagination";
 
-const history = ({userId, classHourHistory}) => <Table striped>
+const history = ({userId, classHourHistory, pagination}) => <Table striped>
     <Table.Header>
         <Table.Row>
             <Table.HeaderCell>时间</Table.HeaderCell>
@@ -16,7 +16,7 @@ const history = ({userId, classHourHistory}) => <Table striped>
     </Table.Header>
     <Table.Body>
         {
-            classHourHistory && classHourHistory[userId] && classHourHistory[userId].map(r =>
+            classHourHistory && classHourHistory[`${userId}-${pagination.current_page}`] && classHourHistory[`${userId}-${pagination.current_page}`].map(r =>
                 <Table.Row
                     key={r.timestamp}>
                     <Table.Cell>
@@ -33,7 +33,8 @@ const history = ({userId, classHourHistory}) => <Table striped>
     </Table.Body>
     <Table.Footer>
         <Table.Row>
-            <BuzzPagination colSpan={5} pagination={{per_page: 10}}/>
+            <BuzzPagination colSpan={5}
+                            pagination={pagination}/>
         </Table.Row>
     </Table.Footer>
 </Table>

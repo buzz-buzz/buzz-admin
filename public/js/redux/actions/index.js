@@ -16,10 +16,11 @@ export function loadFeedbacks(feedbacks) {
     }
 }
 
-export function loadClassHourHistory(userId, history) {
+export function loadClassHourHistory(userId, history, pagination) {
     return {
         type: LOAD_CLASS_HOUR_HISTORY,
         userId: userId,
-        history: history
+        history: history,
+        pagination: pagination
     }
 }

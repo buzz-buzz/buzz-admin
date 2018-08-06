@@ -34,7 +34,10 @@ function feedbackReducer(state = {}, action) {
 function classHourHistory(state = {}, action) {
     switch (action.type) {
         case LOAD_CLASS_HOUR_HISTORY:
-            return {...state, [action.userId]: action.history}
+            return {
+                ...state,
+                [`${action.userId}-${action.pagination.current_page}`]: action.history
+            }
         default:
             return state
     }

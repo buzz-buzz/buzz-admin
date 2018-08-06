@@ -350,10 +350,14 @@ export default class UserList extends React.Component {
                                 {Grades[user.grade]}
                             </Table.Cell>
                             <Table.Cell
-                                onClick={() => this.openClassHours(user)}
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    this.openClassHours(user);
+                                }}
                                 style={{cursor: 'pointer'}}>
-                                <div><a
-                                    title="总课时数"><strong>{(user.class_hours + user.booked_class_hours) || 0}</strong></a>
+                                <div>
+                                    <a
+                                        title="总课时数"><strong>{(user.class_hours + user.booked_class_hours) || 0}</strong></a>
                                     {
                                         user.consumed_class_hours &&
 

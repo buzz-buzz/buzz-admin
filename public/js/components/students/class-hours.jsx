@@ -12,6 +12,10 @@ export default class ClassHours extends React.Component {
         this.state = {
             charge: 0,
             consume: 0,
+            pagination: {
+                current_page: 1,
+                per_page: 10
+            }
         }
 
         this.handleChange = this.handleChange.bind(this);
@@ -34,15 +38,23 @@ export default class ClassHours extends React.Component {
             classHours: nextProps.student ? (nextProps.student.class_hours || 0) : 0,
             userId: nextProps.student ? nextProps.student.user_id : 0
         }, async () => {
-            if (this.state.userId && !store.getState().classHourHistory[this.state.userId]) {
+            if (this.state.userId && !store.getState().classHourHistory[`${this.state.userId}-${this.state.pagination.current_page}`]) {
                 let history = await ServiceProxy.proxyTo({
                     body: {
                         uri: `{buzzService}/api/v1/class-hours/history/${this.state.userId}`,
+                        qs: {
+                            pageSize: this.state.pagination.per_page,
+                            currentPage: this.state.pagination.current_page
+                        },
                         method: 'GET'
                     }
                 })
 
-                store.dispatch(loadClassHourHistory(this.state.userId, history.data))
+                store.dispatch(loadClassHourHistory(this.state.userId, history.data, {
+                    per_page: history.per_page,
+                    current_page: history.current_page,
+                    total: history.total
+                }))
             }
         })
     }
@@ -137,7 +149,8 @@ export default class ClassHours extends React.Component {
                         </Form.Group>
                     </Form>
                     <h3>课时变化历史</h3>
-                    <ClassHourHistory userId={this.state.userId}/>
+                    <ClassHourHistory userId={this.state.userId}
+                                      pagination={this.state.pagination}/>
                 </Modal.Content>
             </Modal>
         );
