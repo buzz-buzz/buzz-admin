@@ -1,6 +1,7 @@
 import React from 'react'
 import {Table} from "semantic-ui-react";
 import {connect} from 'react-redux';
+import TimeDisplay from '../common/time-display';
 
 const history = ({userId, classHourHistory}) => <Table striped>
     <Table.Header>
@@ -16,7 +17,9 @@ const history = ({userId, classHourHistory}) => <Table striped>
             classHourHistory && classHourHistory[userId] && classHourHistory[userId].map(r =>
                 <Table.Row
                     key={r.timestamp}>
-                    <Table.Cell>{r.timestamp}</Table.Cell>
+                    <Table.Cell>
+                        <TimeDisplay timestamp={r.timestamp}/>
+                    </Table.Cell>
                     <Table.Cell>{r.event}</Table.Cell>
                     <Table.Cell>{r.amount}</Table.Cell>
                     <Table.Cell>{r.remark}</Table.Cell>

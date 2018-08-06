@@ -4,7 +4,6 @@ import {
     Container,
     Dropdown,
     Form,
-    Input,
     Menu,
     Segment,
     Table,
@@ -21,6 +20,7 @@ import {Avatar} from "../../common/Avatar";
 import CurrentUser from "../../common/CurrentUser";
 import moment from 'moment';
 import DatePicker from 'react-datepicker';
+import TimeDisplay from '../common/time-display';
 
 function nearestToper(x, y) {
     let now = new Date();
@@ -368,13 +368,7 @@ export default class ClassList extends React.Component {
                                 {c.topic_level}
                             </Table.Cell>
                             <Table.Cell>
-                                <span
-                                    style={{whiteSpace: 'nowrap'}}>{moment(c.start_time).format('LL')}</span><br/>
-                                <span
-                                    style={{color: 'lightgray'}}>{moment(c.start_time).calendar()}</span><br/>
-                                {moment(c.start_time).format('dddd')}<br/>
-                                <span
-                                    style={{color: 'lightgray'}}>{moment(c.start_time).fromNow()}</span>
+                                <TimeDisplay timestamp={c.start_time}/>
                             </Table.Cell>
                             <Table.Cell>
                                 {new Date(c.start_time).toLocaleTimeString()}<br/>
