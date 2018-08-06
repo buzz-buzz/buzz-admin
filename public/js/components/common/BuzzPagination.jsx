@@ -1,5 +1,10 @@
 import React from "react";
-import {Dropdown, Form, Icon, Pagination, Segment, Table} from "semantic-ui-react";
+import {
+    Dropdown,
+    Icon,
+    Pagination,
+    Table
+} from "semantic-ui-react";
 
 export let BuzzPaginationData = {
     current_page: 1,
@@ -23,7 +28,8 @@ export default class BuzzPagination extends React.Component {
         return (
             <Table.HeaderCell colSpan={this.props.colSpan}>
                 <label>每页条数：</label>
-                <Dropdown compact search searchInput={{type: 'number'}} selection options={[{
+                <Dropdown compact search searchInput={{type: 'number'}}
+                          selection options={[{
                     key: 10, text: '10', value: 10
                 }, {
                     key: 20, text: '20', value: 20
@@ -34,7 +40,10 @@ export default class BuzzPagination extends React.Component {
                 }, {
                     key: 1000, text: '1000', value: 1000
                 }]} placeholder="选择每页条数" value={this.state.per_page}
-                          onChange={(e, {value}) => this.handleInputChange(e, {name: 'per_page', value})}/>
+                          onChange={(e, {value}) => this.handleInputChange(e, {
+                              name: 'per_page',
+                              value
+                          })}/>
                 &emsp;
                 <Pagination
                     defaultActivePage={1}
@@ -60,7 +69,7 @@ export default class BuzzPagination extends React.Component {
                     }}
                     totalPages={this.props.pagination.last_page}
                     onPageChange={this.props.gotoPage}
-                ></Pagination>
+                />
             </Table.HeaderCell>
         )
     }

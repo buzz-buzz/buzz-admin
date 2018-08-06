@@ -42,7 +42,7 @@ export default class ClassHours extends React.Component {
                     }
                 })
 
-                store.dispatch(loadClassHourHistory(this.state.userId, history))
+                store.dispatch(loadClassHourHistory(this.state.userId, history.data))
             }
         })
     }
