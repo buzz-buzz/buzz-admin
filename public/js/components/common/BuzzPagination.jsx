@@ -10,7 +10,7 @@ export let BuzzPaginationData = {
     current_page: 1,
     per_page: Number(window.localStorage.getItem('pagination.per_page')) || 10,
     total: 1,
-    last_page: 1
+    last_page: 1,
 };
 
 export default class BuzzPagination extends React.Component {
@@ -27,6 +27,7 @@ export default class BuzzPagination extends React.Component {
     render() {
         return (
             <Table.HeaderCell colSpan={this.props.colSpan}>
+                <label>共 {this.props.pagination.total} 条记录。</label>
                 <label>每页条数：</label>
                 <Dropdown compact search searchInput={{type: 'number'}}
                           selection options={[{

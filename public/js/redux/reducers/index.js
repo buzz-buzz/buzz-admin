@@ -36,7 +36,7 @@ function classHourHistory(state = {}, action) {
         case LOAD_CLASS_HOUR_HISTORY:
             return {
                 ...state,
-                [`${action.userId}-${action.pagination.current_page}`]: action.history
+                [`${action.userId}-${action.pagination.current_page}`]: action.history,
             }
         default:
             return state

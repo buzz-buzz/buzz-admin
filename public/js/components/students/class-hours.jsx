@@ -14,7 +14,9 @@ export default class ClassHours extends React.Component {
             consume: 0,
             pagination: {
                 current_page: 1,
-                per_page: 10
+                per_page: 10,
+                total: 1,
+                last_page: 1
             }
         }
 
@@ -22,6 +24,7 @@ export default class ClassHours extends React.Component {
         this.charge = this.charge.bind(this);
         this.consume = this.consume.bind(this);
         this.close = this.close.bind(this);
+        this.paginationChanged = this.paginationChanged.bind(this);
     }
 
     handleChange(e, {name, value}) {
@@ -33,30 +36,47 @@ export default class ClassHours extends React.Component {
     async componentWillMount() {
     }
 
+    async paginationChanged(pagination) {
+        this.setState({pagination: pagination}, async () => {
+            await this.searchHistory();
+        })
+    }
+
     async componentWillReceiveProps(nextProps) {
         this.setState({
             classHours: nextProps.student ? (nextProps.student.class_hours || 0) : 0,
             userId: nextProps.student ? nextProps.student.user_id : 0
         }, async () => {
-            if (this.state.userId && !store.getState().classHourHistory[`${this.state.userId}-${this.state.pagination.current_page}`]) {
-                let history = await ServiceProxy.proxyTo({
-                    body: {
-                        uri: `{buzzService}/api/v1/class-hours/history/${this.state.userId}`,
-                        qs: {
-                            pageSize: this.state.pagination.per_page,
-                            currentPage: this.state.pagination.current_page
-                        },
-                        method: 'GET'
-                    }
-                })
-
-                store.dispatch(loadClassHourHistory(this.state.userId, history.data, {
-                    per_page: history.per_page,
-                    current_page: history.current_page,
-                    total: history.total
-                }))
-            }
+            await this.searchHistory();
         })
+    }
+
+    async searchHistory() {
+        window.store = store;
+        console.log(store.getState().classHourHistory);
+
+        if (this.state.userId && !store.getState().classHourHistory[`${this.state.userId}-${this.state.pagination.current_page}`]) {
+            let history = await ServiceProxy.proxyTo({
+                body: {
+                    uri: `{buzzService}/api/v1/class-hours/history/${this.state.userId}`,
+                    qs: {
+                        pageSize: this.state.pagination.per_page,
+                        currentPage: this.state.pagination.current_page
+                    },
+                    method: 'GET'
+                }
+            })
+
+            this.setState({
+                pagination: {
+                    total: history.total,
+                    current_page: history.current_page,
+                    per_page: history.per_page,
+                    last_page: history.last_page
+                }
+            })
+            store.dispatch(loadClassHourHistory(this.state.userId, history.data, this.state.pagination))
+        }
     }
 
     componentDidMount() {
@@ -150,7 +170,8 @@ export default class ClassHours extends React.Component {
                     </Form>
                     <h3>课时变化历史</h3>
                     <ClassHourHistory userId={this.state.userId}
-                                      pagination={this.state.pagination}/>
+                                      pagination={this.state.pagination}
+                                      paginationChanged={this.paginationChanged}/>
                 </Modal.Content>
             </Modal>
         );

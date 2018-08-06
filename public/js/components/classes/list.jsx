@@ -534,7 +534,6 @@ export default class ClassList extends React.Component {
                         <BuzzPagination pagination={this.state.pagination}
                                         gotoPage={this.gotoPage}
                                         paginationChanged={(newPagination) => {
-                                            console.log('new = ', newPagination);
                                             window.localStorage.setItem('pagination.per_page', newPagination.per_page);
                                             this.setState({pagination: newPagination}, async () => {
                                                 await this.searchClasses();
