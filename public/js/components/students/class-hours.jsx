@@ -34,7 +34,7 @@ export default class ClassHours extends React.Component {
             classHours: nextProps.student ? (nextProps.student.class_hours || 0) : 0,
             userId: nextProps.student ? nextProps.student.user_id : 0
         }, async () => {
-            if (this.state.userId) {
+            if (this.state.userId && !store.getState().classHourHistory[this.state.userId]) {
                 let history = await ServiceProxy.proxyTo({
                     body: {
                         uri: `{buzzService}/api/v1/class-hours/history/${this.state.userId}`,
