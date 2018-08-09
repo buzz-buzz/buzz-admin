@@ -1,8 +1,7 @@
 import React from 'react'
 import {Table} from "semantic-ui-react";
-import {connect} from 'react-redux';
-import TimeDisplay from '../common/time-display';
 import BuzzPagination from "../common/BuzzPagination";
+import TimeDisplay from '../common/time-display';
 
 const history = ({userId, classHourHistory, pagination, paginationChanged}) =>
     <Table striped>
@@ -47,6 +46,4 @@ const history = ({userId, classHourHistory, pagination, paginationChanged}) =>
         </Table.Footer>
     </Table>
 
-export default connect(store => ({
-    classHourHistory: store.classHourHistory
-}), null)(history)
+export default history

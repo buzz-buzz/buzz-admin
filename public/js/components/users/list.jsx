@@ -19,8 +19,8 @@ import SchedulePreference from "./schedule-preference";
 import BigCalendar from 'react-big-calendar'
 import moment from 'moment'
 import 'moment/locale/zh-cn'
-import ClassHours from "../students/class-hours";
-import Integral from "../students/integral";
+import ClassHours from "./class-hours";
+import Integral from "./integral";
 import LevelModal from "../students/level-modal";
 import BookingTable from "./booking-table";
 import queryString from 'query-string';

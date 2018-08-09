@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Form, Header, Icon, Message, Modal, TextArea, Dropdown } from "semantic-ui-react";
 import ServiceProxy from "../../service-proxy";
-import EvaluationVersion from './evaluation-result-v2';
+import EvaluationVersion from '../users/evaluation-result-v2';
 
 export default class LevelModal extends React.Component {
     constructor(props) {

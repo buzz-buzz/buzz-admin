@@ -2,7 +2,7 @@ import * as React from 'react';
 import {Form, Header, Message, Modal} from "semantic-ui-react";
 import ServiceProxy from "../../service-proxy";
 import ClassHourHistory from './class-hour-history'
-import {loadClassHourHistory} from "../../redux/actions";
+import {loadClassHourHistory} from "../../redux/actions/index";
 import store from "../../redux/store/index";
 
 export default class ClassHours extends React.Component {
