@@ -42,7 +42,6 @@ export default class Balance extends React.Component {
     }
 
     async paginationChanged(pagination) {
-        console.log('pa = ', pagination)
         this.setState({pagination: pagination}, async () => {
             await this.searchHistory();
         })
@@ -86,6 +85,10 @@ export default class Balance extends React.Component {
     }
 
     async charge() {
+        let remark = window.prompt('请输入原因：')
+        if (remark === null) {
+            return;
+        }
         try {
             this.setState({loading: true, error: false});
             let result = await ServiceProxy.proxyTo({
@@ -93,7 +96,8 @@ export default class Balance extends React.Component {
                     uri: `${this.props.balanceApi}${this.state.userId}`,
                     method: 'PUT',
                     json: {
-                        [this.props.balanceType]: this.state.charge
+                        [this.props.balanceType]: this.state.charge,
+                        remark: remark
                     }
                 }
             });
@@ -102,12 +106,14 @@ export default class Balance extends React.Component {
                 balance: result[this.props.balanceType]
             })
 
+            store.dispatch(this.props.clearBalanceHistory(this.state.userId, this.state.pagination))
+
             await this.searchHistory()
             this.props.balanceUpdatedCallback(result[this.props.balanceType]);
         } catch (error) {
             this.setState({
                 error: true,
-                message: error.message || error.toString()
+                message: error.result || error.message || error.toString()
             })
         } finally {
             this.setState({loading: false})
@@ -115,6 +121,11 @@ export default class Balance extends React.Component {
     }
 
     async consume() {
+        let remark = window.prompt('请输入原因：')
+        if (remark === null) {
+            return;
+        }
+
         try {
             this.setState({loading: true, error: false});
             let result = await ServiceProxy.proxyTo({
@@ -122,7 +133,8 @@ export default class Balance extends React.Component {
                     uri: `${this.props.balanceApi}${this.state.userId}`,
                     method: 'DELETE',
                     json: {
-                        [this.props.balanceType]: this.state.consume
+                        [this.props.balanceType]: this.state.consume,
+                        remark: remark
                     }
                 }
             });
@@ -131,12 +143,15 @@ export default class Balance extends React.Component {
                 balance: result[this.props.balanceType],
                 error: false
             })
+
+            store.dispatch(this.props.clearBalanceHistory(this.state.userId, this.state.pagination))
+
             await this.searchHistory()
             this.props.balanceUpdatedCallback(result[this.props.balanceType]);
         } catch (error) {
             this.setState({
                 error: true,
-                message: error.message || error.toString()
+                message: error.result || error.message || error.toString()
             })
         } finally {
             this.setState({loading: false})
