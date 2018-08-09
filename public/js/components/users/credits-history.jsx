@@ -3,5 +3,5 @@ import {connect} from 'react-redux';
 import history from './balance-history'
 
 export default connect(store => ({
-    history: store.classHourHistory
+    history: store.creditsHistory
 }), null)(history)

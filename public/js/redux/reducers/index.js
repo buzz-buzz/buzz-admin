@@ -1,10 +1,9 @@
 import {combineReducers} from 'redux'
-import {LOAD_CLASS, LOAD_CLASS_HOUR_HISTORY, LOAD_FEEDBACK} from '../actions'
+import {LOAD_CLASS, LOAD_CLASS_HOUR_HISTORY, LOAD_CREDITS_HISTORY, LOAD_FEEDBACK} from '../actions'
 
 function classReducer(state = {}, action) {
     switch (action.type) {
         case LOAD_CLASS:
-            console.log('loading ...', action);
             return {
                 ...state,
                 [action.classInfo.class_id]: {
@@ -43,8 +42,21 @@ function classHourHistory(state = {}, action) {
     }
 }
 
+function creditsHistory(state = {}, action) {
+    switch (action.type) {
+        case LOAD_CREDITS_HISTORY:
+            return {
+                ...state,
+                [`${action.userId}-${action.pagination.current_page}`]: action.history,
+            }
+        default:
+            return state
+    }
+}
+
 export default combineReducers({
     classes: classReducer,
     feedbacks: feedbackReducer,
-    classHourHistory: classHourHistory
+    classHourHistory: classHourHistory,
+    creditsHistory: creditsHistory,
 })

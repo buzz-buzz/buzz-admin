@@ -20,7 +20,7 @@ import BigCalendar from 'react-big-calendar'
 import moment from 'moment'
 import 'moment/locale/zh-cn'
 import ClassHours from "./class-hours";
-import Integral from "./integral";
+import Credits from "./credits";
 import LevelModal from "../students/level-modal";
 import BookingTable from "./booking-table";
 import queryString from 'query-string';
@@ -265,14 +265,14 @@ export default class UserList extends React.Component {
                     {this.renderListTable()}
                 </Segment>
                 <ClassHours open={this.state.classHoursModalOpen}
-                            student={this.state.currentUser}
+                            user={this.state.currentUser}
                             classHoursUpdateCallback={this.classHoursUpdated}
                             onCloseCallback={this.closeClassHoursModal}/>
 
-                <Integral open={this.state.integralModalOpen}
-                          student={this.state.currentUser}
-                          integralUpdateCallback={this.integralUpdated}
-                          onCloseCallback={this.closeIntegralModal}/>
+                <Credits open={this.state.integralModalOpen}
+                         user={this.state.currentUser}
+                         integralUpdateCallback={this.integralUpdated}
+                         onCloseCallback={this.closeIntegralModal}/>
                 {
                     this.props['user-type'] === MemberType.Student &&
 
@@ -420,7 +420,7 @@ export default class UserList extends React.Component {
                             <Table.Cell
                                 onClick={() => this.openSchedulePreferenceModal(user)}>
                                 <BookingTable events={user.events}
-                                              defaultDate={new Date()}></BookingTable>
+                                              defaultDate={new Date()}/>
                             </Table.Cell>
                             <Table.Cell onClick={() => this.openProfile(user)}>
                                 <span>{user.tags}</span>
@@ -586,12 +586,6 @@ export default class UserList extends React.Component {
                     this.props['user-type'] === MemberType.Student &&
                     <Table.HeaderCell>能力评级</Table.HeaderCell>
                 }
-                {/* {
-                    this.props['user-type'] === MemberType.Student && <Table.HeaderCell>每周学习次数</Table.HeaderCell>
-                }
-                {
-                    this.props['user-type'] === MemberType.Companion && <Table.HeaderCell>每周教学次数</Table.HeaderCell>
-                } */}
                 <Table.HeaderCell>预约/排课</Table.HeaderCell>
                 <Table.HeaderCell>标签</Table.HeaderCell>
                 <Table.HeaderCell style={{cursor: 'pointer'}}>
@@ -615,10 +609,10 @@ export default class UserList extends React.Component {
         this.setState({classHoursModalOpen: false})
     }
 
-    openIntegral(student) {
+    openIntegral(user) {
         this.setState({
             integralModalOpen: true,
-            currentUser: student
+            currentUser: user
         });
     }
 

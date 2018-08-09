@@ -3,7 +3,7 @@ import {Table} from "semantic-ui-react";
 import BuzzPagination from "../common/BuzzPagination";
 import TimeDisplay from '../common/time-display';
 
-const history = ({userId, classHourHistory, pagination, paginationChanged}) =>
+const history = ({userId, history, pagination, paginationChanged}) =>
     <Table striped>
         <Table.Header>
             <Table.Row>
@@ -16,7 +16,7 @@ const history = ({userId, classHourHistory, pagination, paginationChanged}) =>
         </Table.Header>
         <Table.Body>
             {
-                classHourHistory && classHourHistory[`${userId}-${pagination.current_page}`] && classHourHistory[`${userId}-${pagination.current_page}`].map(r =>
+                history && history[`${userId}-${pagination.current_page}`] && history[`${userId}-${pagination.current_page}`].map(r =>
                     <Table.Row
                         key={r.timestamp}>
                         <Table.Cell>
