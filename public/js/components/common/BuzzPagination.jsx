@@ -15,12 +15,15 @@ export let BuzzPaginationData = {
 
 export default class BuzzPagination extends React.Component {
     state = {
-        per_page: this.props.pagination.per_page
+        per_page: Number(this.props.pagination.per_page)
     };
 
     handleInputChange = (e, {name, value}) => {
         this.setState({[name]: value}, () => {
-            this.props.paginationChanged(Object.assign({}, this.props.pagination, this.state))
+            this.props.paginationChanged({
+                ...this.props.pagination,
+                per_page: Number(this.state.per_page)
+            })
         });
     };
 
@@ -29,7 +32,7 @@ export default class BuzzPagination extends React.Component {
             <Table.HeaderCell colSpan={this.props.colSpan}>
                 <label>共 {this.props.pagination.total} 条记录。</label>
                 <label>每页条数：</label>
-                <Dropdown compact search searchInput={{type: 'number'}}
+                <Dropdown compact search searchInput={{type: 'text'}}
                           selection options={[{
                     key: 10, text: '10', value: 10
                 }, {
@@ -43,11 +46,11 @@ export default class BuzzPagination extends React.Component {
                 }]} placeholder="选择每页条数" value={this.state.per_page}
                           onChange={(e, {value}) => this.handleInputChange(e, {
                               name: 'per_page',
-                              value
+                              value: Number(value),
                           })}/>
                 &emsp;
                 <Pagination
-                    defaultActivePage={1}
+                    defaultActivePage={this.props.pagination.current_page}
                     ellipsisItem={{
                         content: <Icon name='ellipsis horizontal'/>,
                         icon: true

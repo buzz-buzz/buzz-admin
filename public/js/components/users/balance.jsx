@@ -42,6 +42,7 @@ export default class Balance extends React.Component {
     }
 
     async paginationChanged(pagination) {
+        console.log('pa = ', pagination)
         this.setState({pagination: pagination}, async () => {
             await this.searchHistory();
         })
@@ -181,11 +182,30 @@ export default class Balance extends React.Component {
                         this.props.balanceType === 'class_hours' &&
                         <ClassHourHistory userId={this.state.userId}
                                           pagination={this.state.pagination}
-                                          paginationChanged={this.paginationChanged}/>
+                                          paginationChanged={this.paginationChanged}
+                                          clearData={() => {
+                                              this.setState({
+                                                  pagination: {
+                                                      ...this.state.pagination,
+                                                      current_page: 1
+                                                  }
+                                              })
+                                              store.dispatch(this.props.clearBalanceHistory(this.state.userId, this.state.pagination))
+                                          }}
+                        />
                     }
                     {
                         this.props.balanceType === 'integral' &&
-                        <CreditsHistory userId={this.state.userId} pagination={this.state.pagination} paginationChanged={this.paginationChanged}/>
+                        <CreditsHistory userId={this.state.userId} pagination={this.state.pagination} paginationChanged={this.paginationChanged}
+                                        clearData={() => {
+                                            this.setState({
+                                                pagination: {
+                                                    ...this.state.pagination,
+                                                    current_page: 1
+                                                }
+                                            })
+                                            store.dispatch(this.props.clearBalanceHistory(this.state.userId, this.state.pagination))
+                                        }}/>
                     }
                 </Modal.Content>
             </Modal>

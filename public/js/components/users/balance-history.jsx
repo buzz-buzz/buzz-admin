@@ -3,7 +3,7 @@ import {Table} from "semantic-ui-react";
 import BuzzPagination from "../common/BuzzPagination";
 import TimeDisplay from '../common/time-display';
 
-const history = ({userId, history, pagination, paginationChanged}) =>
+const history = ({userId, history, pagination, paginationChanged, clearData}) =>
     <Table striped>
         <Table.Header>
             <Table.Row>
@@ -35,7 +35,10 @@ const history = ({userId, history, pagination, paginationChanged}) =>
             <Table.Row>
                 <BuzzPagination colSpan={5}
                                 pagination={pagination}
-                                paginationChanged={paginationChanged}
+                                paginationChanged={(pagination) => {
+                                    clearData()
+                                    paginationChanged({...pagination, current_page: 1})
+                                }}
                                 gotoPage={(e, {activePage}) => {
                                     paginationChanged({
                                         ...pagination,

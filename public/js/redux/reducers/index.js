@@ -1,5 +1,5 @@
 import {combineReducers} from 'redux'
-import {LOAD_CLASS, LOAD_CLASS_HOUR_HISTORY, LOAD_CREDITS_HISTORY, LOAD_FEEDBACK} from '../actions'
+import {CLEAR_CLASS_HOUR_HISTORY, CLEAR_CREDITS_HISTORY, LOAD_CLASS, LOAD_CLASS_HOUR_HISTORY, LOAD_CREDITS_HISTORY, LOAD_FEEDBACK} from '../actions'
 
 function classReducer(state = {}, action) {
     switch (action.type) {
@@ -37,6 +37,8 @@ function classHourHistory(state = {}, action) {
                 ...state,
                 [`${action.userId}-${action.pagination.current_page}`]: action.history,
             }
+        case CLEAR_CLASS_HOUR_HISTORY:
+            return {}
         default:
             return state
     }
@@ -49,6 +51,8 @@ function creditsHistory(state = {}, action) {
                 ...state,
                 [`${action.userId}-${action.pagination.current_page}`]: action.history,
             }
+        case CLEAR_CREDITS_HISTORY:
+            return {}
         default:
             return state
     }
