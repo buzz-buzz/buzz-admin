@@ -1,5 +1,6 @@
 import React from 'react'
+import RemarkParser from "../../common/RemarkParser";
 
 export default ({remark}) =>
-    <div>{remark}</div>
+    <div>{RemarkParser.parse(remark)}</div>
 
