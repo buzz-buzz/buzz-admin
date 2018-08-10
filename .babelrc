@@ -1,2 +1,12 @@
 {
+  "env": {
+    "test": {
+      "presets": [
+        [
+          "env"
+        ],
+        "react"
+      ]
+    }
+  }
 }

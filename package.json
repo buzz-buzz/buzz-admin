@@ -6,7 +6,7 @@
   "scripts": {
     "start": "concurrently \"npm run server\" \"npm run build-dev\"",
     "server": "cross-env BASIC_NAME=buzz BASIC_PASS=buzz nodemon app.js",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
     "build": "cross-env NODE_ENV=production webpack -p --color --progress",
     "build-dev": "cross-env NODE_ENV=development webpack --color --watch",
     "dev-server": "webpack-dev-server --port 3300 --hot --inline"
@@ -71,14 +71,19 @@
     "webpack": "^3.10.0"
   },
   "devDependencies": {
+    "babel-core": "^6.26.3",
+    "babel-jest": "^23.4.2",
     "babel-plugin-transform-class-properties": "^6.24.1",
     "babel-plugin-transform-object-rest-spread": "^7.0.0-beta.3",
+    "babel-preset-env": "^1.7.0",
     "babel-preset-stage-2": "^6.24.1",
     "concurrently": "^3.5.1",
     "cross-env": "^5.1.4",
+    "jest": "^23.4.2",
     "koa-send": "^4.1.3",
     "nodemon": "^1.17.3",
     "paths": "^0.1.1",
+    "regenerator-runtime": "^0.12.1",
     "webpack-cli": "^2.0.12",
     "webpack-dev-server": "^2.9.7"
   },
