@@ -5,8 +5,7 @@ export default ({timestamp, format}) => <div>
                                 <span
                                     style={{whiteSpace: 'nowrap'}}>{moment(timestamp).format(format || 'LL')}</span><br/>
     <span
-        style={{color: 'lightgray'}}>{moment(timestamp).calendar()}</span><br/>
-    {moment(timestamp).format('dddd')}<br/>
+        style={{color: 'lightgray'}}>{moment(timestamp).calendar()}</span>，
     <span
         style={{color: 'lightgray'}}>{moment(timestamp).fromNow()}</span>
 </div>

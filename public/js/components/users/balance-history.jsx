@@ -3,6 +3,7 @@ import {Table} from "semantic-ui-react";
 import BuzzPagination from "../common/BuzzPagination";
 import TimeDisplay from '../common/time-display';
 import {Avatar} from "../../common/Avatar";
+import RemarkDisplay from "../common/RemarkDisplay";
 
 const history = ({userId, history, pagination, paginationChanged, clearData}) =>
     <Table striped>
@@ -21,14 +22,16 @@ const history = ({userId, history, pagination, paginationChanged, clearData}) =>
                     <Table.Row
                         key={r.timestamp}>
                         <Table.Cell>
-                            <TimeDisplay timestamp={r.timestamp} format="LLL"/>
+                            <TimeDisplay timestamp={r.timestamp} format="LLLL"/>
                         </Table.Cell>
                         <Table.Cell>
                             <Avatar userId={r.by}></Avatar>
                         </Table.Cell>
                         <Table.Cell>{r.event}</Table.Cell>
                         <Table.Cell>{r.amount}</Table.Cell>
-                        <Table.Cell>{r.remark}</Table.Cell>
+                        <Table.Cell>
+                            <RemarkDisplay remark={r.remark}/>
+                        </Table.Cell>
                     </Table.Row>)
             }
         </Table.Body>

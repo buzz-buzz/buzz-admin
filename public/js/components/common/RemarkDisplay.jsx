@@ -2,5 +2,5 @@ import React from 'react'
 import RemarkParser from "../../common/RemarkParser";
 
 export default ({remark}) =>
-    <div>{RemarkParser.parse(remark)}</div>
+    <div dangerouslySetInnerHTML={{__html: RemarkParser.parse(remark)}}/>
 
