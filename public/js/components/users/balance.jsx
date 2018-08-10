@@ -4,6 +4,7 @@ import ServiceProxy from "../../service-proxy";
 import ClassHourHistory from './class-hour-history'
 import CreditsHistory from './credits-history'
 import store from "../../redux/store/index";
+import ClassHourDisplay from '../common/ClassHourDisplay';
 
 const displayNameMap = {
     class_hours: '课时',
@@ -167,8 +168,16 @@ export default class Balance extends React.Component {
         return (
             <Modal open={this.props.open} closeOnEscape={true}
                    closeOnRootNodeClick={true} onClose={this.close} closeIcon>
-                <Header
-                    content={`${displayNameMap[this.props.balanceType]}明细 —— 当前可用余额：${this.state.balance}`}/>
+                <Header>
+                    {displayNameMap[this.props.balanceType]}明细 —— 当前可用余额：
+                    {this.state.balance}
+                    {
+                        this.props.balanceType === 'class_hours' &&
+                        <div style={{float: 'right', display: 'inline-block', fontSize: 'small', fontWeight: 'normal'}}>
+                            <ClassHourDisplay user={this.props.user || {}}/>
+                        </div>
+                    }
+                </Header>
                 <Modal.Content>
                     <Form error={this.state.error} loading={this.state.loading}>
                         <Message error header="出错了"
