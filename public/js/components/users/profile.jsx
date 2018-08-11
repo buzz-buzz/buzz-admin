@@ -106,7 +106,12 @@ export default class Profile extends React.Component {
         date_of_birth: this.state.date_of_birth && new Date(this.state.date_of_birth),
         display_name: this.state.display_name,
         weekly_schedule_requirements: this.state.weekly_schedule_requirements,
-        password: this.state.password
+        password: this.state.password,
+
+        wechat_openid: this.state.user.wechat_openid,
+        wechat_unionid: this.state.user.wechat_unionid,
+        wechat_data: this.state.user.wechat_data,
+        wechat_name: this.state.user.wechat_name
     }) {
         try {
             this.setState({loading: true});
@@ -190,7 +195,7 @@ export default class Profile extends React.Component {
 
             let newUser = {
                 name: '',
-                role: 'c',
+                role: MemberType.Companion,
             }
 
             let userId = await ServiceProxy.proxyTo({
@@ -225,7 +230,7 @@ export default class Profile extends React.Component {
                         href={`/classes?userIds=${this.state.user.user_id}&statuses=${ClassStatusCode.Opened}&statuses=${ClassStatusCode.Cancelled}&statuses=${ClassStatusCode.Ended}`}
                         target="_blank">查看课程历史</a>
                     </div>
-                }></Header>
+                }/>
                 <Modal.Content>
                     <object data={this.state.avatar} type="image/png" className="ui image avatar"
                             title={this.state.user.user_id} alt={this.state.user.user_id}>
@@ -331,7 +336,8 @@ export default class Profile extends React.Component {
                                             label="微信昵称" readOnly width={3}/>
                             } on="focus" header="微信详细资料" content={
                                 <WechatProfile userId={this.state.user.user_id} user={this.state.user}
-                                               profileUpdateCallback={this.props.profileUpdateCallback}/>
+                                               profileUpdateCallback={this.props.profileUpdateCallback}
+                                               wechatProfileUpdated={this.wechatProfileUpdated}/>
                             }/>
 
                             <Form.Input placeholder="Facebook 名称" name="facebookName"
@@ -353,14 +359,16 @@ export default class Profile extends React.Component {
                                     <Form.Button positive content="创建" type="button" onClick={this.createUser}/>
                             }
                             {
-                                // TODO: Only super user can see this button
-                                (!process.env.NODE_ENV || process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'qa' || window.location.host.startsWith('admin-test')) &&
+                                (this.state.user.user_id && (!process.env.NODE_ENV || process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'qa' || window.location.host.startsWith('admin-test'))) &&
                                 <Form.Button negative content="删除" type="button" onClick={this.deleteUser}/>
                             }
-                            <Form.Button color="black"
-                                         content={`切换成 ${MemberTypeChinese[this.state.theOtherRole]}`}
-                                         type="button"
-                                         onClick={this.changeRole}/>
+                            {
+                                this.state.user.user_id &&
+                                <Form.Button color="black"
+                                             content={`切换成 ${MemberTypeChinese[this.state.theOtherRole]}`}
+                                             type="button"
+                                             onClick={this.changeRole}/>
+                            }
                         </Form.Group>
                     </Form>
                 </Modal.Content>
@@ -376,5 +384,9 @@ export default class Profile extends React.Component {
         if (role === MemberType.Companion) {
             return MemberType.Student
         }
+    }
+
+    wechatProfileUpdated = (wechatProfile) => {
+        this.setState({user: wechatProfile})
     }
 }

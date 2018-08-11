@@ -169,7 +169,6 @@ export default class UserList extends React.Component {
     }
 
     async componentWillMount() {
-        let searchParams = this.state.searchParams
         this.setState({
             allTags: (await UserTags.getAllTags()).map(t => {
                 return {
@@ -191,6 +190,10 @@ export default class UserList extends React.Component {
 
     async openSelectedUserProfile() {
         if (this.props.match.params.userId) {
+            if (this.props.match.params.userId === 'undefined') {
+                return this.createNewUser()
+            }
+
             let theUsers = this.state.users.filter(s => s.user_id === Number(this.props.match.params.userId));
             if (theUsers.length) {
                 this.openProfile(theUsers[0]);

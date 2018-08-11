@@ -19,6 +19,21 @@ export default class WechatProfile extends React.Component {
     }
 
     async componentWillMount() {
+        const {user} = this.props
+        if (user.wechat_data) {
+            this.setState({
+                wechat_data: user.wechat_data,
+                wechat_name: user.wechat_name,
+                wechat_openid: user.wechat_openid,
+                wechat_unionid: user.wechat_unionid
+            })
+            return;
+        }
+
+        if (!this.props.userId) {
+            return;
+        }
+
         let res = await ServiceProxy.proxyTo({
             body: {
                 uri: `{buzzService}/api/v1/users/social-account-profile/${this.props.userId}`
@@ -32,6 +47,12 @@ export default class WechatProfile extends React.Component {
             wechat_name: res.wechat_name || '',
             wechat_openid: res.wechat_openid || '',
             wechat_unionid: res.wechat_unionid || ''
+        })
+    }
+
+    handleChange = (e, {name, value}) => {
+        this.setState({[name]: value}, () => {
+            this.props.wechatProfileUpdated(this.state)
         })
     }
 
@@ -103,6 +124,8 @@ export default class WechatProfile extends React.Component {
     }
 
     render() {
+        const props = this.props;
+        const readOnly = props.userId !== undefined
         return (
             <div>
                 <Form onSubmit={this.saveSocialAccountProfile} success={this.formStatus.success === true}
@@ -110,15 +133,16 @@ export default class WechatProfile extends React.Component {
                     <Message success={this.formStatus.success} error={!this.formStatus.success} header={this.formStatus.success ? "操作完成" : '操作失败'}
                              content={this.formStatus.message}/>
                     <Form.Group>
-                        <Form.Field control={Input} label='微信昵称' placeholder='微信昵称' value={this.state.wechat_name}
-                                    readOnly={true}/>
+                        <Form.Field control={Input} label='微信昵称' placeholder='微信昵称' value={this.state.wechat_name} name='wechat_name'
+                                    onChange={this.handleChange}
+                                    readOnly={readOnly}/>
                         <Form.Field control={Input} label='openid' placeholder='openid' value={this.state.wechat_openid}
-                                    readOnly={true}/>
+                                    readOnly={readOnly} name='wechat_openid' onChange={this.handleChange}/>
                         <Form.Field control={Input} label='unionid' placeholder='unionid'
-                                    value={this.state.wechat_unionid} readOnly={true}/>
+                                    value={this.state.wechat_unionid} readOnly={readOnly} name='wechat_unionid' onChange={this.handleChange}/>
                     </Form.Group>
-                    <Form.Field control={TextArea} label='其他' placeholder='其他' value={this.state.wechat_data}
-                                readOnly={true}/>
+                    <Form.Field control={TextArea} label='其他' placeholder='其他' value={this.state.wechat_data} name='wechat_data'
+                                readOnly={readOnly} onChange={this.handleChange}/>
 
                     <Button.Group icon>
                         <Button onClick={this.syncWithWechat} type="button">
