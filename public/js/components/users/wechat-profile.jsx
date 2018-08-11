@@ -61,32 +61,45 @@ export default class WechatProfile extends React.Component {
 
             this.props.profileUpdateCallback(p)
         } catch (ex) {
-            console.error(ex)
             this.formStatus.success = false;
-            this.formStatus.message = JSON.stringify(ex)
+            this.formStatus.message = ex.result || ex.message || ex.toString()
         } finally {
             this.forceUpdate()
         }
     }
 
     syncWithWechat = async () => {
-        let res = await ServiceProxy.proxyTo({
-            body: {
-                uri: `{buzzService}/api/v1/wechat/batch-get-users`,
-                qs: {
-                    openids: this.state.wechat_openid
+        try {
+            let res = await ServiceProxy.proxyTo({
+                body: {
+                    uri: `{buzzService}/api/v1/wechat/batch-get-users`,
+                    qs: {
+                        openids: this.state.wechat_openid
+                    }
                 }
+            })
+
+            this.wechatData = res
+
+            this.setState({
+                wechat_openid: res.openid,
+                wechat_unionid: res.unionid,
+                wechat_name: res.nickname,
+                wechat_data: JSON.stringify(res)
+            })
+
+            this.formStatus.success = true
+            this.formStatus.message = "同步微信信息成功"
+        } catch (error) {
+            this.formStatus.success = false
+            this.formStatus.message = error.result || error.message || error.toString()
+
+            if (error.result.startsWith('invalid openid hint')) {
+                this.formStatus.message += ` 该用户最初是通过扫码登录 BuzzBuzz 系统，所以其 openid 与公众号下的 openid 不同，无法主动获取用户微信基本信息，只能在下次用户自行授权时获得。`
             }
-        })
-
-        this.wechatData = res
-
-        this.setState({
-            wechat_openid: res.openid,
-            wechat_unionid: res.unionid,
-            wechat_name: res.nickname,
-            wechat_data: JSON.stringify(res)
-        })
+        } finally {
+            this.forceUpdate()
+        }
     }
 
     render() {
@@ -94,8 +107,8 @@ export default class WechatProfile extends React.Component {
             <div>
                 <Form onSubmit={this.saveSocialAccountProfile} success={this.formStatus.success === true}
                       error={this.formStatus.success === false}>
-                    <Message success={this.formStatus.success} error={!this.formStatus.success} header="保存结束"
-                             content={this.formStatus.message}></Message>
+                    <Message success={this.formStatus.success} error={!this.formStatus.success} header={this.formStatus.success ? "操作完成" : '操作失败'}
+                             content={this.formStatus.message}/>
                     <Form.Group>
                         <Form.Field control={Input} label='微信昵称' placeholder='微信昵称' value={this.state.wechat_name}
                                     readOnly={true}/>
