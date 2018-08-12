@@ -1,5 +1,4 @@
 import * as React from "react";
-import Header from "./header";
 import cdn from "./cdn";
 import {Container} from "semantic-ui-react";
 
@@ -22,7 +21,6 @@ export default class Layout extends React.Component {
                 <link rel="stylesheet" href="/css/style.css"/>
             </head>
             <body>
-            <Header title={this.props.title} path={this.props.path} user={this.props.user}/>
             <Container style={{marginTop: '7em'}}>
                 {this.props.children}
             </Container>

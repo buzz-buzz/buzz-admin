@@ -1,6 +1,6 @@
 // var Content = require('../public/js/components/content');
 // var escapeHtml = require('escape-html');
-// var ReactDOMServer = require('react-dom/server');
+var ReactDOMServer = require('react-dom/server');
 
 import Layout from "./layout";
 import * as React from "react";

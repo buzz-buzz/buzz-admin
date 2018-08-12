@@ -11,15 +11,19 @@ export class Avatar extends React.Component {
         }
     }
 
-    async componentWillMount() {
-        if (this.props.userId) {
-            const profile = await CachableProxy.get({
-                body: {
-                    uri: `{buzzService}/api/v1/users/${this.props.userId}`
-                }
-            })
+    async componentWillReceiveProps(nextProps) {
+        if (nextProps.profile) {
+            return this.setState({profile: nextProps.profile})
+        }
 
-            this.setState({profile})
+        if (nextProps.userId) {
+            this.setState({
+                profile: await CachableProxy.get({
+                    body: {
+                        uri: `{buzzService}/api/v1/users/${this.props.userId}`
+                    }
+                })
+            })
         }
     }
 
@@ -33,7 +37,7 @@ export class Avatar extends React.Component {
                        src={`/images/empty_avatar.jpg`}
                 />
             </object>
-            <span style={{color: 'black'}}>{this.state.profile.name}</span>
+            <span>{this.state.profile.name}</span>
                 &emsp;
                 <span style={{color: 'green'}}>{this.state.profile.wechat_name}</span>
                 &emsp;

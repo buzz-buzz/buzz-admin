@@ -1,13 +1,27 @@
 import * as React from "react";
-import {Container, Image, Menu} from "semantic-ui-react";
+import {Container, Dropdown, Image, Menu} from "semantic-ui-react";
+import CurrentUser from "./common/CurrentUser";
+import {Avatar} from "./common/Avatar";
 
 export default class Header extends React.Component {
     constructor(props) {
         super(props);
+
+        this.state = {user: {profile: {}}};
+    }
+
+    async componentWillMount() {
+        this.setState({
+            user: await CurrentUser.getProfile()
+        }, () => {
+            console.log('user = ', this.state.user)
+        })
     }
 
     render() {
-        const activeItem = this.props.path;
+        const activeItem = window.location.pathname;
+        const {user} = this.state;
+
         return (
             <Menu fixed="top" inverted>
                 <Container>
@@ -25,25 +39,12 @@ export default class Header extends React.Component {
                     <Menu.Item name="faq-list" active={activeItem === '/faq-list'} href="/admin-neue/faq-list"
                                target="_blank">常见问题管理</Menu.Item>
                     <Menu.Menu position="right">
-                        <Menu.Item href={`/users/${this.props.user.profile.user_id}`}>
-                            <object data={this.props.user.profile.avatar} type="image/png" className="ui image avatar"
-                                    title={this.props.user.profile.name} alt={this.props.user.profile.name}>
-                                <Image avatar src="/images/empty_avatar.jpg" title={this.props.user.profile.name}
-                                       alt={this.props.user.profile.name}
-                                       label={this.props.user.isSuper ? {
-                                           as: 'a',
-                                           color: 'red',
-                                           corner: 'right',
-                                           icon: 'heart'
-                                       } : {}}
-                                />
-                            </object>
-                        </Menu.Item>
-                        <Menu.Item
-                            name="退出登录"
-                            active={activeItem === '/sign-out'}
-                            href="/sign-out"
-                        />
+                        <Dropdown item trigger={<Avatar userId={user.userId} profile={user.profile} icon={null}/>}>
+                            <Dropdown.Menu>
+                                <Dropdown.Item as='a' href={`/users/${user.userId}`}>账号</Dropdown.Item>
+                                <Dropdown.Item as='a' href='/sign-out'>退出登录</Dropdown.Item>
+                            </Dropdown.Menu>
+                        </Dropdown>
                     </Menu.Menu>
                 </Container>
             </Menu>
