@@ -802,6 +802,7 @@ export default class UserList extends React.Component {
     renderStudentStates = () => {
         return <Menu fluid widths={Object.keys(StudentLifeCycles).length}>
             {Object.keys(StudentLifeCycles).map(state => <Menu.Item name={StudentLifeCycles[state]} key={state}
+                                                                    active={this.state.searchParams.state === state.toLowerCase()}
                                                                     onClick={() => this.filterUsersByState(state)}/>)}
         </Menu>
     };
