@@ -33,6 +33,7 @@ import {Avatar} from "../../common/Avatar";
 import {Grades} from '../../common/Grades';
 import DatePicker from "react-datepicker/es/index";
 import ClassHourDisplay from '../common/ClassHourDisplay';
+import {StudentLifeCycles} from "../../common/LifeCycles";
 
 moment.locale('zh-CN');
 BigCalendar.setLocalizer(BigCalendar.momentLocalizer(moment))
@@ -264,6 +265,10 @@ export default class UserList extends React.Component {
         return (
             <Container>
                 {this.renderSearchForm()}
+                {
+                    this.props['user-type'] === MemberType.Student &&
+                    this.renderStudentStates()
+                }
 
                 <Segment basic loading={this.state.loading}>
                     {this.renderListTable()}
@@ -792,5 +797,23 @@ export default class UserList extends React.Component {
         })
 
         return result.join('\n')
+    }
+
+    renderStudentStates = () => {
+        return <Menu fluid widths={Object.keys(StudentLifeCycles).length}>
+            {Object.keys(StudentLifeCycles).map(state => <Menu.Item name={StudentLifeCycles[state]} key={state}
+                                                                    onClick={() => this.filterUsersByState(state)}/>)}
+        </Menu>
+    };
+
+    filterUsersByState = (state) => {
+        let {searchParams} = this.state
+        searchParams.state = state.toLowerCase()
+
+        this.setState({
+            searchParams: searchParams
+        }, async () => {
+            await this.searchUsers()
+        })
     }
 }
