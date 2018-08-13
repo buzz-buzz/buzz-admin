@@ -60,6 +60,12 @@ export default class ClassList extends React.Component {
         })
     };
 
+    fetchAllUsers = async () => {
+        if (!this.state.allUsersLoaded) {
+            await this.getAllUsers()
+        }
+    };
+
     constructor() {
         super();
 
@@ -207,12 +213,12 @@ export default class ClassList extends React.Component {
     }
 
     async getAllUsers() {
-        this.setState({loading: true})
+        this.setState({fetchingAllUsers: true})
         let result = await ServiceProxy.proxyTo({
             body: {uri: `{buzzService}/api/v1/users`}
         });
         this.setState({
-            loading: false, allUsers: result.map(u => ({
+            fetchingAllUsers: false, allUsers: result.map(u => ({
                 key: u.user_id,
                 value: u.user_id,
                 text: u.name || u.display_name || u.wechat_name,
@@ -224,7 +230,8 @@ export default class ClassList extends React.Component {
                 searchParams: {
                     ...this.state.searchParams,
                     user_ids: new URLSearchParams(window.location.search).getAll('userIds').map(id => Number(id))
-                }
+                },
+                allUsersLoaded: true
             })
         });
     }
@@ -233,8 +240,6 @@ export default class ClassList extends React.Component {
         await this.searchClasses();
         this.setState({
             currentUser: await CurrentUser.getProfile()
-        }, async () => {
-            await this.getAllUsers();
         })
     }
 
@@ -491,8 +496,11 @@ export default class ClassList extends React.Component {
                     <Form.Field control={Dropdown} label="参与者" name="users"
                                 value={this.state.searchParams.user_ids}
                                 onChange={this.handleUsersChange}
+                                onClick={this.fetchAllUsers}
                                 multiple search selection
-                                options={this.state.allUsers}/>
+                                options={this.state.allUsers}
+                                loading={this.state.fetchingAllUsers}
+                    />
                     <Form.Field control={Dropdown} label="排序方式" name="orderby"
                                 value={this.state.searchParams.orderby}
                                 onChange={this.handleChange}
