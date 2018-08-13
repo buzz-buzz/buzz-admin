@@ -312,7 +312,10 @@ export default class UserList extends React.Component {
                             <Table.Cell onClick={() => this.openProfile(user)}>
                                 <p>{user.user_id}</p>
                                 <p style={{color: 'gainsboro'}}>
-                                    <Flag name={user.country}/>
+                                    {
+                                        user.country &&
+                                        <Flag name={user.country.toLowerCase()}/>
+                                    }
                                     {user.country} {user.city}
                                 </p>
                             </Table.Cell>
