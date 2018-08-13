@@ -809,7 +809,11 @@ export default class UserList extends React.Component {
 
     filterUsersByState = (state) => {
         let {searchParams} = this.state
-        searchParams.state = state.toLowerCase()
+        if (searchParams.state === state.toLowerCase()) {
+            searchParams.state = ''
+        } else {
+            searchParams.state = state.toLowerCase()
+        }
 
         this.setState({
             searchParams: searchParams
