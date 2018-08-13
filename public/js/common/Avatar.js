@@ -11,20 +11,31 @@ export class Avatar extends React.Component {
         }
     }
 
+    async componentWillMount() {
+        if (this.props.userId) {
+            this.setState({userId: this.props.userId})
+            await this.loadProfile()
+        }
+    }
+
     async componentWillReceiveProps(nextProps) {
         if (nextProps.profile) {
             return this.setState({profile: nextProps.profile})
         }
 
-        if (nextProps.userId) {
-            this.setState({
-                profile: await CachableProxy.get({
-                    body: {
-                        uri: `{buzzService}/api/v1/users/${this.props.userId}`
-                    }
-                })
-            })
+        if (nextProps.userId && nextProps.userId !== this.state.userId) {
+            await this.loadProfile();
         }
+    }
+
+    async loadProfile() {
+        this.setState({
+            profile: await CachableProxy.get({
+                body: {
+                    uri: `{buzzService}/api/v1/users/${this.props.userId}`
+                }
+            })
+        })
     }
 
     render() {
