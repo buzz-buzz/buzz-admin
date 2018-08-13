@@ -42,7 +42,7 @@ function nearestToper(x, y) {
 }
 
 export default class ClassList extends React.Component {
-    handleStatusChange = ({value}) => {
+    handleStatusChange = (event, {value}) => {
         let {searchParams} = this.state;
         searchParams.statuses = value;
 
@@ -51,14 +51,14 @@ export default class ClassList extends React.Component {
         })
     };
 
-    handleUsersChange = ({value}) => {
+    handleUsersChange = (event, {value}) => {
         this.setState({
             searchParams: {
                 ...this.state.searchParams,
                 user_ids: value
             }
         })
-    }
+    };
 
     constructor() {
         super();
