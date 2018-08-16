@@ -21,6 +21,7 @@ import CurrentUser from "../../common/CurrentUser";
 import moment from 'moment';
 import DatePicker from 'react-datepicker';
 import TimeDisplay from '../common/time-display';
+import ClassRoomDisplay from "./ClassRoomDisplay";
 
 function nearestToper(x, y) {
     let now = new Date();
@@ -389,7 +390,7 @@ export default class ClassList extends React.Component {
                                 whiteSpace: 'normal',
                                 wordWrap: 'break-word'
                             }}>
-                                {c.room_url}
+                                <ClassRoomDisplay roomUrl={c.room_url}/>
                             </Table.Cell>
                             <Table.Cell>
                                 {
