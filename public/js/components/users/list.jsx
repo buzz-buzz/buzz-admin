@@ -420,10 +420,13 @@ class UserList extends React.Component {
                             <Table.Cell onClick={() => {
                             }}>
                                 <LifeCycle user={user} changeState={(newState) => {
-                                    this.setState({
-                                        users: [...this.state.users.slice(0, i), {...user, state: newState}, ...this.state.users.slice(i + 1)],
-                                    })
-                                    this.props.changeUserState(user, newState)
+                                    const remark = window.prompt('请输入原因')
+                                    if (remark !== null) {
+                                        this.setState({
+                                            users: [...this.state.users.slice(0, i), {...user, state: newState}, ...this.state.users.slice(i + 1)],
+                                        })
+                                        this.props.changeUserState(user, newState)
+                                    }
                                 }}/>
                             </Table.Cell>
                             <Table.Cell>
