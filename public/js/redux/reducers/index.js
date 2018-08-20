@@ -1,5 +1,6 @@
 import {combineReducers} from 'redux'
-import {CLEAR_CLASS_HOUR_HISTORY, CLEAR_CREDITS_HISTORY, LOAD_CLASS, LOAD_CLASS_HOUR_HISTORY, LOAD_CREDITS_HISTORY, LOAD_FEEDBACK} from '../actions'
+import {CHANGE_USER_STATE, CLEAR_CLASS_HOUR_HISTORY, CLEAR_CREDITS_HISTORY, LOAD_CLASS, LOAD_CLASS_HOUR_HISTORY, LOAD_CREDITS_HISTORY, LOAD_FEEDBACK} from '../actions'
+import ServiceProxy from "../../service-proxy";
 
 function classReducer(state = {}, action) {
     switch (action.type) {
@@ -58,9 +59,31 @@ function creditsHistory(state = {}, action) {
     }
 }
 
+async function changeUserState(state = {}, action) {
+    switch (action.type) {
+        case CHANGE_USER_STATE:
+            const result = await ServiceProxy.proxyTo({
+                body: {
+                    uri: `{buzzService}/api/v1/user-states/${action.user.user_id}`,
+                    json: {
+                        newState: action.newState,
+                    },
+                    method: 'PUT'
+                }
+            })
+            return {
+                ...state,
+                [action.user.user_id]: {...action.user, state: result.state}
+            }
+        default:
+            return state
+    }
+}
+
 export default combineReducers({
     classes: classReducer,
     feedbacks: feedbackReducer,
     classHourHistory: classHourHistory,
     creditsHistory: creditsHistory,
+    users: changeUserState
 })

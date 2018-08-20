@@ -35,6 +35,9 @@ import DatePicker from "react-datepicker/es/index";
 import ClassHourDisplay from '../common/ClassHourDisplay';
 import {StudentLifeCycles, StudentLifeCyclesMapping} from "../../common/LifeCycles";
 import ErrorHandler from "../../common/ErrorHandler";
+import LifeCycle from "../../common/LifeCycle";
+import {connect} from 'react-redux';
+import {changeUserState} from "../../redux/actions";
 
 moment.locale('zh-CN');
 BigCalendar.setLocalizer(BigCalendar.momentLocalizer(moment))
@@ -70,7 +73,7 @@ async function attachEvents(users) {
     }
 }
 
-export default class UserList extends React.Component {
+class UserList extends React.Component {
     handleSelectedTagsChange = (e, {value}) => {
         let {searchParams} = this.state;
         searchParams.tags = value;
@@ -406,9 +409,6 @@ export default class UserList extends React.Component {
                                     on='click'
                                 />
                             }
-                            {/* <Table.Cell onClick={() => this.openProfile(user)}>
-                                {user.weekly_schedule_requirements || '1'}
-                            </Table.Cell> */}
                             <Table.Cell
                                 onClick={() => this.openSchedulePreferenceModal(user)}>
                                 <BookingTable events={user.events}
@@ -419,7 +419,12 @@ export default class UserList extends React.Component {
                             </Table.Cell>
                             <Table.Cell onClick={() => {
                             }}>
-                                <span>{StudentLifeCyclesMapping[user.state]}</span>
+                                <LifeCycle user={user} changeState={(newState) => {
+                                    this.setState({
+                                        users: [...this.state.users.slice(0, i), {...user, state: newState}, ...this.state.users.slice(i + 1)],
+                                    })
+                                    this.props.changeUserState(user, newState)
+                                }}/>
                             </Table.Cell>
                             <Table.Cell>
                                 <a href={`/classes/?userIds=${user.user_id}&statuses=${ClassStatusCode.Opened}&statuses=${ClassStatusCode.Cancelled}&statuses=${ClassStatusCode.Ended}&start_time=1990-1-1`}
@@ -832,3 +837,7 @@ export default class UserList extends React.Component {
         })
     }
 }
+
+export default connect(null, dispatch => ({
+    changeUserState: (user, newState) => dispatch(changeUserState(user, newState))
+}))(UserList)

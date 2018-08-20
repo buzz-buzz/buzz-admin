@@ -4,6 +4,7 @@ export const LOAD_CLASS_HOUR_HISTORY = 'LOAD_CLASS_HOUR_HISTORY';
 export const LOAD_CREDITS_HISTORY = 'LOAD_CREDITS_HISTORY';
 export const CLEAR_CREDITS_HISTORY = 'CLEAR_CREDITS_HISTORY';
 export const CLEAR_CLASS_HOUR_HISTORY = 'CLEAR_CLASS_HOUR_HISTORY';
+export const CHANGE_USER_STATE = 'CHANGE_USER_STATE';
 
 export function loadClass(classInfo) {
     return {
@@ -50,5 +51,13 @@ export function clearCreditsHistory(userId, pagination) {
         type: CLEAR_CREDITS_HISTORY,
         userId: userId,
         pagination: pagination
+    }
+}
+
+export function changeUserState(user, newState) {
+    return {
+        type: CHANGE_USER_STATE,
+        user: user,
+        newState: newState
     }
 }
