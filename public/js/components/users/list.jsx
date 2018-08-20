@@ -33,7 +33,8 @@ import {Avatar} from "../../common/Avatar";
 import {Grades} from '../../common/Grades';
 import DatePicker from "react-datepicker/es/index";
 import ClassHourDisplay from '../common/ClassHourDisplay';
-import {StudentLifeCycles} from "../../common/LifeCycles";
+import {StudentLifeCycles, StudentLifeCyclesMapping} from "../../common/LifeCycles";
+import ErrorHandler from "../../common/ErrorHandler";
 
 moment.locale('zh-CN');
 BigCalendar.setLocalizer(BigCalendar.momentLocalizer(moment))
@@ -212,8 +213,8 @@ export default class UserList extends React.Component {
 
     async searchUsers() {
         this.setState({loading: true});
-        let paginationData = await
-            ServiceProxy.proxyTo({
+        try {
+            let paginationData = await            ServiceProxy.proxyTo({
                 body: {
                     uri: `{buzzService}/api/v1/users`,
                     useQuerystring: true,
@@ -226,21 +227,25 @@ export default class UserList extends React.Component {
                 }
             });
 
-        let users = paginationData.data;
+            let users = paginationData.data;
 
-        this.setState({
-            loading: false,
-            users: await attachEvents.call(this, users),
-            pagination: {
-                current_page: paginationData.current_page,
-                from: paginationData.from,
-                last_page: paginationData.last_page,
-                offset: paginationData.offset,
-                per_page: paginationData.per_page,
-                to: paginationData.to,
-                total: paginationData.total
-            }
-        });
+            this.setState({
+                users: await attachEvents.call(this, users),
+                pagination: {
+                    current_page: paginationData.current_page,
+                    from: paginationData.from,
+                    last_page: paginationData.last_page,
+                    offset: paginationData.offset,
+                    per_page: paginationData.per_page,
+                    to: paginationData.to,
+                    total: paginationData.total
+                }
+            });
+        } catch (ex) {
+            ErrorHandler.handle(ex)
+        } finally {
+            this.setState({loading: false})
+        }
     }
 
     handleTextChange(event, {value, name}) {
@@ -412,6 +417,10 @@ export default class UserList extends React.Component {
                             <Table.Cell onClick={() => this.openProfile(user)}>
                                 <span>{user.tags}</span>
                             </Table.Cell>
+                            <Table.Cell onClick={() => {
+                            }}>
+                                <span>{StudentLifeCyclesMapping[user.state]}</span>
+                            </Table.Cell>
                             <Table.Cell>
                                 <a href={`/classes/?userIds=${user.user_id}&statuses=${ClassStatusCode.Opened}&statuses=${ClassStatusCode.Cancelled}&statuses=${ClassStatusCode.Ended}&start_time=1990-1-1`}
                                    target="_blank">课程历史</a>
@@ -575,6 +584,7 @@ export default class UserList extends React.Component {
                 }
                 <Table.HeaderCell>预约/排课</Table.HeaderCell>
                 <Table.HeaderCell>标签</Table.HeaderCell>
+                <Table.HeaderCell>状态</Table.HeaderCell>
                 <Table.HeaderCell style={{cursor: 'pointer'}}>
                     <a href={this.state.downloadLink}
                        download={this.state.filename} onClick={this.export}
