@@ -38,6 +38,7 @@ import ErrorHandler from "../../common/ErrorHandler";
 import LifeCycle from "../../common/LifeCycle";
 import {connect} from 'react-redux';
 import {changeUserState} from "../../redux/actions";
+import UserFollowup from "./user-follow-up";
 
 moment.locale('zh-CN');
 BigCalendar.setLocalizer(BigCalendar.momentLocalizer(moment))
@@ -430,8 +431,7 @@ class UserList extends React.Component {
                                 }}/>
                             </Table.Cell>
                             <Table.Cell>
-                                <a href={`/classes/?userIds=${user.user_id}&statuses=${ClassStatusCode.Opened}&statuses=${ClassStatusCode.Cancelled}&statuses=${ClassStatusCode.Ended}&start_time=1990-1-1`}
-                                   target="_blank">课程历史</a>
+                                <UserFollowup userId={user.user_id}/>
                             </Table.Cell>
                         </Table.Row>
                     )
@@ -447,7 +447,7 @@ class UserList extends React.Component {
                                             await this.searchUsers();
                                         });
                                     }}
-                                    colSpan={this.props['user-type'] === MemberType.Student ? 10 : (this.props['user-type'] === MemberType.Companion ? 10 : 9)}/>
+                                    colSpan={this.props['user-type'] === MemberType.Student ? 11 : (this.props['user-type'] === MemberType.Companion ? 11 : 10)}/>
                 </Table.Row>
             </Table.Footer>
         </Table>;
@@ -570,6 +570,16 @@ class UserList extends React.Component {
     renderTableHeader() {
         return <Table.Header>
             <Table.Row>
+                <Table.HeaderCell colSpan={11}>
+                    <a href={this.state.downloadLink} className="ui button right floated"
+                       download={this.state.filename} onClick={this.export}
+                       style={{cursor: 'pointer'}}>
+                        <Icon name="download"/>
+                        导出
+                    </a>
+                </Table.HeaderCell>
+            </Table.Row>
+            <Table.Row>
                 <Table.HeaderCell>用户编号</Table.HeaderCell>
                 <Table.HeaderCell>头像-昵称</Table.HeaderCell>
                 {
@@ -593,10 +603,8 @@ class UserList extends React.Component {
                 <Table.HeaderCell>预约/排课</Table.HeaderCell>
                 <Table.HeaderCell>标签</Table.HeaderCell>
                 <Table.HeaderCell>状态</Table.HeaderCell>
-                <Table.HeaderCell style={{cursor: 'pointer'}}>
-                    <a href={this.state.downloadLink}
-                       download={this.state.filename} onClick={this.export}
-                       style={{cursor: 'pointer'}}>导出</a>
+                <Table.HeaderCell>
+                    跟进情况
                 </Table.HeaderCell>
             </Table.Row>
         </Table.Header>
