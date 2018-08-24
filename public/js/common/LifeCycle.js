@@ -15,6 +15,6 @@ export default class LifeCycle extends React.Component {
             text: StudentLifeCyclesMapping[state],
             value: state
         }))
-        return <Dropdown name="state" trigger={<span>{StudentLifeCyclesMapping[user.state]}</span>} options={options} value={user.state} onChange={this.handleChange}/>
+        return <Dropdown name="state" trigger={<span>{StudentLifeCyclesMapping[user.state]}</span>} options={options} value={user.state} onChange={this.handleChange} on={['hover']}/>
     }
 }
