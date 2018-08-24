@@ -12,7 +12,7 @@ export default class Header extends React.Component {
 
     async componentWillMount() {
         this.setState({
-            user: await CurrentUser.getProfile()
+            user: await CurrentUser.getInstance()
         }, () => {
             console.log('user = ', this.state.user)
         })

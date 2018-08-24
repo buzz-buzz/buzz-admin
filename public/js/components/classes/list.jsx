@@ -240,7 +240,7 @@ export default class ClassList extends React.Component {
     async componentWillMount() {
         await this.searchClasses();
         this.setState({
-            currentUser: await CurrentUser.getProfile()
+            currentUser: await CurrentUser.getInstance()
         })
     }
 
