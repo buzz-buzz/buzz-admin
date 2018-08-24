@@ -38,6 +38,10 @@ export class Avatar extends React.Component {
         })
     }
 
+    componentWillUnmount() {
+        CachableProxy.cancelAll()
+    }
+
     render() {
         const props = this.props
 

@@ -66,7 +66,7 @@ export default class UserFollowup extends React.Component {
 
     render() {
         return (<div>
-                <Popup trigger={<div dangerouslySetInnerHTML={{__html: (this.state.rows || []).map(r => r.remark).join('<br />')}}/>}>
+                <Popup hoverable trigger={<div dangerouslySetInnerHTML={{__html: (this.state.rows || []).map(r => r.remark).join('<br />')}}/>}>
                     <Table>
                         <Table.Header>
                             <Table.Row>
@@ -86,11 +86,13 @@ export default class UserFollowup extends React.Component {
                         </Table.Body>
                     </Table>
                 </Popup>
-                <Form onSubmit={this.saveFollowup} loading={this.state.loading}>
-                    <TextArea autoHeight placeholder="有什么要备注的吗？" value={this.state.followup} onChange={this.handleChange} name="followup" rows={1}/>
-                    <div>&nbsp;</div>
-                    <Button className="" color="yellow">添加跟进记录</Button>
-                </Form>
+                <Popup hoverable trigger={<Button className="" color="yellow">添加跟进记录</Button>}>
+                    <Form onSubmit={this.saveFollowup} loading={this.state.loading}>
+                        <TextArea autoHeight placeholder="有什么要备注的吗？" value={this.state.followup} onChange={this.handleChange} name="followup" rows={1}/>
+                        <div>&nbsp;</div>
+                        <Button className="" color="yellow">保存</Button>
+                    </Form>
+                </Popup>
             </div>
         )
     }
