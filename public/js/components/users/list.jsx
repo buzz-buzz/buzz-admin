@@ -28,7 +28,6 @@ import {MemberType, MemberTypeChinese} from "../../common/MemberType";
 import history from '../common/history';
 import BuzzPagination, {BuzzPaginationData} from "../common/BuzzPagination";
 import UserTags from "./user-tags";
-import {ClassStatusCode} from "../../common/ClassStatus";
 import {Avatar} from "../../common/Avatar";
 import {Grades} from '../../common/Grades';
 import DatePicker from "react-datepicker/es/index";
@@ -39,6 +38,7 @@ import LifeCycle from "../../common/LifeCycle";
 import {connect} from 'react-redux';
 import {changeUserState} from "../../redux/actions";
 import UserFollowup from "./user-follow-up";
+import LifeCycleChangeModal from "./life-cycle-change-modal";
 
 moment.locale('zh-CN');
 BigCalendar.setLocalizer(BigCalendar.momentLocalizer(moment))
@@ -115,7 +115,8 @@ class UserList extends React.Component {
             allTags: [],
             pagination: BuzzPaginationData,
             loading: false,
-            users: []
+            users: [],
+            currentLifeCycleChange: {},
         };
 
         this.searchUsers = this.searchUsers.bind(this);
@@ -309,6 +310,18 @@ class UserList extends React.Component {
                     open={this.state.schedulePreferenceModalOpen}
                     user={this.state.currentUser}
                     onCloseCallback={this.closeSchedulePreferenceModal}/>
+                <LifeCycleChangeModal open={this.state.showLifecycleModal} onClose={() => this.setState({showLifecycleModal: false})} changeUserState={(user, newState) => {
+                    this.props.changeUserState(user, newState);
+                    let index = -1
+                    for (let i = 0; i < this.state.users.length; i++) {
+                        if (this.state.users[i].user_id === user.user_id) {
+                            index = i;
+                        }
+                    }
+                    this.setState({
+                        users: [...this.state.users.slice(0, index), {...user, state: newState}, ...this.state.users.slice(index + 1)]
+                    })
+                }} user={this.state.currentLifeCycleChange.user} newState={this.state.currentLifeCycleChange.newState}/>
             </Container>
         )
     }
@@ -421,12 +434,17 @@ class UserList extends React.Component {
                             <Table.Cell onClick={() => {
                             }}>
                                 <LifeCycle user={user} changeState={(newState) => {
-                                    const remark = window.prompt('请输入原因')
-                                    if (remark !== null) {
-                                        this.setState({
-                                            users: [...this.state.users.slice(0, i), {...user, state: newState}, ...this.state.users.slice(i + 1)],
-                                        })
-                                        this.props.changeUserState(user, newState)
+                                    if (newState === 'demo') {
+                                        this.setState({showLifecycleModal: true, currentLifeCycleChange: {newState: newState, user: user}});
+                                    } else {
+                                        const remark = window.prompt('请输入原因');
+                                        if (remark !== null) {
+                                            this.setState({
+                                                users: [...this.state.users.slice(0, i), {...user, state: newState}, ...this.state.users.slice(i + 1)],
+                                            });
+
+                                            this.props.changeUserState(user, newState)
+                                        }
                                     }
                                 }}/>
                             </Table.Cell>

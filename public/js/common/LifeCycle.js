@@ -1,11 +1,13 @@
 import React from 'react'
-import {Dropdown, Popup} from "semantic-ui-react";
+import {Dropdown} from "semantic-ui-react";
 import {StudentLifeCyclesMapping} from "./LifeCycles";
 
 export default class LifeCycle extends React.Component {
     handleChange = (event, data) => {
-        this.props.changeState(data.value)
-    }
+        if (this.props.user.state !== data.value) {
+            this.props.changeState(data.value)
+        }
+    };
 
     render() {
         const {user} = this.props
