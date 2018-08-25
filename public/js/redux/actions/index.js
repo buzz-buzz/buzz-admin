@@ -54,10 +54,11 @@ export function clearCreditsHistory(userId, pagination) {
     }
 }
 
-export function changeUserState(user, newState) {
+export function changeUserState(user, newState, remark) {
     return {
         type: CHANGE_USER_STATE,
         user: user,
-        newState: newState
+        newState: newState,
+        remark
     }
 }

@@ -32,7 +32,7 @@ import {Avatar} from "../../common/Avatar";
 import {Grades} from '../../common/Grades';
 import DatePicker from "react-datepicker/es/index";
 import ClassHourDisplay from '../common/ClassHourDisplay';
-import {StudentLifeCycles, StudentLifeCyclesMapping} from "../../common/LifeCycles";
+import {StudentLifeCycles} from "../../common/LifeCycles";
 import ErrorHandler from "../../common/ErrorHandler";
 import LifeCycle from "../../common/LifeCycle";
 import {connect} from 'react-redux';
@@ -443,7 +443,7 @@ class UserList extends React.Component {
                                                 users: [...this.state.users.slice(0, i), {...user, state: newState}, ...this.state.users.slice(i + 1)],
                                             });
 
-                                            this.props.changeUserState(user, newState)
+                                            this.props.changeUserState(user, newState, remark)
                                         }
                                     }
                                 }}/>
@@ -868,5 +868,5 @@ class UserList extends React.Component {
 }
 
 export default connect(null, dispatch => ({
-    changeUserState: (user, newState) => dispatch(changeUserState(user, newState))
+    changeUserState: (user, newState, remark) => dispatch(changeUserState(user, newState, remark))
 }))(UserList)

@@ -67,6 +67,7 @@ async function changeUserState(state = {}, action) {
                     uri: `{buzzService}/api/v1/user-states/${action.user.user_id}`,
                     json: {
                         newState: action.newState,
+                        remark: action.remark
                     },
                     method: 'PUT'
                 }
