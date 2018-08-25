@@ -10,13 +10,15 @@ export default class LifeCycleChangeModal extends React.Component {
     state = {
         followup: '',
         class_hours: null,
-        grade: null
-    }
+        grade: null,
+        demo_time: null,
+        training_time: null
+    };
 
     handleChange = (event, {name, value}) => this.setState({[name]: value})
 
     render() {
-        const {user, newState} = this.props
+        const {user, newState} = this.props;
 
         let classHours = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map(h => ({key: h, value: h, text: `${h} 课时`}));
 
@@ -34,20 +36,20 @@ export default class LifeCycleChangeModal extends React.Component {
                         <Form.Field>
                             <label>入门时间</label>
                             <DatePicker showTimeSelect
-                                        selected={null}
-                                        name="start_time" isClearable={true}
+                                        selected={this.state.training_time}
+                                        name="training_time" isClearable={true}
                                         dateFormat={'YYYY-MM-DD HH:mm'}
                                         placeholderText={"约定入门时间"}
-                                        onChange={date => this.handleDateChange('start_time', date)}/>
+                                        onChange={date => this.handleChange(null, {name: 'training_time', value: date})}/>
                         </Form.Field>
                         <Form.Field>
                             <label>体验时间</label>
                             <DatePicker showTimeSelect
-                                        selected={null}
-                                        name="start_time" isClearable={true}
+                                        selected={this.state.demo_time}
+                                        name="demo_time" isClearable={true}
                                         dateFormat={'YYYY-MM-DD HH:mm'}
                                         placeholderText={"预定体验时间"}
-                                        onChange={date => this.handleDateChange('start_time', date)}/>
+                                        onChange={date => this.handleChange(null, {name: 'demo_time', value: date})}/>
                         </Form.Field>
                     </Form.Group>
                     <Form.Group widths="equal">
@@ -60,7 +62,7 @@ export default class LifeCycleChangeModal extends React.Component {
                     <Icon name="remove"/>
                     取消
                 </Button>
-                <Button color="green" disabled={!this.state.followup} onClick={async () => {
+                <Button color="green" disabled={!this.state.followup || !this.state.demo_time || !this.state.training_time} onClick={async () => {
                     try {
                         await ServiceProxy.proxyTo({
                             body: {
@@ -68,16 +70,26 @@ export default class LifeCycleChangeModal extends React.Component {
                                 json: {grade: this.state.grade},
                                 method: 'put'
                             },
-                        })
+                        });
                         await ServiceProxy.proxyTo({
                             body: {
                                 uri: `{buzzService}/api/v1/user-balance/${user.user_id}`,
                                 json: {class_hours: this.state.class_hours, remark: `在处理用户流程到Demo状态时，充值课时`},
                                 method: 'put'
                             },
-                        })
-                        user.grade = this.state.grade
-                        user.class_hours += this.state.class_hours
+                        });
+                        await ServiceProxy.proxyTo({
+                            body: {
+                                uri: `{buzzService}/api/v1/user-demo/${user.user_id}`,
+                                json: {
+                                    training_time: this.state.training_time,
+                                    demo_time: this.state.demo_time
+                                },
+                                method: 'post'
+                            }
+                        });
+                        user.grade = this.state.grade;
+                        user.class_hours += this.state.class_hours;
                         this.props.changeUserState(user, newState, this.state.followup);
                         this.props.onClose()
                     } catch (ex) {
