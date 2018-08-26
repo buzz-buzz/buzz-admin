@@ -32,13 +32,15 @@ import {Avatar} from "../../common/Avatar";
 import {Grades} from '../../common/Grades';
 import DatePicker from "react-datepicker/es/index";
 import ClassHourDisplay from '../common/ClassHourDisplay';
-import {StudentLifeCycles} from "../../common/LifeCycles";
+import {StudentLifeCycleKeys, StudentLifeCycles} from "../../common/LifeCycles";
 import ErrorHandler from "../../common/ErrorHandler";
 import LifeCycle from "../../common/LifeCycle";
 import {connect} from 'react-redux';
 import {changeUserState} from "../../redux/actions";
 import UserFollowup from "./user-follow-up";
 import LifeCycleChangeModal from "./life-cycle-change-modal";
+import UserListTableHeader from "./user-list-table-header";
+import UserListTableRow from "./user-list-table-row";
 
 moment.locale('zh-CN');
 BigCalendar.setLocalizer(BigCalendar.momentLocalizer(moment))
@@ -326,132 +328,30 @@ class UserList extends React.Component {
         )
     }
 
+
+    changeState = (user, newState) => {
+        if (newState === StudentLifeCycleKeys.demo) {
+            this.setState({showLifecycleModal: true, currentLifeCycleChange: {newState: newState, user: user}});
+        } else {
+            const remark = window.prompt('请输入原因');
+            if (remark !== null) {
+                this.setState({
+                    users: [...this.state.users.slice(0, i), {...user, state: newState}, ...this.state.users.slice(i + 1)],
+                });
+
+                this.props.changeUserState(user, newState, remark)
+            }
+        }
+    }
+
     renderListTable() {
+
         return <Table celled selectable striped>
-            {this.renderTableHeader()}
+            <UserListTableHeader userType={this.props['user-type']} downloadLink={this.state.downloadLink} filename={this.state.filename} onExport={this.export}/>
             <Table.Body>
                 {
                     this.state.users.map((user, i) =>
-                        <Table.Row key={user.user_id}
-                                   style={{cursor: 'pointer'}}
-                                   onClick={() => this.setState({activeIndex: this.state.activeIndex === i ? null : i})}
-                                   active={this.state.activeIndex === i}>
-                            <Table.Cell onClick={() => this.openProfile(user)}>
-                                <p>{user.user_id}</p>
-                                <p style={{color: 'gainsboro'}}>
-                                    {
-                                        user.country &&
-                                        <Flag name={user.country.toLowerCase()}/>
-                                    }
-                                    {user.country} {user.city}
-                                </p>
-                            </Table.Cell>
-                            <Table.Cell onClick={() => this.openProfile(user)}>
-                                <Menu text compact>
-                                    <Menu.Item style={{maxWidth: '100%'}}>
-                                        <Avatar userId={user.user_id}>
-                                        </Avatar>
-                                        {
-                                            this.props.match.path === '/users/:userId?' &&
-                                            <Label floating
-                                                   color={user.role === MemberType.Student ? 'yellow' : 'black'}>
-                                                <span
-                                                    style={{whiteSpace: 'nowrap'}}>{MemberTypeChinese[user.role] ? MemberTypeChinese[user.role].substr(0, 1) : ''}</span>
-                                            </Label>
-                                        }
-                                    </Menu.Item>
-                                </Menu>
-
-                                <div style={{color: 'gainsboro'}}>
-                                    {user.created_at}<br/>
-                                    <span
-                                        style={{color: 'darkgray'}}>{moment(user.created_at).format('LLLL')}</span>
-                                </div>
-                            </Table.Cell>
-                            {
-                                this.props['user-type'] === MemberType.Companion &&
-
-                                <Table.Cell
-                                    onClick={() => this.openProfile(user)}>
-                                    {user.country}
-                                </Table.Cell>
-                            }
-                            <Table.Cell onClick={() => this.openProfile(user)}>
-                                <p>{user.mobile}</p>
-                                <p>{user.email}</p>
-                            </Table.Cell>
-                            <Table.Cell onClick={() => this.openProfile(user)}>
-                                {Grades[user.grade]}
-                            </Table.Cell>
-                            <Table.Cell
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    this.openClassHours(user);
-                                }}
-                                style={{cursor: 'pointer'}}>
-                                <ClassHourDisplay user={user}/>
-                            </Table.Cell>
-                            {
-                                <Table.Cell
-                                    onClick={() => this.openIntegral(user)}
-                                    style={{cursor: 'pointer'}}>
-                                    {user.integral || 0}
-                                </Table.Cell>
-                            }
-                            {
-                                this.props['user-type'] === MemberType.Student && user.placement_test &&
-                                <Table.Cell
-                                    onClick={() => this.openLevelModal(user)}
-                                    style={{
-                                        whiteSpace: 'nowrap',
-                                        color: user.level ? 'black' : 'red'
-                                    }}>
-                                    {user.level ?
-                                        <strong>{user.level}</strong> : '待评级'}
-                                </Table.Cell>
-                            }
-                            {
-                                this.props['user-type'] === MemberType.Student && !user.placement_test &&
-                                <Popup
-                                    trigger={
-                                        <Table.Cell style={{
-                                            color: 'gainsboro',
-                                            whiteSpace: 'nowrap'
-                                        }}>待测试</Table.Cell>
-                                    }
-                                    content={`${user.display_name || user.name || user.wechat_name} 还没有进行测试，请提醒 TA 完成。`}
-                                    on='click'
-                                />
-                            }
-                            <Table.Cell
-                                onClick={() => this.openSchedulePreferenceModal(user)}>
-                                <BookingTable events={user.events}
-                                              defaultDate={new Date()}/>
-                            </Table.Cell>
-                            <Table.Cell onClick={() => this.openProfile(user)}>
-                                <span>{user.tags}</span>
-                            </Table.Cell>
-                            <Table.Cell onClick={() => {
-                            }}>
-                                <LifeCycle user={user} changeState={(newState) => {
-                                    if (newState === 'demo') {
-                                        this.setState({showLifecycleModal: true, currentLifeCycleChange: {newState: newState, user: user}});
-                                    } else {
-                                        const remark = window.prompt('请输入原因');
-                                        if (remark !== null) {
-                                            this.setState({
-                                                users: [...this.state.users.slice(0, i), {...user, state: newState}, ...this.state.users.slice(i + 1)],
-                                            });
-
-                                            this.props.changeUserState(user, newState, remark)
-                                        }
-                                    }
-                                }}/>
-                            </Table.Cell>
-                            <Table.Cell>
-                                <UserFollowup userId={user.user_id}/>
-                            </Table.Cell>
-                        </Table.Row>
+                        <UserListTableRow key={user.user_id} match={this.props.match} userType={this.props['user-type']} user={user} openProfile={this.openProfile} openClassHours={this.openClassHours} openIntegral={this.openIntegral} openLevelModal={this.openLevelModal} openSchedulePreferenceModal={this.openSchedulePreferenceModal} changeState={(newState) => this.changeState(user, newState)}/>
                     )
                 }
             </Table.Body>
@@ -582,50 +482,6 @@ class UserList extends React.Component {
                 </Label.Group>
             </Form.Group>
         </Form>
-            ;
-    }
-
-    renderTableHeader() {
-        return <Table.Header>
-            <Table.Row>
-                <Table.HeaderCell colSpan={11}>
-                    <a href={this.state.downloadLink} className="ui button right floated"
-                       download={this.state.filename} onClick={this.export}
-                       style={{cursor: 'pointer'}}>
-                        <Icon name="download"/>
-                        导出
-                    </a>
-                </Table.HeaderCell>
-            </Table.Row>
-            <Table.Row>
-                <Table.HeaderCell>用户编号</Table.HeaderCell>
-                <Table.HeaderCell>头像-昵称</Table.HeaderCell>
-                {
-                    this.props['user-type'] === MemberType.Companion &&
-                    <Table.HeaderCell>国籍</Table.HeaderCell>
-                }
-                <Table.HeaderCell>联系信息<br/>手机号<br/>邮箱</Table.HeaderCell>
-                <Table.HeaderCell>年级</Table.HeaderCell>
-                <Table.HeaderCell>
-                    总课时 <span style={{color: 'lightgray'}}> (已消费) </span>
-                    <br/>
-                    可用(冻结)
-                </Table.HeaderCell>
-                <Table.HeaderCell>
-                    积分
-                </Table.HeaderCell>
-                {
-                    this.props['user-type'] === MemberType.Student &&
-                    <Table.HeaderCell>能力评级</Table.HeaderCell>
-                }
-                <Table.HeaderCell>预约/排课</Table.HeaderCell>
-                <Table.HeaderCell>标签</Table.HeaderCell>
-                <Table.HeaderCell>状态</Table.HeaderCell>
-                <Table.HeaderCell>
-                    跟进情况
-                </Table.HeaderCell>
-            </Table.Row>
-        </Table.Header>
             ;
     }
 
@@ -834,7 +690,11 @@ class UserList extends React.Component {
         this.state.users.forEach(u => {
             let line = []
             headers.forEach(key => {
-                line.push(encodeURIComponent(String(u[key]).replace(/,/g, '|').replace(/[\r?\n]/g, '<br />')))
+                let value = u[key];
+                if (key === 'mobile_country') {
+                    value = u[key].country.country_full_name
+                }
+                line.push(encodeURIComponent(String(value).replace(/,/g, '|').replace(/[\r?\n]/g, '<br />')))
             })
 
             result.push(line.join(','))

@@ -17,3 +17,13 @@ export const StudentLifeCyclesMapping = {
     waiting_renewal: StudentLifeCycles.Waiting_Renewal,
     invalid: StudentLifeCycles.Invalid
 }
+
+export const StudentLifeCycleKeys = {
+    potential: 'potential',
+    lead: 'lead',
+    demo: 'demo',
+    waiting_purchase: 'waiting_purchase',
+    in_class: 'in_class',
+    waiting_renewal: 'waiting_renewal',
+    invalid: 'invalid'
+}
