@@ -347,11 +347,11 @@ class UserList extends React.Component {
     renderListTable() {
 
         return <Table celled selectable striped>
-            <UserListTableHeader userType={this.props['user-type']} downloadLink={this.state.downloadLink} filename={this.state.filename} onExport={this.export}/>
+            <UserListTableHeader userType={this.props['user-type']} downloadLink={this.state.downloadLink} filename={this.state.filename} onExport={this.export} state={this.state.searchParams.state}/>
             <Table.Body>
                 {
                     this.state.users.map((user, i) =>
-                        <UserListTableRow key={user.user_id} match={this.props.match} userType={this.props['user-type']} user={user} openProfile={this.openProfile} openClassHours={this.openClassHours} openIntegral={this.openIntegral} openLevelModal={this.openLevelModal} openSchedulePreferenceModal={this.openSchedulePreferenceModal} changeState={(newState) => this.changeState(user, newState)}/>
+                        <UserListTableRow key={user.user_id} match={this.props.match} userType={this.props['user-type']} user={user} openProfile={this.openProfile} openClassHours={this.openClassHours} openIntegral={this.openIntegral} openLevelModal={this.openLevelModal} openSchedulePreferenceModal={this.openSchedulePreferenceModal} changeState={(newState) => this.changeState(user, newState)} state={this.state.searchParams.state}/>
                     )
                 }
             </Table.Body>
@@ -365,7 +365,7 @@ class UserList extends React.Component {
                                             await this.searchUsers();
                                         });
                                     }}
-                                    colSpan={this.props['user-type'] === MemberType.Student ? 11 : (this.props['user-type'] === MemberType.Companion ? 11 : 10)}/>
+                                    colSpan={this.props['user-type'] === MemberType.Student ? UserListTableHeader.getColumnNumber(this.state.searchParams.state) : (this.props['user-type'] === MemberType.Companion ? 11 : 10)}/>
                 </Table.Row>
             </Table.Footer>
         </Table>;

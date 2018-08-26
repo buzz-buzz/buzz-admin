@@ -1,13 +1,14 @@
 import {MemberType} from "../../common/MemberType";
 import {Icon, Table} from "semantic-ui-react";
 import React from "react";
+import {StudentLifeCycleKeys} from "../../common/LifeCycles";
 
 export default class UserListTableHeader extends React.Component {
     render() {
-        const {userType, downloadLink, filename, onExport} = this.props
+        const {userType, downloadLink, filename, onExport, state} = this.props
         return <Table.Header>
             <Table.Row>
-                <Table.HeaderCell colSpan={11}>
+                <Table.HeaderCell colSpan={UserListTableHeader.getColumnNumber(state)}>
                     <a href={downloadLink} className="ui button right floated"
                        download={filename} onClick={onExport}
                        style={{cursor: 'pointer'}}>
@@ -16,34 +17,118 @@ export default class UserListTableHeader extends React.Component {
                     </a>
                 </Table.HeaderCell>
             </Table.Row>
-            <Table.Row>
-                <Table.HeaderCell>用户编号</Table.HeaderCell>
-                <Table.HeaderCell>头像-昵称</Table.HeaderCell>
-                {
-                    userType === MemberType.Companion &&
-                    <Table.HeaderCell>国籍</Table.HeaderCell>
-                }
-                <Table.HeaderCell>联系信息<br/>手机号<br/>邮箱</Table.HeaderCell>
-                <Table.HeaderCell>年级</Table.HeaderCell>
-                <Table.HeaderCell>
-                    总课时 <span style={{color: 'lightgray'}}> (已消费) </span>
-                    <br/>
-                    可用(冻结)
-                </Table.HeaderCell>
-                <Table.HeaderCell>
-                    积分
-                </Table.HeaderCell>
-                {
-                    userType === MemberType.Student &&
-                    <Table.HeaderCell>能力评级</Table.HeaderCell>
-                }
-                <Table.HeaderCell>预约/排课</Table.HeaderCell>
-                <Table.HeaderCell>标签</Table.HeaderCell>
-                <Table.HeaderCell>流程状态</Table.HeaderCell>
-                <Table.HeaderCell>
-                    跟进情况
-                </Table.HeaderCell>
-            </Table.Row>
+            {UserListTableHeader.renderHeaderOfState(userType, state)}
         </Table.Header>
+    }
+
+    static renderHeaderOfState(userType, state) {
+        switch (state) {
+            case StudentLifeCycleKeys.potential:
+                return UserListTableHeader.renderPotential(userType)
+            default:
+                return UserListTableHeader.renderGeneral(userType)
+        }
+    }
+
+    static renderGeneral(userType) {
+        return <Table.Row>
+            {UserListTableHeader.renderID()}
+            {UserListTableHeader.renderAvatar()}
+            {
+                userType === MemberType.Companion &&
+                UserListTableHeader.renderCountry()
+            }
+            {UserListTableHeader.renderContactInfo()}
+            {UserListTableHeader.renderGrade()}
+            {UserListTableHeader.renderClassHours()}
+            {UserListTableHeader.renderScore()}
+            {
+                userType === MemberType.Student &&
+                UserListTableHeader.renderLevel()
+            }
+            {UserListTableHeader.renderBookings()}
+            {UserListTableHeader.renderTag()}
+            {UserListTableHeader.renderState()}
+            {UserListTableHeader.renderFollowup()}
+        </Table.Row>;
+    }
+
+    static renderFollowup() {
+        return <Table.HeaderCell>
+            跟进情况
+        </Table.HeaderCell>;
+    }
+
+    static renderState() {
+        return <Table.HeaderCell>流程状态</Table.HeaderCell>;
+    }
+
+    static renderTag() {
+        return <Table.HeaderCell>标签</Table.HeaderCell>;
+    }
+
+    static renderBookings() {
+        return <Table.HeaderCell>预约/排课</Table.HeaderCell>;
+    }
+
+    static renderLevel() {
+        return <Table.HeaderCell>能力评级</Table.HeaderCell>;
+    }
+
+    static renderScore() {
+        return <Table.HeaderCell>
+            积分
+        </Table.HeaderCell>;
+    }
+
+    static renderClassHours() {
+        return <Table.HeaderCell>
+            总课时 <span style={{color: 'lightgray'}}> (已消费) </span>
+            <br/>
+            可用(冻结)
+        </Table.HeaderCell>;
+    }
+
+    static renderGrade() {
+        return <Table.HeaderCell>年级</Table.HeaderCell>;
+    }
+
+    static renderContactInfo() {
+        return <Table.HeaderCell>联系信息<br/>手机号<br/>邮箱</Table.HeaderCell>;
+    }
+
+    static renderCountry() {
+        return <Table.HeaderCell>国籍</Table.HeaderCell>;
+    }
+
+    static renderAvatar() {
+        return <Table.HeaderCell>头像-昵称</Table.HeaderCell>;
+    }
+
+    static renderID() {
+        return <Table.HeaderCell>用户编号</Table.HeaderCell>;
+    }
+
+    static getColumnNumber(state) {
+        switch (state) {
+            case StudentLifeCycleKeys.potential:
+                return 5;
+            default:
+                return 11;
+        }
+    }
+
+    static renderPotential(userType) {
+        return <Table.Row>
+            {UserListTableHeader.renderID()}
+            {UserListTableHeader.renderAvatar()}
+            {UserListTableHeader.renderSource()}
+            {UserListTableHeader.renderTag()}
+            {UserListTableHeader.renderFollowup()}
+        </Table.Row>
+    }
+
+    static renderSource() {
+        return <Table.HeaderCell>来源</Table.HeaderCell>
     }
 }
