@@ -18,6 +18,8 @@ export default class UserListTableRow extends React.Component {
         switch (state) {
             case StudentLifeCycleKeys.potential:
                 return this.renderPotential(openProfile, user, match)
+            case StudentLifeCycleKeys.lead:
+                return this.renderLeads(openProfile, user, match, changeState)
             default:
                 return this.renderGeneral(openProfile, user, match, userType, openClassHours, openIntegral, openLevelModal, openSchedulePreferenceModal, changeState)
         }
@@ -187,11 +189,30 @@ export default class UserListTableRow extends React.Component {
             {this.renderAvatar(openProfile, user, match)}
             {this.renderSource(openProfile, user)}
             {this.renderTags(openProfile, user)}
+            {UserListTableRow.renderState(user)}
+        </Table.Row>
+    }
+
+    renderLeads(openProfile, user, match, changeState) {
+        return <Table.Row>
+            {this.renderID(openProfile, user)}
+            {this.renderAvatar(openProfile, user, match)}
+            {this.renderContact(openProfile, user)}
+            {this.renderGrade(openProfile, user)}
+            {this.renderLevel(openProfile, user)}
+            {this.renderSource(openProfile, user)}
+            {this.renderFollower(openProfile, user)}
             {UserListTableRow.renderFollowup(user)}
+            {this.renderTags(openProfile, user)}
+            {UserListTableRow.renderState(user, changeState)}
         </Table.Row>
     }
 
     renderSource(openProfile, user) {
-        return <Table.Cell onClick={() => openProfile(user)}>xxx</Table.Cell>
+        return <Table.Cell onClick={() => openProfile(user)}>{user.source}</Table.Cell>
+    }
+
+    renderFollower(openProfile, user) {
+        return <Table.Cell onClick={() => openProfile(user)}>{user.follower}</Table.Cell>
     }
 }

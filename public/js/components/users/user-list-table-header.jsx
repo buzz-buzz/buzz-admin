@@ -24,7 +24,9 @@ export default class UserListTableHeader extends React.Component {
     static renderHeaderOfState(userType, state) {
         switch (state) {
             case StudentLifeCycleKeys.potential:
-                return UserListTableHeader.renderPotential(userType)
+                return UserListTableHeader.renderPotential()
+            case StudentLifeCycleKeys.lead:
+                return UserListTableHeader.renderLeads()
             default:
                 return UserListTableHeader.renderGeneral(userType)
         }
@@ -113,22 +115,43 @@ export default class UserListTableHeader extends React.Component {
         switch (state) {
             case StudentLifeCycleKeys.potential:
                 return 5;
+            case StudentLifeCycleKeys.lead:
+                return 10;
             default:
                 return 11;
         }
     }
 
-    static renderPotential(userType) {
+    static renderPotential() {
         return <Table.Row>
             {UserListTableHeader.renderID()}
             {UserListTableHeader.renderAvatar()}
             {UserListTableHeader.renderSource()}
             {UserListTableHeader.renderTag()}
-            {UserListTableHeader.renderFollowup()}
+            {UserListTableHeader.renderState()}
         </Table.Row>
     }
 
     static renderSource() {
         return <Table.HeaderCell>来源</Table.HeaderCell>
+    }
+
+    static renderLeads() {
+        return <Table.Row>
+            {UserListTableHeader.renderID()}
+            {UserListTableHeader.renderAvatar()}
+            {UserListTableHeader.renderContactInfo()}
+            {UserListTableHeader.renderGrade()}
+            {UserListTableHeader.renderLevel()}
+            {UserListTableHeader.renderSource()}
+            {UserListTableHeader.renderFollower()}
+            {UserListTableHeader.renderFollowup()}
+            {UserListTableHeader.renderTag()}
+            {UserListTableHeader.renderState()}
+        </Table.Row>
+    }
+
+    static renderFollower() {
+        return <Table.HeaderCell>跟进人</Table.HeaderCell>
     }
 }
