@@ -1,5 +1,5 @@
 import {combineReducers} from 'redux'
-import {CHANGE_USER_STATE, CLEAR_CLASS_HOUR_HISTORY, CLEAR_CREDITS_HISTORY, LOAD_ALL_SALES, LOAD_CLASS, LOAD_CLASS_HOUR_HISTORY, LOAD_CREDITS_HISTORY, LOAD_FEEDBACK} from '../actions'
+import {ADD_USER_DEMO, CHANGE_USER_STATE, CLEAR_CLASS_HOUR_HISTORY, CLEAR_CREDITS_HISTORY, LOAD_ALL_SALES, LOAD_CLASS, LOAD_CLASS_HOUR_HISTORY, LOAD_CREDITS_HISTORY, LOAD_FEEDBACK} from '../actions'
 import ServiceProxy from "../../service-proxy";
 
 function classReducer(state = {}, action) {
@@ -90,11 +90,24 @@ function loadAllSales(state = null, action) {
     }
 }
 
+function userDemoReducer(state = {}, action) {
+    switch (action.type) {
+        case ADD_USER_DEMO:
+            return {
+                ...state,
+                [action.userId]: action.userDemo
+            };
+        default:
+            return state;
+    }
+}
+
 export default combineReducers({
     classes: classReducer,
     feedbacks: feedbackReducer,
     classHourHistory: classHourHistory,
     creditsHistory: creditsHistory,
     users: changeUserState,
-    allSales: loadAllSales
+    allSales: loadAllSales,
+    userDemo: userDemoReducer
 })

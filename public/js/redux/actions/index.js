@@ -6,6 +6,7 @@ export const CLEAR_CREDITS_HISTORY = 'CLEAR_CREDITS_HISTORY';
 export const CLEAR_CLASS_HOUR_HISTORY = 'CLEAR_CLASS_HOUR_HISTORY';
 export const CHANGE_USER_STATE = 'CHANGE_USER_STATE';
 export const LOAD_ALL_SALES = 'LOAD_ALL_SALES';
+export const ADD_USER_DEMO = 'ADD_USER_DEMO';
 
 export function loadClass(classInfo) {
     return {
@@ -68,5 +69,14 @@ export function loadAllSales(users) {
     return {
         type: LOAD_ALL_SALES,
         payload: users
+    }
+}
+
+
+export function addUserDemo(userId, userDemo) {
+    return {
+        type: ADD_USER_DEMO,
+        userId: userId,
+        userDemo
     }
 }

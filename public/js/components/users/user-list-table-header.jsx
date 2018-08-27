@@ -27,6 +27,8 @@ export default class UserListTableHeader extends React.Component {
                 return UserListTableHeader.renderPotential()
             case StudentLifeCycleKeys.lead:
                 return UserListTableHeader.renderLeads()
+            case StudentLifeCycleKeys.demo:
+                return UserListTableHeader.renderDemo()
             default:
                 return UserListTableHeader.renderGeneral(userType)
         }
@@ -117,6 +119,8 @@ export default class UserListTableHeader extends React.Component {
                 return 5;
             case StudentLifeCycleKeys.lead:
                 return 10;
+            case StudentLifeCycleKeys.demo:
+                return 14;
             default:
                 return 11;
         }
@@ -153,5 +157,37 @@ export default class UserListTableHeader extends React.Component {
 
     static renderFollower() {
         return <Table.HeaderCell>跟进人</Table.HeaderCell>
+    }
+
+    static renderDemo() {
+        return <Table.Row>
+            {UserListTableHeader.renderID()}
+            {UserListTableHeader.renderAvatar()}
+            {UserListTableHeader.renderContactInfo()}
+            {UserListTableHeader.renderGrade()}
+            {UserListTableHeader.renderClassHours()}
+            {UserListTableHeader.renderLevel()}
+            {UserListTableHeader.renderSource()}
+            {UserListTableHeader.renderFollowup()}
+            {UserListTableHeader.renderTrainingTime()}
+            {UserListTableHeader.renderDemoTime()}
+            {UserListTableHeader.renderOldestClass()}
+            {UserListTableHeader.renderFollower()}
+            {UserListTableHeader.renderTag()}
+            {UserListTableHeader.renderState()}
+        </Table.Row>
+    }
+
+    static renderTrainingTime() {
+        return <Table.HeaderCell>入门指导</Table.HeaderCell>
+    }
+
+
+    static renderDemoTime() {
+        return <Table.HeaderCell>体验时间</Table.HeaderCell>
+    }
+
+    static renderOldestClass() {
+        return <Table.HeaderCell>Demo 课</Table.HeaderCell>
     }
 }
