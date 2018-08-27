@@ -127,6 +127,7 @@ class UserList extends React.Component {
         this.closeClassHoursModal = this.closeClassHoursModal.bind(this);
         this.classHoursUpdated = this.classHoursUpdated.bind(this);
         this.openIntegral = this.openIntegral.bind(this);
+        this.openProfile = this.openProfile.bind(this);
         this.closeIntegralModal = this.closeIntegralModal.bind(this);
         this.integralUpdated = this.integralUpdated.bind(this);
         this.closeProfileModal = this.closeProfileModal.bind(this);

@@ -10,6 +10,7 @@ import UserFollowup from "./user-follow-up";
 import {Avatar} from "../../common/Avatar";
 import {Label} from "recharts";
 import {StudentLifeCycleKeys} from "../../common/LifeCycles";
+import UserDropdownSingle from "./user-dropdown";
 
 export default class UserListTableRow extends React.Component {
     render() {
@@ -213,6 +214,6 @@ export default class UserListTableRow extends React.Component {
     }
 
     renderFollower(openProfile, user) {
-        return <Table.Cell onClick={() => openProfile(user)}>{user.follower}</Table.Cell>
+        return <Table.Cell>{user.follower ? <Avatar userId={user.follower}/> : <UserDropdownSingle/>}</Table.Cell>
     }
 }
