@@ -3,13 +3,11 @@ import {
     Button,
     Container,
     Dropdown,
-    Flag,
     Form,
     Icon,
     Input,
     Label,
     Menu,
-    Popup,
     Segment,
     Table
 } from "semantic-ui-react";
@@ -22,22 +20,16 @@ import 'moment/locale/zh-cn'
 import ClassHours from "./class-hours";
 import Credits from "./credits";
 import LevelModal from "../students/level-modal";
-import BookingTable from "./booking-table";
 import queryString from 'query-string';
-import {MemberType, MemberTypeChinese} from "../../common/MemberType";
+import {MemberType} from "../../common/MemberType";
 import history from '../common/history';
 import BuzzPagination, {BuzzPaginationData} from "../common/BuzzPagination";
 import UserTags from "./user-tags";
-import {Avatar} from "../../common/Avatar";
-import {Grades} from '../../common/Grades';
 import DatePicker from "react-datepicker/es/index";
-import ClassHourDisplay from '../common/ClassHourDisplay';
 import {StudentLifeCycleKeys, StudentLifeCycles} from "../../common/LifeCycles";
 import ErrorHandler from "../../common/ErrorHandler";
-import LifeCycle from "../../common/LifeCycle";
 import {connect} from 'react-redux';
 import {changeUserState} from "../../redux/actions";
-import UserFollowup from "./user-follow-up";
 import LifeCycleChangeModal from "./life-cycle-change-modal";
 import UserListTableHeader from "./user-list-table-header";
 import UserListTableRow from "./user-list-table-row";

@@ -1,8 +1,10 @@
 import React from "react";
 import {Dropdown, Form} from "semantic-ui-react";
 import ServiceProxy from "../../service-proxy";
+import {connect} from 'react-redux';
+import {loadAllUsers} from "../../redux/actions";
 
-export default class UserDropdownSingle extends React.Component {
+class UserDropdownSingle extends React.Component {
     state = {
         userId: 0,
         allUsers: [],
@@ -17,9 +19,10 @@ export default class UserDropdownSingle extends React.Component {
 
     fetchAllUsers = async () => {
         this.setState({fetchingAllUsers: true})
-        let result = await ServiceProxy.proxyTo({
+        let result = this.props.allUsers || await ServiceProxy.proxyTo({
             body: {uri: `{buzzService}/api/v1/users`}
         });
+        this.props.loadAllUsers(result)
         this.setState({
             fetchingAllUsers: false,
             allUsers: result.map(u => ({
@@ -42,3 +45,9 @@ export default class UserDropdownSingle extends React.Component {
                            loading={this.state.fetchingAllUsers}/>
     }
 }
+
+export default connect(store => ({allUsers: store.allUsers}), dispatch => {
+    return {
+        loadAllUsers: (users) => dispatch(loadAllUsers(users))
+    }
+})(UserDropdownSingle)
