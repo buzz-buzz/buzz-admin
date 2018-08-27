@@ -5,7 +5,7 @@ export const LOAD_CREDITS_HISTORY = 'LOAD_CREDITS_HISTORY';
 export const CLEAR_CREDITS_HISTORY = 'CLEAR_CREDITS_HISTORY';
 export const CLEAR_CLASS_HOUR_HISTORY = 'CLEAR_CLASS_HOUR_HISTORY';
 export const CHANGE_USER_STATE = 'CHANGE_USER_STATE';
-export const LOAD_ALL_USERS = 'LOAD_ALL_USERS';
+export const LOAD_ALL_SALES = 'LOAD_ALL_SALES';
 
 export function loadClass(classInfo) {
     return {
@@ -64,9 +64,9 @@ export function changeUserState(user, newState, remark) {
     }
 }
 
-export function loadAllUsers(users) {
+export function loadAllSales(users) {
     return {
-        type: LOAD_ALL_USERS,
+        type: LOAD_ALL_SALES,
         payload: users
     }
 }
