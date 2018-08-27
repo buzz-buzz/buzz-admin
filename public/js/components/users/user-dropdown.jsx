@@ -3,15 +3,21 @@ import {Dropdown, Form} from "semantic-ui-react";
 import ServiceProxy from "../../service-proxy";
 import {connect} from 'react-redux';
 import {loadAllSales} from "../../redux/actions";
+import {Avatar} from "../../common/Avatar";
 
 class UserDropdownSingle extends React.Component {
-    state = {
-        userId: 0,
-        allSales: [],
-        fetchingAllUsers: false
+    constructor(props) {
+        super(props)
+
+        this.state = {
+            allSales: [],
+            fetchingAllUsers: false
+        }
     }
 
-    handleUsersChange = (event, {name, value}) => {
+    handleUsersChange = async (event, {name, value}) => {
+        this.props.changeFollowerTo(value)
+
         this.setState({
             [name]: value
         })
@@ -42,13 +48,18 @@ class UserDropdownSingle extends React.Component {
     }
 
     render() {
-        return <Form.Field control={Dropdown} name="userId"
-                           value={this.state.userId}
-                           onChange={this.handleUsersChange}
-                           onClick={this.fetchSales}
-                           search selection
-                           options={this.state.allSales}
-                           loading={this.state.fetchingAllUsers}/>
+        return <div>
+            <Dropdown trigger={this.props.selectedUserId ? <Avatar userId={this.props.selectedUserId}/> : '待分配'} name="userId"
+                      value={this.props.selectedUserId}
+                      onChange={this.handleUsersChange}
+                      onClick={this.fetchSales}
+                      search
+                      options={this.state.allSales}
+                      loading={this.state.fetchingAllUsers} icon={null}
+                      placeholder="待分配"
+            />
+            {this.props.selectedUserId ? <a style={{cursor: 'pointer'}} onClick={() => this.handleUsersChange(null, {name: 'userId', value: null})}>清除</a> : null}
+        </div>
     }
 }
 

@@ -11,10 +11,20 @@ import {Avatar} from "../../common/Avatar";
 import {Label} from "recharts";
 import {StudentLifeCycleKeys} from "../../common/LifeCycles";
 import UserDropdownSingle from "./user-dropdown";
+import ServiceProxy from "../../service-proxy";
 
 export default class UserListTableRow extends React.Component {
+    constructor(props) {
+        super(props)
+
+        this.state = {
+            user: props.user
+        }
+    }
+
     render() {
-        const {state, match, userType, user, openProfile, openClassHours, openIntegral, openLevelModal, openSchedulePreferenceModal, changeState} = this.props
+        const {state, match, userType, openProfile, openClassHours, openIntegral, openLevelModal, openSchedulePreferenceModal, changeState} = this.props
+        const {user} = this.state
 
         switch (state) {
             case StudentLifeCycleKeys.potential:
@@ -214,6 +224,25 @@ export default class UserListTableRow extends React.Component {
     }
 
     renderFollower(openProfile, user) {
-        return <Table.Cell>{user.follower ? <Avatar userId={user.follower}/> : <UserDropdownSingle/>}</Table.Cell>
+        return <Table.Cell>
+            <UserDropdownSingle selectedUserId={user.follower} changeFollowerTo={async (follower) => {
+                await ServiceProxy.proxyTo({
+                    body: {
+                        uri: `{buzzService}/api/v1/users/${user.user_id}`,
+                        method: 'PUT',
+                        json: {
+                            follower: follower
+                        }
+                    }
+                })
+
+                this.setState({
+                    user: {
+                        ...user,
+                        follower: follower
+                    }
+                })
+            }}/>
+        </Table.Cell>
     }
 }
