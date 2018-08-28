@@ -13,8 +13,9 @@ import {StudentLifeCycleKeys} from "../../common/LifeCycles";
 import UserDropdownSingle from "./user-dropdown";
 import ServiceProxy from "../../service-proxy";
 import {connect} from 'react-redux';
-import {addUserDemo} from "../../redux/actions";
+import {addFirstClass, addUserDemo} from "../../redux/actions";
 import TimeDisplay from '../common/time-display';
+import ClassAvatar from "../classes/class-avatar";
 
 class UserListTableRow extends React.Component {
     constructor(props) {
@@ -26,7 +27,7 @@ class UserListTableRow extends React.Component {
     }
 
     async componentWillMount() {
-        const {userDemo, addUserDemoToStore} = this.props
+        const {userDemo, firstClass, addUserDemoToStore, addFirstClassToStore} = this.props
         if (!userDemo[this.state.user.user_id]) {
             const userDemo = await ServiceProxy.proxyTo({
                 body: {uri: `{buzzService}/api/v1/user-demo/${this.state.user.user_id}`}
@@ -34,10 +35,20 @@ class UserListTableRow extends React.Component {
 
             addUserDemoToStore(this.state.user.user_id, userDemo)
         }
+
+        if (!firstClass[this.state.user.user_id]) {
+            const firstClass = await ServiceProxy.proxyTo({
+                body: {
+                    uri: `{buzzService}/api/v1/student-class-schedule/demo-class/${this.state.user.user_id}`
+                }
+            })
+
+            addFirstClassToStore(this.state.user.user_id, firstClass)
+        }
     }
 
     render() {
-        const {state, match, userType, openProfile, openClassHours, openIntegral, openLevelModal, openSchedulePreferenceModal, changeState, userDemo} = this.props
+        const {state, match, userType, openProfile, openClassHours, openIntegral, openLevelModal, openSchedulePreferenceModal, changeState, userDemo, firstClass} = this.props
         const {user} = this.state
 
         switch (state) {
@@ -46,7 +57,7 @@ class UserListTableRow extends React.Component {
             case StudentLifeCycleKeys.lead:
                 return this.renderLeads(openProfile, user, match, changeState)
             case StudentLifeCycleKeys.demo:
-                return this.renderDemoUsers(openProfile, user, match, changeState, userDemo)
+                return this.renderDemoUsers(openProfile, user, match, changeState, userDemo, firstClass)
             default:
                 return this.renderGeneral(openProfile, user, match, userType, openClassHours, openIntegral, openLevelModal, openSchedulePreferenceModal, changeState)
         }
@@ -262,7 +273,7 @@ class UserListTableRow extends React.Component {
         </Table.Cell>
     }
 
-    renderDemoUsers(openProfile, user, match, changeState, userDemo) {
+    renderDemoUsers(openProfile, user, match, changeState, userDemo, firstClass) {
         return <Table.Row>
             {this.renderID(openProfile, user)}
             {this.renderAvatar(openProfile, user, match)}
@@ -272,9 +283,9 @@ class UserListTableRow extends React.Component {
             {UserListTableRow.renderPlacementTest(user)}
             {this.renderSource(openProfile, user)}
             {UserListTableRow.renderFollowup(user)}
-            {UserListTableRow.renderTrainingTime(openProfile, user, userDemo)}
-            {UserListTableRow.renderDemoTime(openProfile, user, userDemo)}
-            {UserListTableRow.renderFirstClass(openProfile, user)}
+            {UserListTableRow.renderTrainingTime(openProfile, user, userDemo[user.user_id])}
+            {UserListTableRow.renderDemoTime(openProfile, user, userDemo[user.user_id])}
+            {UserListTableRow.renderFirstClass(openProfile, user, firstClass)}
             {this.renderFollower(openProfile, user)}
             {this.renderTags(openProfile, user)}
             {UserListTableRow.renderState(user, changeState)}
@@ -283,25 +294,29 @@ class UserListTableRow extends React.Component {
 
     static renderTrainingTime(openProfile, user, userDemo) {
         return <Table.Cell onClick={openProfile}>
-            {TimeDisplay({timestamp: userDemo[user.user_id].training_time, format: 'LLLL'})}
+            {TimeDisplay({timestamp: (userDemo || {}).training_time, format: 'LL'})}
         </Table.Cell>
     }
 
     static renderDemoTime(openProfile, user, userDemo) {
         return <Table.Cell onClick={openProfile}>
-            {TimeDisplay({timestamp: userDemo[user.user_id].demo_time, format: 'LLLL'})}
+            {TimeDisplay({timestamp: (userDemo || {}).demo_time, format: 'LL'})}
         </Table.Cell>
     }
 
-    static renderFirstClass(openProfile, user) {
-        return <Table.Cell onClick={openProfile}>xzzz</Table.Cell>
+    static renderFirstClass(openProfile, user, classInfo) {
+        return <Table.Cell onClick={openProfile}>
+            <ClassAvatar classInfo={classInfo[user.user_id]}/>
+        </Table.Cell>
     }
 }
 
 export default connect(store => ({
-    userDemo: store.userDemo
+    userDemo: store.userDemo,
+    firstClass: store.firstClass
 }), dispatch => {
     return {
-        addUserDemoToStore: (userId, userDemo) => dispatch(addUserDemo(userId, userDemo))
+        addUserDemoToStore: (userId, userDemo) => dispatch(addUserDemo(userId, userDemo)),
+        addFirstClassToStore: (userId, firstClass) => dispatch(addFirstClass(userId, firstClass))
     }
 })(UserListTableRow)

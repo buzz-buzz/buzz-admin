@@ -268,7 +268,7 @@ class UserList extends React.Component {
 
     render() {
         return (
-            <Container>
+            <Container fluid style={{overflow: 'auto'}}>
                 {this.renderSearchForm()}
                 {
                     this.props['user-type'] === MemberType.Student &&

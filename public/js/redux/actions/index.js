@@ -7,6 +7,7 @@ export const CLEAR_CLASS_HOUR_HISTORY = 'CLEAR_CLASS_HOUR_HISTORY';
 export const CHANGE_USER_STATE = 'CHANGE_USER_STATE';
 export const LOAD_ALL_SALES = 'LOAD_ALL_SALES';
 export const ADD_USER_DEMO = 'ADD_USER_DEMO';
+export const ADD_FIRST_CLASS = 'ADD_FIRST_CLASS';
 
 export function loadClass(classInfo) {
     return {
@@ -78,5 +79,13 @@ export function addUserDemo(userId, userDemo) {
         type: ADD_USER_DEMO,
         userId: userId,
         userDemo
+    }
+}
+
+export function addFirstClass(userId, firstClass) {
+    return {
+        type: ADD_FIRST_CLASS,
+        userId: userId,
+        firstClass
     }
 }
