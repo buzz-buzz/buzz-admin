@@ -58,6 +58,8 @@ class UserListTableRow extends React.Component {
                 return this.renderLeads(openProfile, user, match, changeState)
             case StudentLifeCycleKeys.demo:
                 return this.renderDemoUsers(openProfile, user, match, changeState, userDemo, firstClass)
+            case StudentLifeCycleKeys.waiting_purchase:
+                return this.renderWaitingForPurchase(openProfile, openLevelModal, user, match, changeState, userDemo, firstClass)
             default:
                 return this.renderGeneral(openProfile, user, match, userType, openClassHours, openIntegral, openLevelModal, openSchedulePreferenceModal, changeState)
         }
@@ -308,6 +310,21 @@ class UserListTableRow extends React.Component {
         return <Table.Cell onClick={openProfile}>
             <ClassAvatar classInfo={classInfo[user.user_id]}/>
         </Table.Cell>
+    }
+
+    renderWaitingForPurchase(openProfile, openLevelModal, user, match, changeState, userDemo, firstClass) {
+        return <Table.Row>
+            {this.renderID(openProfile, user)}
+            {this.renderAvatar(openProfile, user, match)}
+            {this.renderContact(openProfile, user)}
+            {this.renderGrade(openProfile, user)}
+            {UserListTableRow.renderPlacementTest(user)}
+            {UserListTableRow.renderFirstClass(openProfile, user, firstClass)}
+            {this.renderFollower(openProfile, user)}
+            {UserListTableRow.renderFollowup(user)}
+            {this.renderTags(openProfile, user)}
+            {UserListTableRow.renderState(user, changeState)}
+        </Table.Row>
     }
 }
 

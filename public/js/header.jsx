@@ -24,7 +24,7 @@ export default class Header extends React.Component {
 
         return (
             <Menu fixed="top" inverted>
-                <Container>
+                <Container fluid>
                     <Menu.Item name="users" active={activeItem.startsWith('/users')} href="/users">所有用户列表</Menu.Item>
                     <Menu.Item name="students" active={activeItem.startsWith('/students')}
                                href="/students">中方学生列表</Menu.Item>

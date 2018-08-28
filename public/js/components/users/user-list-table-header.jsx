@@ -29,6 +29,8 @@ export default class UserListTableHeader extends React.Component {
                 return UserListTableHeader.renderLeads()
             case StudentLifeCycleKeys.demo:
                 return UserListTableHeader.renderDemo()
+            case StudentLifeCycleKeys.waiting_purchase:
+                return UserListTableHeader.renderWaitingPurchase()
             default:
                 return UserListTableHeader.renderGeneral(userType)
         }
@@ -121,6 +123,8 @@ export default class UserListTableHeader extends React.Component {
                 return 10;
             case StudentLifeCycleKeys.demo:
                 return 14;
+            case StudentLifeCycleKeys.waiting_purchase:
+                return 10;
             default:
                 return 11;
         }
@@ -171,7 +175,7 @@ export default class UserListTableHeader extends React.Component {
             {UserListTableHeader.renderFollowup()}
             {UserListTableHeader.renderTrainingTime()}
             {UserListTableHeader.renderDemoTime()}
-            {UserListTableHeader.renderOldestClass()}
+            {UserListTableHeader.renderFirstClass()}
             {UserListTableHeader.renderFollower()}
             {UserListTableHeader.renderTag()}
             {UserListTableHeader.renderState()}
@@ -187,7 +191,22 @@ export default class UserListTableHeader extends React.Component {
         return <Table.HeaderCell>体验时间</Table.HeaderCell>
     }
 
-    static renderOldestClass() {
+    static renderFirstClass() {
         return <Table.HeaderCell>Demo 课</Table.HeaderCell>
+    }
+
+    static renderWaitingPurchase() {
+        return <Table.Row>
+            {UserListTableHeader.renderID()}
+            {UserListTableHeader.renderAvatar()}
+            {UserListTableHeader.renderContactInfo()}
+            {UserListTableHeader.renderGrade()}
+            {UserListTableHeader.renderLevel()}
+            {UserListTableHeader.renderFirstClass()}
+            {UserListTableHeader.renderFollower()}
+            {UserListTableHeader.renderFollowup()}
+            {UserListTableHeader.renderTag()}
+            {UserListTableHeader.renderState()}
+        </Table.Row>
     }
 }

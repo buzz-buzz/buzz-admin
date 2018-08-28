@@ -366,114 +366,116 @@ class UserList extends React.Component {
 
     renderSearchForm() {
         return <Form onSubmit={this.searchUsers} loading={this.state.loading}>
-            <Form.Group widths='equal'>
-                <Form.Field control={Input} label="微信昵称" name="wechat_name"
-                            value={this.state.searchParams.wechat_name}
-                            onChange={this.handleTextChange}/>
-                <Form.Field control={Input} label="（孩子）英文名"
-                            value={this.state.searchParams.name} name="name"
-                            onChange={this.handleTextChange}>
-                </Form.Field>
-                <Form.Field control={Input} label="备注名（内部可见）"
-                            value={this.state.searchParams.display_name}
-                            name="display_name"
-                            onChange={this.handleTextChange}/>
-                <Form.Field control={Input} label="手机号"
-                            value={this.state.searchParams.mobile}
-                            name="mobile" onChange={this.handleTextChange}/>
-                <Form.Field control={Input} label="邮箱"
-                            value={this.state.searchParams.email}
-                            name="email" onChange={this.handleTextChange}/>
-            </Form.Group>
-            <Form.Group widths="equal">
-                <Form.Field>
-                    <label>预约/排课时间段 开始时间</label>
-                    <DatePicker showTimeSelect
-                                selected={this.state.searchParams.start_time ? moment(this.state.searchParams.start_time) : null}
-                                name="start_time" isClearable={true}
-                                dateFormat={'YYYY-MM-DD HH:mm'}
-                                placeholderText={"开始时间"}
-                                onChange={date => this.handleDateChange('start_time', date)}/>
-                </Form.Field>
+            <Container fluid>
+                <Form.Group widths='equal'>
+                    <Form.Field control={Input} label="微信昵称" name="wechat_name"
+                                value={this.state.searchParams.wechat_name}
+                                onChange={this.handleTextChange}/>
+                    <Form.Field control={Input} label="（孩子）英文名"
+                                value={this.state.searchParams.name} name="name"
+                                onChange={this.handleTextChange}>
+                    </Form.Field>
+                    <Form.Field control={Input} label="备注名（内部可见）"
+                                value={this.state.searchParams.display_name}
+                                name="display_name"
+                                onChange={this.handleTextChange}/>
+                    <Form.Field control={Input} label="手机号"
+                                value={this.state.searchParams.mobile}
+                                name="mobile" onChange={this.handleTextChange}/>
+                    <Form.Field control={Input} label="邮箱"
+                                value={this.state.searchParams.email}
+                                name="email" onChange={this.handleTextChange}/>
+                </Form.Group>
+                <Form.Group widths="equal">
+                    <Form.Field>
+                        <label>预约/排课时间段 开始时间</label>
+                        <DatePicker showTimeSelect
+                                    selected={this.state.searchParams.start_time ? moment(this.state.searchParams.start_time) : null}
+                                    name="start_time" isClearable={true}
+                                    dateFormat={'YYYY-MM-DD HH:mm'}
+                                    placeholderText={"开始时间"}
+                                    onChange={date => this.handleDateChange('start_time', date)}/>
+                    </Form.Field>
 
-                <Form.Field>
-                    <label>结束时间</label>
-                    <DatePicker showTimeSelect
-                                selected={this.state.searchParams.end_time ? moment(this.state.searchParams.end_time) : null}
-                                name="end_time" isClearable={true}
-                                dateFormat={"YYYY-MM-DD HH:mm"}
-                                placeholderText={"结束时间"}
-                                onChange={date => this.handleDateChange('end_time', date)}/>
-                </Form.Field>
+                    <Form.Field>
+                        <label>结束时间</label>
+                        <DatePicker showTimeSelect
+                                    selected={this.state.searchParams.end_time ? moment(this.state.searchParams.end_time) : null}
+                                    name="end_time" isClearable={true}
+                                    dateFormat={"YYYY-MM-DD HH:mm"}
+                                    placeholderText={"结束时间"}
+                                    onChange={date => this.handleDateChange('end_time', date)}/>
+                    </Form.Field>
 
-                <Form.Field>
-                    <label>注册开始时间段 开始时间</label>
-                    <DatePicker
-                        selected={this.state.searchParams.create_start_time ? moment(this.state.searchParams.create_start_time) : null}
-                        name="create_start_time" isClearable={true}
-                        dateFormat={"YYYY-MM-DD HH:mm"}
-                        placeholderText={"注册开始时间段 开始时间"}
-                        onChange={date => this.handleDateChange('create_start_time', date)}/>
-                </Form.Field>
-                <Form.Field>
-                    <label>结束时间</label>
-                    <DatePicker showTimeSelect
-                                selected={this.state.searchParams.create_end_time ? moment(this.state.searchParams.create_end_time) : null}
-                                name="create_end_time" isClearable={true}
-                                dateFormat={"YYYY-MM-DD HH:mm"}
-                                placeholderText={"结束时间"}
-                                onChange={date => this.handleDateChange('create_end_time', date)}/>
-                </Form.Field>
-                <Form.Field control={Dropdown} label="用户标签" name="tags"
-                            value={this.state.searchParams.tags} multiple
-                            options={this.state.allTags}
-                            search selection
-                            onChange={this.handleSelectedTagsChange}/>
+                    <Form.Field>
+                        <label>注册开始时间段 开始时间</label>
+                        <DatePicker
+                            selected={this.state.searchParams.create_start_time ? moment(this.state.searchParams.create_start_time) : null}
+                            name="create_start_time" isClearable={true}
+                            dateFormat={"YYYY-MM-DD HH:mm"}
+                            placeholderText={"注册开始时间段 开始时间"}
+                            onChange={date => this.handleDateChange('create_start_time', date)}/>
+                    </Form.Field>
+                    <Form.Field>
+                        <label>结束时间</label>
+                        <DatePicker showTimeSelect
+                                    selected={this.state.searchParams.create_end_time ? moment(this.state.searchParams.create_end_time) : null}
+                                    name="create_end_time" isClearable={true}
+                                    dateFormat={"YYYY-MM-DD HH:mm"}
+                                    placeholderText={"结束时间"}
+                                    onChange={date => this.handleDateChange('create_end_time', date)}/>
+                    </Form.Field>
+                    <Form.Field control={Dropdown} label="用户标签" name="tags"
+                                value={this.state.searchParams.tags} multiple
+                                options={this.state.allTags}
+                                search selection
+                                onChange={this.handleSelectedTagsChange}/>
 
-                <Form.Field>
-                    <label>排课状态</label>
-                    <Form.Select options={[{
-                        key: 'all', text: '全部（不限）', value: ''
-                    }, {
-                        key: 'excess', text: '超额排课', value: 'excess'
-                    }, {
-                        key: 'no_need', text: '不可排课', value: 'no_need'
-                    }, {
-                        key: 'done', text: '排课完成', value: 'done'
-                    }, {
-                        key: 'need', text: '需排课', value: 'need'
-                    }]} placeholder="排课状态"
-                                 value={this.state.searchParams.weekly_schedule_requirements}
-                                 name="weekly_schedule_requirements"
-                                 onChange={this.handleTextChange}/>
-                </Form.Field>
-            </Form.Group>
-            <Form.Group>
-                <Button type="submit">
-                    <Icon name="search"/>
-                    查询
-                </Button>
-                {
-                    this.props['user-type'] === MemberType.Companion &&
-                    <Button type="button"
-                            onClick={this.createNewUser}>创建新用户</Button>
-                }
-
-                <label>快捷方式：</label>
-                <Label.Group color='blue'>
+                    <Form.Field>
+                        <label>排课状态</label>
+                        <Form.Select options={[{
+                            key: 'all', text: '全部（不限）', value: ''
+                        }, {
+                            key: 'excess', text: '超额排课', value: 'excess'
+                        }, {
+                            key: 'no_need', text: '不可排课', value: 'no_need'
+                        }, {
+                            key: 'done', text: '排课完成', value: 'done'
+                        }, {
+                            key: 'need', text: '需排课', value: 'need'
+                        }]} placeholder="排课状态"
+                                     value={this.state.searchParams.weekly_schedule_requirements}
+                                     name="weekly_schedule_requirements"
+                                     onChange={this.handleTextChange}/>
+                    </Form.Field>
+                </Form.Group>
+                <Form.Group>
+                    <Button type="submit">
+                        <Icon name="search"/>
+                        查询
+                    </Button>
                     {
-                        this.state.allTags.map(t => {
-                            return (
-                                <Label as="button" key={t.key} onClick={() => {
-                                    this.searchUsersByTag(t.key)
-                                }} style={{cursor: 'pointer'}}>
-                                    {t.text}
-                                </Label>
-                            )
-                        })
+                        this.props['user-type'] === MemberType.Companion &&
+                        <Button type="button"
+                                onClick={this.createNewUser}>创建新用户</Button>
                     }
-                </Label.Group>
-            </Form.Group>
+
+                    <label>快捷方式：</label>
+                    <Label.Group color='blue'>
+                        {
+                            this.state.allTags.map(t => {
+                                return (
+                                    <Label as="button" key={t.key} onClick={() => {
+                                        this.searchUsersByTag(t.key)
+                                    }} style={{cursor: 'pointer'}}>
+                                        {t.text}
+                                    </Label>
+                                )
+                            })
+                        }
+                    </Label.Group>
+                </Form.Group>
+            </Container>
         </Form>
             ;
     }
