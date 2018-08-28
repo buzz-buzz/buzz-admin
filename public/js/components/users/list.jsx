@@ -322,7 +322,7 @@ class UserList extends React.Component {
     }
 
 
-    changeState = (user, newState) => {
+    changeState = (user, newState, i) => {
         if (newState === StudentLifeCycleKeys.demo) {
             this.setState({showLifecycleModal: true, currentLifeCycleChange: {newState: newState, user: user}});
         } else {
@@ -330,6 +330,8 @@ class UserList extends React.Component {
             if (remark !== null) {
                 this.setState({
                     users: [...this.state.users.slice(0, i), {...user, state: newState}, ...this.state.users.slice(i + 1)],
+                }, () => {
+                    console.log('user new state = ', this.state.users)
                 });
 
                 this.props.changeUserState(user, newState, remark)
@@ -344,7 +346,7 @@ class UserList extends React.Component {
             <Table.Body>
                 {
                     this.state.users.map((user, i) =>
-                        <UserListTableRow key={user.user_id} match={this.props.match} userType={this.props['user-type']} user={user} openProfile={this.openProfile} openClassHours={this.openClassHours} openIntegral={this.openIntegral} openLevelModal={this.openLevelModal} openSchedulePreferenceModal={this.openSchedulePreferenceModal} changeState={(newState) => this.changeState(user, newState)} state={this.state.searchParams.state}/>
+                        <UserListTableRow key={user.user_id} match={this.props.match} userType={this.props['user-type']} user={user} openProfile={this.openProfile} openClassHours={this.openClassHours} openIntegral={this.openIntegral} openLevelModal={this.openLevelModal} openSchedulePreferenceModal={this.openSchedulePreferenceModal} changeState={(newState) => this.changeState(user, newState, i)} state={this.state.searchParams.state}/>
                     )
                 }
             </Table.Body>

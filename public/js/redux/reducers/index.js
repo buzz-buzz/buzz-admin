@@ -72,6 +72,7 @@ async function changeUserState(state = {}, action) {
                     method: 'PUT'
                 }
             })
+            console.log('result = ', result)
             return {
                 ...state,
                 [action.user.user_id]: {...action.user, state: result.state}

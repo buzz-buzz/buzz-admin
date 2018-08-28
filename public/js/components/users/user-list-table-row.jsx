@@ -103,6 +103,7 @@ class UserListTableRow extends React.Component {
     }
 
     static renderState(user, changeState) {
+
         return <Table.Cell>
             <LifeCycle user={user} changeState={changeState}/>
         </Table.Cell>;
