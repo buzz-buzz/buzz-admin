@@ -8,6 +8,7 @@ export const CHANGE_USER_STATE = 'CHANGE_USER_STATE';
 export const LOAD_ALL_SALES = 'LOAD_ALL_SALES';
 export const ADD_USER_DEMO = 'ADD_USER_DEMO';
 export const ADD_FIRST_CLASS = 'ADD_FIRST_CLASS';
+export const ADD_LATEST_CLASS = 'ADD_LATEST_CLASS';
 
 export function loadClass(classInfo) {
     return {
@@ -58,6 +59,7 @@ export function clearCreditsHistory(userId, pagination) {
 }
 
 export function changeUserState(user, newState, remark) {
+    console.log('dispatching...', user, newState, remark)
     return {
         type: CHANGE_USER_STATE,
         user: user,
@@ -87,5 +89,13 @@ export function addFirstClass(userId, firstClass) {
         type: ADD_FIRST_CLASS,
         userId: userId,
         firstClass
+    }
+}
+
+export function addLatestEndClass(userId, latestEndClass) {
+    return {
+        type: ADD_LATEST_CLASS,
+        userId,
+        latestEndClass
     }
 }

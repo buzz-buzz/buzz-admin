@@ -305,8 +305,7 @@ class UserList extends React.Component {
                     open={this.state.schedulePreferenceModalOpen}
                     user={this.state.currentUser}
                     onCloseCallback={this.closeSchedulePreferenceModal}/>
-                <LifeCycleChangeModal open={this.state.showLifecycleModal} onClose={() => this.setState({showLifecycleModal: false})} changeUserState={(user, newState) => {
-                    this.props.changeUserState(user, newState);
+                <LifeCycleChangeModal open={this.state.showLifecycleModal} onClose={() => this.setState({showLifecycleModal: false})} changeUserState={(user, newState, remark) => {
                     let index = -1
                     for (let i = 0; i < this.state.users.length; i++) {
                         if (this.state.users[i].user_id === user.user_id) {
@@ -316,6 +315,7 @@ class UserList extends React.Component {
                     this.setState({
                         users: [...this.state.users.slice(0, index), {...user, state: newState}, ...this.state.users.slice(index + 1)]
                     })
+                    this.props.changeUserState(user, newState, remark)
                 }} user={this.state.currentLifeCycleChange.user} newState={this.state.currentLifeCycleChange.newState}/>
             </Container>
         )
@@ -717,7 +717,8 @@ class UserList extends React.Component {
         }
 
         this.setState({
-            searchParams: searchParams
+            searchParams: searchParams,
+            pagination: BuzzPaginationData
         }, async () => {
             await this.searchUsers()
         })

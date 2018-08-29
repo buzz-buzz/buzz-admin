@@ -91,7 +91,15 @@ export default class LifeCycleChangeModal extends React.Component {
                         user.grade = this.state.grade;
                         user.class_hours += this.state.class_hours;
                         this.props.changeUserState(user, newState, this.state.followup);
-                        this.props.onClose()
+                        this.setState({
+                            followup: '',
+                            class_hours: null,
+                            grade: null,
+                            demo_time: null,
+                            training_time: null
+                        }, () => {
+                            this.props.onClose()
+                        })
                     } catch (ex) {
                         ErrorHandler.handle(ex)
                     }

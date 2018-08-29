@@ -13,7 +13,7 @@ import {StudentLifeCycleKeys} from "../../common/LifeCycles";
 import UserDropdownSingle from "./user-dropdown";
 import ServiceProxy from "../../service-proxy";
 import {connect} from 'react-redux';
-import {addFirstClass, addUserDemo} from "../../redux/actions";
+import {addFirstClass, addLatestEndClass, addUserDemo} from "../../redux/actions";
 import TimeDisplay from '../common/time-display';
 import ClassAvatar from "../classes/class-avatar";
 
@@ -27,7 +27,7 @@ class UserListTableRow extends React.Component {
     }
 
     async componentWillMount() {
-        const {userDemo, firstClass, addUserDemoToStore, addFirstClassToStore} = this.props
+        const {userDemo, firstClass, latestEndClass, addUserDemoToStore, addFirstClassToStore, addLatestEndClassToStore} = this.props
         if (!userDemo[this.state.user.user_id]) {
             const userDemo = await ServiceProxy.proxyTo({
                 body: {uri: `{buzzService}/api/v1/user-demo/${this.state.user.user_id}`}
@@ -45,10 +45,20 @@ class UserListTableRow extends React.Component {
 
             addFirstClassToStore(this.state.user.user_id, firstClass)
         }
+
+        if (!latestEndClass[this.state.user.user_id]) {
+            const latestEndClass = await ServiceProxy.proxyTo({
+                body: {
+                    uri: `{buzzService}/api/v1/student-class-schedule/latest-end-class/${this.state.user.user_id}`
+                }
+            })
+
+            addLatestEndClassToStore(this.state.user.user_id, latestEndClass)
+        }
     }
 
     render() {
-        const {state, match, userType, openProfile, openClassHours, openIntegral, openLevelModal, openSchedulePreferenceModal, changeState, userDemo, firstClass} = this.props
+        const {state, match, userType, openProfile, openClassHours, openIntegral, openLevelModal, openSchedulePreferenceModal, changeState, userDemo, firstClass, latestEndClass} = this.props
         const {user} = this.state
 
         switch (state) {
@@ -60,6 +70,8 @@ class UserListTableRow extends React.Component {
                 return this.renderDemoUsers(openProfile, user, match, changeState, userDemo, firstClass)
             case StudentLifeCycleKeys.waiting_purchase:
                 return this.renderWaitingForPurchase(openProfile, openLevelModal, user, match, changeState, userDemo, firstClass)
+            case StudentLifeCycleKeys.waiting_renewal:
+                return this.renderWaitingForRenewal(openProfile, openLevelModal, user, match, openClassHours, changeState, latestEndClass)
             default:
                 return this.renderGeneral(openProfile, user, match, userType, openClassHours, openIntegral, openLevelModal, openSchedulePreferenceModal, changeState)
         }
@@ -327,14 +339,38 @@ class UserListTableRow extends React.Component {
             {UserListTableRow.renderState(user, changeState)}
         </Table.Row>
     }
+
+    renderWaitingForRenewal(openProfile, openLevelModal, user, match, openClassHours, changeState, latestEndClass) {
+        return <Table.Row>
+            {this.renderID(openProfile, user)}
+            {this.renderAvatar(openProfile, user, match)}
+            {this.renderContact(openProfile, user)}
+            {this.renderGrade(openProfile, user)}
+            {UserListTableRow.renderPlacementTest(user)}
+            {this.renderClassHours(openClassHours, user)}
+            {UserListTableRow.renderFollowup(user)}
+            {UserListTableRow.renderLatestEndClassFor(user, latestEndClass)}
+            {this.renderFollower(openProfile, user)}
+            {this.renderTags(openProfile, user)}
+            {UserListTableRow.renderState(user, changeState)}
+        </Table.Row>
+    }
+
+    static renderLatestEndClassFor(user, latestEndClass) {
+        return <Table.Cell>
+            <ClassAvatar classInfo={latestEndClass[user.user_id]}/>
+        </Table.Cell>
+    }
 }
 
 export default connect(store => ({
     userDemo: store.userDemo,
-    firstClass: store.firstClass
+    firstClass: store.firstClass,
+    latestEndClass: store.latestEndClass,
 }), dispatch => {
     return {
         addUserDemoToStore: (userId, userDemo) => dispatch(addUserDemo(userId, userDemo)),
-        addFirstClassToStore: (userId, firstClass) => dispatch(addFirstClass(userId, firstClass))
+        addFirstClassToStore: (userId, firstClass) => dispatch(addFirstClass(userId, firstClass)),
+        addLatestEndClassToStore: (userId, latestEndClass) => dispatch(addLatestEndClass(userId, latestEndClass))
     }
 })(UserListTableRow)

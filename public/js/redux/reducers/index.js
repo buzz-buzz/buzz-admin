@@ -1,5 +1,5 @@
 import {combineReducers} from 'redux'
-import {ADD_FIRST_CLASS, ADD_USER_DEMO, CHANGE_USER_STATE, CLEAR_CLASS_HOUR_HISTORY, CLEAR_CREDITS_HISTORY, LOAD_ALL_SALES, LOAD_CLASS, LOAD_CLASS_HOUR_HISTORY, LOAD_CREDITS_HISTORY, LOAD_FEEDBACK} from '../actions'
+import {ADD_FIRST_CLASS, ADD_LATEST_CLASS, ADD_USER_DEMO, CHANGE_USER_STATE, CLEAR_CLASS_HOUR_HISTORY, CLEAR_CREDITS_HISTORY, LOAD_ALL_SALES, LOAD_CLASS, LOAD_CLASS_HOUR_HISTORY, LOAD_CREDITS_HISTORY, LOAD_FEEDBACK} from '../actions'
 import ServiceProxy from "../../service-proxy";
 
 function classReducer(state = {}, action) {
@@ -62,6 +62,7 @@ function creditsHistory(state = {}, action) {
 async function changeUserState(state = {}, action) {
     switch (action.type) {
         case CHANGE_USER_STATE:
+            console.log('changing user state)')
             const result = await ServiceProxy.proxyTo({
                 body: {
                     uri: `{buzzService}/api/v1/user-states/${action.user.user_id}`,
@@ -116,6 +117,19 @@ function userFirstClassReducer(state = {}, action) {
     }
 }
 
+function userLatestEndClassReducer(state = {}, action) {
+    switch (action.type) {
+        case ADD_LATEST_CLASS:
+            return {
+                ...state,
+                [action.userId]: action.latestEndClass
+            };
+
+        default:
+            return state;
+    }
+}
+
 export default combineReducers({
     classes: classReducer,
     feedbacks: feedbackReducer,
@@ -125,4 +139,5 @@ export default combineReducers({
     allSales: loadAllSales,
     userDemo: userDemoReducer,
     firstClass: userFirstClassReducer,
+    latestEndClass: userLatestEndClassReducer,
 })
