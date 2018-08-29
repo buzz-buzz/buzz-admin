@@ -211,7 +211,7 @@ class UserList extends React.Component {
         }
     }
 
-    async searchUsers() {
+    async searchUsers(orderBy = null, sortDirection = null) {
         this.setState({loading: true});
         try {
             let paginationData = await            ServiceProxy.proxyTo({
@@ -222,7 +222,9 @@ class UserList extends React.Component {
                         role: this.props['user-type']
                     }, this.state.searchParams, {
                         start_time: this.state.searchParams.start_time ? new Date(this.state.searchParams.start_time) : undefined,
-                        end_time: this.state.searchParams.end_time ? new Date(this.state.searchParams.end_time) : undefined
+                        end_time: this.state.searchParams.end_time ? new Date(this.state.searchParams.end_time) : undefined,
+                        orderBy,
+                        orderDirection: sortDirection
                     }, this.state.pagination)
                 }
             });
@@ -722,7 +724,7 @@ class UserList extends React.Component {
             searchParams: searchParams,
             pagination: BuzzPaginationData
         }, async () => {
-            await this.searchUsers()
+            await this.searchUsers('user_states.timestamp', 'desc')
         })
     }
 }

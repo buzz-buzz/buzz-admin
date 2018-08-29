@@ -89,7 +89,7 @@ class UserListTableRow extends React.Component {
         return <Table.Row
             style={{cursor: 'pointer'}}>
             {this.renderID(openProfile, user)}
-            {this.renderAvatar(openProfile, user, match)}
+            {this.renderAvatar(openProfile, user, match, user.created_at)}
             {
                 userType === MemberType.Companion &&
 
@@ -207,7 +207,7 @@ class UserListTableRow extends React.Component {
         </Table.Cell>;
     }
 
-    renderAvatar(openProfile, user, match) {
+    renderAvatar(openProfile, user, match, timestamp = user.state_timestamp) {
         return <Table.Cell onClick={() => openProfile(user)}>
             <Menu text compact>
                 <Menu.Item style={{maxWidth: '100%'}}>
@@ -226,7 +226,7 @@ class UserListTableRow extends React.Component {
 
             <div>
                     <span
-                        style={{color: 'darkgray'}}>{moment(user.created_at).format('LLLL')}</span>
+                        style={{color: 'darkgray'}}>{moment(timestamp).format('LLLL')}</span>
             </div>
         </Table.Cell>;
     }
