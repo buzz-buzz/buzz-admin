@@ -78,6 +78,8 @@ class UserListTableRow extends React.Component {
                 return this.renderWaitingForPurchase(openProfile, openLevelModal, user, match, changeState, userDemo, firstClass)
             case StudentLifeCycleKeys.waiting_renewal:
                 return this.renderWaitingForRenewal(openProfile, openLevelModal, user, match, openClassHours, changeState, latestEndClass)
+            case StudentLifeCycleKeys.invalid:
+                return this.renderInvalidUsers(openProfile, openLevelModal, user, match, openClassHours, changeState)
             default:
                 return this.renderGeneral(openProfile, user, match, userType, openClassHours, openIntegral, openLevelModal, openSchedulePreferenceModal, changeState)
         }
@@ -367,6 +369,22 @@ class UserListTableRow extends React.Component {
         return <Table.Cell>
             <ClassAvatar classInfo={latestEndClass[user.user_id]}/>
         </Table.Cell>
+    }
+
+    renderInvalidUsers(openProfile, openLevelModal, user, match, openClassHours, changeState) {
+        return <Table.Row>
+            {this.renderID(openProfile, user)}
+            {this.renderAvatar(openProfile, user, match)}
+            {this.renderContact(openProfile, user)}
+            {this.renderGrade(openProfile, user)}
+            {UserListTableRow.renderPlacementTest(user)}
+            {this.renderClassHours(openClassHours, user)}
+            {this.renderSource(openProfile, user)}
+            {UserListTableRow.renderFollowup(user)}
+            {this.renderFollower(openProfile, user)}
+            {this.renderTags(openProfile, user)}
+            {UserListTableRow.renderState(user, changeState)}
+        </Table.Row>
     }
 }
 

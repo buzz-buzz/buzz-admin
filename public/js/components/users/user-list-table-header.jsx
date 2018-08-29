@@ -33,6 +33,8 @@ export default class UserListTableHeader extends React.Component {
                 return UserListTableHeader.renderWaitingPurchase()
             case StudentLifeCycleKeys.waiting_renewal:
                 return UserListTableHeader.renderWaitingRenewal()
+            case StudentLifeCycleKeys.invalid:
+                return UserListTableHeader.renderInvalid()
             default:
                 return UserListTableHeader.renderGeneral(userType)
         }
@@ -128,6 +130,8 @@ export default class UserListTableHeader extends React.Component {
             case StudentLifeCycleKeys.waiting_purchase:
                 return 10;
             case StudentLifeCycleKeys.waiting_renewal:
+                return 11;
+            case StudentLifeCycleKeys.invalid:
                 return 11;
             default:
                 return 11;
@@ -232,5 +236,21 @@ export default class UserListTableHeader extends React.Component {
 
     static renderLatestEndClass() {
         return <Table.HeaderCell>排课信息</Table.HeaderCell>
+    }
+
+    static renderInvalid() {
+        return <Table.Row>
+            {UserListTableHeader.renderID()}
+            {UserListTableHeader.renderAvatar()}
+            {UserListTableHeader.renderContactInfo()}
+            {UserListTableHeader.renderGrade()}
+            {UserListTableHeader.renderLevel()}
+            {UserListTableHeader.renderClassHours()}
+            {UserListTableHeader.renderSource()}
+            {UserListTableHeader.renderFollowup()}
+            {UserListTableHeader.renderFollower()}
+            {UserListTableHeader.renderTag()}
+            {UserListTableHeader.renderState()}
+        </Table.Row>
     }
 }

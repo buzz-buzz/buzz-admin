@@ -20,10 +20,6 @@ export default class LifeCycle extends React.Component {
         }
     };
 
-    componentWillReceiveProps(nextProps) {
-        console.log('next = ', nextProps.user.state)
-    }
-
     render() {
         const options = Object.keys(StudentLifeCyclesMapping).map(state => ({
             key: state,
