@@ -5,26 +5,43 @@ import CurrentUser from "../../common/CurrentUser";
 import ErrorHandler from "../../common/ErrorHandler";
 import moment from "moment";
 import {Avatar} from "../../common/Avatar";
+import BuzzPagination, {BuzzPaginationData} from "../common/BuzzPagination";
 
 export default class UserFollowup extends React.Component {
     constructor(props) {
         super(props)
 
         this.state = {
-            followup: ''
+            followup: '',
+            pagination: BuzzPaginationData
         }
     }
 
     async componentWillMount() {
+        await this.searchFollowups();
+    }
+
+    async searchFollowups() {
         let history = await ServiceProxy.proxyTo({
             body: {
-                uri: `{buzzService}/api/v1/follow-up/${this.props.userId}`
+                uri: `{buzzService}/api/v1/follow-up/${this.props.userId}`,
+                useQuerystring: true,
+                qs: this.state.pagination
             }
         })
 
         this.setState({
             rows: history.data,
             pagination: {...history, data: null}
+        })
+    }
+
+    gotoPage = (evt, {activePage}) => {
+        let p = this.state.pagination;
+        p.current_page = activePage;
+
+        this.setState({pagination: p}, async () => {
+            await this.searchFollowups();
         })
     }
 
@@ -37,7 +54,7 @@ export default class UserFollowup extends React.Component {
                     body: {
                         uri: `{buzzService}/api/v1/follow-up/${this.props.userId}`,
                         json: {
-                            remark: this.state.followup
+                            remark: this.state.followup,
                         },
                         method: 'POST'
                     }
@@ -84,6 +101,19 @@ export default class UserFollowup extends React.Component {
                                 </Table.Row>)
                             }
                         </Table.Body>
+                        <Table.Footer>
+                            <Table.Row>
+                                <BuzzPagination pagination={this.state.pagination}
+                                                gotoPage={this.gotoPage}
+                                                paginationChanged={(newPagination) => {
+                                                    window.localStorage.setItem('pagination.per_page', newPagination.per_page);
+                                                    this.setState({pagination: newPagination}, async () => {
+                                                        await this.searchFollowups();
+                                                    });
+                                                }}
+                                                colSpan={3}/>
+                            </Table.Row>
+                        </Table.Footer>
                     </Table>
                 </Popup>
                 <Popup hoverable trigger={<Button className="" color="yellow">添加跟进记录</Button>}>

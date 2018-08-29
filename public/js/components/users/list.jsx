@@ -370,7 +370,7 @@ class UserList extends React.Component {
 
     renderSearchForm() {
         return <Form onSubmit={this.searchUsers} loading={this.state.loading}>
-            <Container fluid>
+            <div style={{padding: '0 15px'}}>
                 <Form.Group widths='equal'>
                     <Form.Field control={Input} label="微信昵称" name="wechat_name"
                                 value={this.state.searchParams.wechat_name}
@@ -479,7 +479,7 @@ class UserList extends React.Component {
                         }
                     </Label.Group>
                 </Form.Group>
-            </Container>
+            </div>
         </Form>
             ;
     }

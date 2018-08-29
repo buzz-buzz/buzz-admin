@@ -12,8 +12,8 @@ export default class CompanionList extends React.Component {
 
     render() {
         return (
-            <Container>
-                <UserList user-type={MemberType.Companion} match={this.props.match}></UserList>
+            <Container fluid>
+                <UserList user-type={MemberType.Companion} match={this.props.match}/>
             </Container>
         )
     }

@@ -286,7 +286,7 @@ export default class ClassList extends React.Component {
 
     render() {
         return (
-            <Container>
+            <Container fluid>
                 {this.renderSearchForm()}
                 {this.renderClassStatuses()}
                 {/*{this.renderPagination()}*/}
