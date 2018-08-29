@@ -11,6 +11,8 @@ import {MemberType, MemberTypeChinese} from "../../common/MemberType";
 import WechatProfile from "./wechat-profile";
 import UserTags from "./user-tags";
 import {ClassStatusCode} from "../../common/ClassStatus";
+import {StudentLifeCyclesMapping} from "../../common/LifeCycles";
+import moment from "moment/moment";
 
 export default class Profile extends React.Component {
     constructor(props) {
@@ -225,10 +227,13 @@ export default class Profile extends React.Component {
                    closeIcon>
                 <Header content={
                     <div>
-                        用户资料 - {this.state.user.user_id}
-                        &emsp;<a
-                        href={`/classes?userIds=${this.state.user.user_id}&statuses=${ClassStatusCode.Opened}&statuses=${ClassStatusCode.Cancelled}&statuses=${ClassStatusCode.Ended}`}
-                        target="_blank">查看课程历史</a>
+                        用户信息 - {this.state.user.user_id}
+                        &emsp;
+                        {StudentLifeCyclesMapping[this.state.user.state]}：
+                        {this.state.user.state_timestamp ? moment(this.state.user.state_timestamp).format('LLLL') : null}
+                        &emsp;<a style={{float: 'right'}}
+                                 href={`/classes?userIds=${this.state.user.user_id}&statuses=${ClassStatusCode.Opened}&statuses=${ClassStatusCode.Cancelled}&statuses=${ClassStatusCode.Ended}`}
+                                 target="_blank">查看课程历史</a>
                     </div>
                 }/>
                 <Modal.Content>

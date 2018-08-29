@@ -86,7 +86,6 @@ class UserListTableRow extends React.Component {
     }
 
     renderGeneral(openProfile, user, match, userType, openClassHours, openIntegral, openLevelModal, openSchedulePreferenceModal, changeState) {
-        console.log('user = ', user)
         return <Table.Row
             style={{cursor: 'pointer'}}>
             {this.renderID(openProfile, user)}
