@@ -20,12 +20,16 @@ export default class LifeCycle extends React.Component {
         }
     };
 
+    componentWillReceiveProps(nextProps) {
+        console.log('next = ', nextProps.user.state)
+    }
+
     render() {
         const options = Object.keys(StudentLifeCyclesMapping).map(state => ({
             key: state,
             text: StudentLifeCyclesMapping[state],
             value: state
         }))
-        return <div><Dropdown name="state" trigger={<span>{StudentLifeCyclesMapping[this.state.state]}</span>} options={options} value={this.state.state} onChange={this.handleChange} on={['hover']}/></div>
+        return <div><Dropdown name="state" trigger={<span>{StudentLifeCyclesMapping[this.props.user.state]}</span>} options={options} value={this.state.state} onChange={this.handleChange} on={['hover']}/></div>
     }
 }
