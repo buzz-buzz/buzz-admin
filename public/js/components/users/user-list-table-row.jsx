@@ -10,7 +10,7 @@ import UserFollowup from "./user-follow-up";
 import {Avatar} from "../../common/Avatar";
 import {Label} from "recharts";
 import {StudentLifeCycleKeys} from "../../common/LifeCycles";
-import UserDropdownSingle from "./user-dropdown";
+import UserDropdownSingle from "./UserDropdownSingle";
 import ServiceProxy from "../../service-proxy";
 import {connect} from 'react-redux';
 import {addFirstClass, addLatestEndClass, addUserDemo} from "../../redux/actions";

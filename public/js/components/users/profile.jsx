@@ -13,6 +13,9 @@ import UserTags from "./user-tags";
 import {ClassStatusCode} from "../../common/ClassStatus";
 import {StudentLifeCyclesMapping} from "../../common/LifeCycles";
 import moment from "moment/moment";
+import ClassHourDisplay from "../common/ClassHourDisplay";
+import UserDropdownSingle from "./UserDropdownSingle";
+import UserFollowup from "./user-follow-up";
 
 export default class Profile extends React.Component {
     constructor(props) {
@@ -35,7 +38,9 @@ export default class Profile extends React.Component {
             user: {},
             display_name: '',
             weekly_schedule_requirements: 1,
-            password: ''
+            password: '',
+            source: '',
+            follower: 0
         };
 
         this.handleChange = this.handleChange.bind(this);
@@ -83,7 +88,9 @@ export default class Profile extends React.Component {
                 display_name: this.state.user.display_name || '',
                 theOtherRole: Profile.theOtherRole(this.state.user.role),
                 weekly_schedule_requirements: this.state.user.weekly_schedule_requirements,
-                password: this.state.user.password || ''
+                password: this.state.user.password || '',
+                source: this.state.user.source || '',
+                follower: this.state.user.follower || 0
             });
         })
     }
@@ -109,6 +116,8 @@ export default class Profile extends React.Component {
         display_name: this.state.display_name,
         weekly_schedule_requirements: this.state.weekly_schedule_requirements,
         password: this.state.password,
+        source: this.state.source,
+        follower: this.state.follower,
 
         wechat_openid: this.state.user.wechat_openid,
         wechat_unionid: this.state.user.wechat_unionid,
@@ -256,17 +265,53 @@ export default class Profile extends React.Component {
 
                             <Form.Input placeholder="备注名称(eg: 小明宝妈)" name="display_name" value={this.state.display_name}
                                         onChange={this.handleChange} label="备注名（内部使用，对用户不可见）"/>
+                            <Form.Input placeholder="渠道来源" name="source" value={this.state.source} onChange={this.handleChange} label="渠道来源"/>
                         </Form.Group>
+
+                        <Form.Group widths="equal">
+                            <Form.Field>
+                                <label>性别</label>
+                                <Dropdown selection multiple={false} search={true} name="gender"
+                                          options={Genders.list}
+                                          value={this.state.gender} placeholder="性别" onChange={this.handleChange}
+                                          onSearchChange={this.handleSearchChange}/>
+                            </Form.Field>
+
+                            <Form.Field>
+                                <label>在读年级</label>
+                                <Dropdown selection multiple={false} search={true} name="grade"
+                                          options={Grades.list}
+                                          value={this.state.grade} placeholder="年级" onChange={this.handleChange}
+                                          onSearchChange={this.handleSearchChange}/>
+                            </Form.Field>
+                            <Form.Input label="生日" placeholder="生日" value={this.state.date_of_birth}
+                                        type="datetime-local" name="date_of_birth" onChange={this.handleChange}/>
+
+                            <Form.Input placeholder="兴趣爱好" name="interests" value={this.state.user.interests || ''}
+                                        label="兴趣爱好" readOnly width={12}/>
+                        </Form.Group>
+
                         <Form.Group>
+                            <Popup trigger={
+                                <Form.Input placeholder="微信昵称" name="wechat_name"
+                                            value={this.state.user.wechat_name || ''}
+                                            label="微信昵称" readOnly width={3}/>
+                            } on="focus" header="微信详细资料" content={
+                                <WechatProfile userId={this.state.user.user_id} user={this.state.user}
+                                               profileUpdateCallback={this.props.profileUpdateCallback}
+                                               wechatProfileUpdated={this.wechatProfileUpdated}/>
+                            }/>
+
+                            <Form.Input placeholder="Facebook 名称" name="facebookName"
+                                        value={this.state.user.facebook_name || ''} label="Facebook 名称" width={3}/>
+
 
                             <Form.Input placeholder="手机号" name="mobile" value={this.state.mobile}
                                         onChange={this.handleChange}
                                         type="number" label="手机号"/>
-                            <Form.Input placeholder="邮箱" name="email" value={this.state.email}
-                                        onChange={this.handleChange} type="email" label="邮箱"/>
-                            <Form.Input placeholder="周上课频率" name="weekly_schedule_requirements"
-                                        value={this.state.weekly_schedule_requirements} onChange={this.handleChange}
-                                        label="周上课频率" type="number"/>
+
+                            <Form.Input label="登录密码" placeholder="用户密码,不小于6位" value={this.state.password}
+                                        name="password" onChange={this.handleChange}/>
                         </Form.Group>
                         <Form.Group widths="equal">
                             <Form.Field>
@@ -309,53 +354,27 @@ export default class Profile extends React.Component {
                             <Form.Input label="学校名称" placeholder="学校名称" value={this.state.school_name}
                                         name="school_name" onChange={this.handleChange}/>
                         </Form.Group>
-                        <Form.Group widths="equal">
-                            <Form.Field>
-                                <label>年级</label>
-                                <Dropdown selection multiple={false} search={true} name="grade"
-                                          options={Grades.list}
-                                          value={this.state.grade} placeholder="年级" onChange={this.handleChange}
-                                          onSearchChange={this.handleSearchChange}/>
-                            </Form.Field>
-                            <Form.Input label="用户密码" placeholder="用户密码,不小于6位" value={this.state.password}
-                                        name="password" onChange={this.handleChange}/>
-                        </Form.Group>
-                        <Form.Group widths="equal">
-                            <Form.Field>
-                                <label>性别</label>
-                                <Dropdown selection multiple={false} search={true} name="gender"
-                                          options={Genders.list}
-                                          value={this.state.gender} placeholder="性别" onChange={this.handleChange}
-                                          onSearchChange={this.handleSearchChange}/>
-                            </Form.Field>
-                            <Form.Input label="生日" placeholder="生日" value={this.state.date_of_birth}
-                                        type="datetime-local" name="date_of_birth" onChange={this.handleChange}/>
 
-                            <Form.Input placeholder="兴趣爱好" name="interests" value={this.state.user.interests || ''}
-                                        label="兴趣爱好" readOnly width={12}/>
-                        </Form.Group>
                         <Form.Group>
-                            <Popup trigger={
-                                <Form.Input placeholder="微信昵称" name="wechat_name"
-                                            value={this.state.user.wechat_name || ''}
-                                            label="微信昵称" readOnly width={3}/>
-                            } on="focus" header="微信详细资料" content={
-                                <WechatProfile userId={this.state.user.user_id} user={this.state.user}
-                                               profileUpdateCallback={this.props.profileUpdateCallback}
-                                               wechatProfileUpdated={this.wechatProfileUpdated}/>
-                            }/>
-
-                            <Form.Input placeholder="Facebook 名称" name="facebookName"
-                                        value={this.state.user.facebook_name || ''} label="Facebook 名称" width={3}/>
-                            <Form.Input placeholder="头像" name="avatar" value={this.state.avatar} label="头像 URL"
-                                        onChange={this.handleChange} width={10}/>
+                            <Form.Input placeholder="周上课频率" name="weekly_schedule_requirements"
+                                        value={this.state.weekly_schedule_requirements} onChange={this.handleChange}
+                                        label="周上课频率" type="number"/>
+                            <Form.Field>
+                                <label>余额（消费）<br/>可用（冻结）</label>
+                                <ClassHourDisplay user={this.props.user}/>
+                            </Form.Field>
+                            <Form.Input placeholder="当前积分（累计积分）" label="当前积分（累计积分）" value={`${(this.props.user || {}).integral || 0}（待开发）`}/>
+                            <Form.Field>
+                                <label>销售跟进人</label>
+                                <UserDropdownSingle selectedUserId={this.state.follower} changeFollowerTo={async (follower) => {
+                                    this.setState({
+                                        follower
+                                    })
+                                }}/>
+                            </Form.Field>
                         </Form.Group>
                         <Form.Group widths="equal">
-                            <Form.Field>
-                                <label>备注</label>
-                                <TextArea autoHeight placeholder="备注" rows={3} value={this.state.remark} name="remark"
-                                          onChange={this.handleChange}/>
-                            </Form.Field>
+                            <UserFollowup userId={this.state.user.user_id}/>
                         </Form.Group>
                         <Form.Group>
                             {
@@ -377,6 +396,9 @@ export default class Profile extends React.Component {
                         </Form.Group>
                     </Form>
                 </Modal.Content>
+                <Modal.Actions>
+                    注册时间：{moment(this.state.user.created_at).format('LLLL')}
+                </Modal.Actions>
             </Modal>
         );
     }

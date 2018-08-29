@@ -560,6 +560,8 @@ class UserList extends React.Component {
         selectedUser.date_of_birth = newProfile.date_of_birth;
         selectedUser.weekly_schedule_requirements = newProfile.weekly_schedule_requirements;
         selectedUser.password = newProfile.password;
+        selectedUser.source = newProfile.source;
+        selectedUser.follower = newProfile.follower;
 
         let newUsers = this.state.users.map(s => {
             if (s.user_id === selectedUser.user_id) {
