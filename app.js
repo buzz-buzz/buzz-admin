@@ -155,6 +155,9 @@ router
     .get('/admin-neue/faq-list', async ctx => {
         ctx.redirect(`${config.endPoints.adminNeue}/faqList`);
     })
+    .get('/admin-neue/importUser', async ctx => {
+        ctx.redirect(`${config.endPoints.adminNeue}/importUser`);
+    })
     .get('/current-user', membership.ensureAuthenticated, membership.ensureSystemUsers, async ctx => {
         ctx.body = ctx.state.user;
     })
