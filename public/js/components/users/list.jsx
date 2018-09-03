@@ -213,6 +213,12 @@ class UserList extends React.Component {
     }
 
     async searchUsers(orderBy = null, sortDirection = null) {
+        if (!_.isString(orderBy)) {
+          orderBy = null
+        }
+        if (!_.isString(sortDirection)) {
+          sortDirection = null
+        }
         this.setState({loading: true});
         try {
             let paginationData = await            ServiceProxy.proxyTo({
