@@ -389,6 +389,9 @@ class UserList extends React.Component {
                     <Form.Field control={Input} label="邮箱"
                                 value={this.state.searchParams.email}
                                 name="email" onChange={this.handleTextChange}/>
+                    <Form.Field control={Input} label="跟进人"
+                                value={this.state.searchParams.follower}
+                                name="follower" onChange={this.handleTextChange}/>
                 </Form.Group>
                 <Form.Group widths="equal">
                     <Form.Field>
