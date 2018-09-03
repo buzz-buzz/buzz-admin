@@ -103,6 +103,7 @@ class UserList extends React.Component {
                 display_name: '',
                 mobile: '',
                 email: '',
+                follower: '',
                 weekly_schedule_requirements: '',
                 tags: [],
             },
