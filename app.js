@@ -63,6 +63,7 @@ app.use(async (ctx, next) => {
             // await membership.signOut(ctx, async () => {
             // });
             // ctx.redirect(membership.getSignInUrl(ctx.request.url));
+            ctx.throw(err.status, err);
         } else {
             ctx.throw(err.status, err)
         }
