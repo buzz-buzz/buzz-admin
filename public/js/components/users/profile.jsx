@@ -80,6 +80,7 @@ export default class Profile extends React.Component {
                 country: this.state.user.country || '',
                 city: this.state.user.city || '',
                 remark: this.state.user.remark || '',
+                old_remark: this.state.user.old_remark || '',
                 avatar: this.state.user.avatar || '',
                 gender: this.state.user.gender || '',
                 grade: this.state.user.grade || '',
@@ -91,7 +92,7 @@ export default class Profile extends React.Component {
                 weekly_schedule_requirements: this.state.user.weekly_schedule_requirements,
                 password: this.state.user.password || '',
                 source: this.state.user.source || '',
-                follower: this.state.user.follower || 0
+                follower: this.state.user.follower || 0,
             });
         })
     }
@@ -109,6 +110,7 @@ export default class Profile extends React.Component {
         city: this.state.city,
         gender: this.state.gender,
         remark: this.state.remark,
+        old_remark: this.state.old_remark,
         avatar: this.state.avatar,
         grade: this.state.grade,
         school_name: this.state.school_name,
