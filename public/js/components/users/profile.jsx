@@ -376,10 +376,10 @@ export default class Profile extends React.Component {
                                 }}/>
                             </Form.Field>
                         </Form.Group>
-                        <Form.Grop>
+                        <Form.Group>
                             <Form.Field control={TextArea} label='备注' placeholder='old_remark' value={this.state.old_remark} name='old_remark'
                                 onChange={this.handleChange}/>
-                        </Form.Grop>
+                        </Form.Group>
                         <Form.Group widths="equal">
                             <UserFollowup userId={this.state.user.user_id}/>
                         </Form.Group>
