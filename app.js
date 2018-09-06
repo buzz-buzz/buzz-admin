@@ -59,7 +59,7 @@ app.use(async (ctx, next) => {
         if (401 === Number(err.status)) {
             ctx.set('WWW-Authenticate', 'Basic');
             membership.rejectAccess(ctx);
-        } else if (404 === Number(err.statusCode)) {
+        } else if (404 === Number(err.statusCode) && err.error !== 'The requested user does not exists') {
             await membership.signOut(ctx, async () => {
             });
             ctx.redirect(membership.getSignInUrl(ctx.request.url));
