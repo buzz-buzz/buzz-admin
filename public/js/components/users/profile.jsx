@@ -29,7 +29,7 @@ export default class Profile extends React.Component {
             country: '',
             city: '',
             remark: '',
-            old_remak: '',
+            old_remark: '',
             avatar: '',
             gender: '',
             grade: '',
@@ -377,7 +377,6 @@ export default class Profile extends React.Component {
                         <Form.Grop>
                             <Form.Field control={TextArea} label='备注' placeholder='old_remark' value={this.state.old_remark} name='old_remark'
                                 onChange={this.handleChange}/>
-
                         </Form.Grop>
                         <Form.Group widths="equal">
                             <UserFollowup userId={this.state.user.user_id}/>
