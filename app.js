@@ -65,7 +65,11 @@ app.use(async (ctx, next) => {
             ctx.redirect(membership.getSignInUrl(ctx.request.url));
             //ctx.throw(err.status, err);
         } else {
-            ctx.throw(err.status, err)
+            if(ctx.request.path === '/'){
+                ctx.redirect(membership.getSignInUrl(ctx.request.url)); 
+            }else{
+                ctx.throw(err.status, err)
+            }
         }
     }
 });

@@ -8,7 +8,7 @@ let config = {
             adminNeue: `${process.env.admin_neue}`,
         },
         superUsers: [532],
-        signInUrl: `http://corner-test.buzzbuzzenglish.com/select-role?return_url=%s`,
+        signInUrl: `http://corner-test.buzzbuzzenglish.com/login?return_url=%s`,
         origin: 'http://heroku.buzzbuzzenglish.com:16666',
         rootDomain: '.buzzbuzzenglish.com'
     },
@@ -18,7 +18,7 @@ let config = {
             adminNeue: `${process.env.admin_neue}`,
         },
         superUsers: [56],
-        signInUrl: 'http://corner-test.buzzbuzzenglish.com/select-role?return_url=%s',
+        signInUrl: 'http://corner-test.buzzbuzzenglish.com/login?return_url=%s',
         origin: 'http://admin-test.buzzbuzzenglish.com',
         rootDomain: '.buzzbuzzenglish.com'
     },
@@ -28,7 +28,7 @@ let config = {
             adminNeue: `${process.env.admin_neue}`,
         },
         superUsers: [3],
-        signInUrl: 'http://live.buzzbuzzenglish.com/select-role?return_url=%s',
+        signInUrl: 'http://live.buzzbuzzenglish.com/login?return_url=%s',
         origin: 'http://admin.buzzbuzzenglish.com',
         rootDomain: '.buzzbuzzenglish.com'
     }
