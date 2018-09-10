@@ -11,7 +11,7 @@ class FeedbackDetail extends React.Component {
     render() {
         const classInfo = this.props.classes[this.props.match.params.class_id];
 
-        return <Container>
+        return <Container fluid>
             <ClassDetail match={this.props.match}/>
             <h2>外籍语伴对中方学生的评价</h2>
             <Grid columns='equal'>

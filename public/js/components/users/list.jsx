@@ -3,13 +3,11 @@ import {
     Button,
     Container,
     Dropdown,
-    Flag,
     Form,
     Icon,
     Input,
     Label,
     Menu,
-    Popup,
     Segment,
     Table
 } from "semantic-ui-react";
@@ -22,18 +20,19 @@ import 'moment/locale/zh-cn'
 import ClassHours from "./class-hours";
 import Credits from "./credits";
 import LevelModal from "../students/level-modal";
-import BookingTable from "./booking-table";
 import queryString from 'query-string';
-import {MemberType, MemberTypeChinese} from "../../common/MemberType";
+import {MemberType} from "../../common/MemberType";
 import history from '../common/history';
 import BuzzPagination, {BuzzPaginationData} from "../common/BuzzPagination";
 import UserTags from "./user-tags";
-import {ClassStatusCode} from "../../common/ClassStatus";
-import {Avatar} from "../../common/Avatar";
-import {Grades} from '../../common/Grades';
 import DatePicker from "react-datepicker/es/index";
-import ClassHourDisplay from '../common/ClassHourDisplay';
-import {StudentLifeCycles} from "../../common/LifeCycles";
+import {StudentLifeCycleKeys, StudentLifeCycles} from "../../common/LifeCycles";
+import ErrorHandler from "../../common/ErrorHandler";
+import {connect} from 'react-redux';
+import {changeUserState} from "../../redux/actions";
+import LifeCycleChangeModal from "./life-cycle-change-modal";
+import UserListTableHeader from "./user-list-table-header";
+import UserListTableRow from "./user-list-table-row";
 
 moment.locale('zh-CN');
 BigCalendar.setLocalizer(BigCalendar.momentLocalizer(moment))
@@ -69,7 +68,7 @@ async function attachEvents(users) {
     }
 }
 
-export default class UserList extends React.Component {
+class UserList extends React.Component {
     handleSelectedTagsChange = (e, {value}) => {
         let {searchParams} = this.state;
         searchParams.tags = value;
@@ -104,13 +103,15 @@ export default class UserList extends React.Component {
                 display_name: '',
                 mobile: '',
                 email: '',
+                follower: '',
                 weekly_schedule_requirements: '',
                 tags: [],
             },
             allTags: [],
             pagination: BuzzPaginationData,
             loading: false,
-            users: []
+            users: [],
+            currentLifeCycleChange: {},
         };
 
         this.searchUsers = this.searchUsers.bind(this);
@@ -119,6 +120,7 @@ export default class UserList extends React.Component {
         this.closeClassHoursModal = this.closeClassHoursModal.bind(this);
         this.classHoursUpdated = this.classHoursUpdated.bind(this);
         this.openIntegral = this.openIntegral.bind(this);
+        this.openProfile = this.openProfile.bind(this);
         this.closeIntegralModal = this.closeIntegralModal.bind(this);
         this.integralUpdated = this.integralUpdated.bind(this);
         this.closeProfileModal = this.closeProfileModal.bind(this);
@@ -210,10 +212,16 @@ export default class UserList extends React.Component {
         }
     }
 
-    async searchUsers() {
+    async searchUsers(orderBy = null, sortDirection = null) {
+        if (!_.isString(orderBy)) {
+          orderBy = null
+        }
+        if (!_.isString(sortDirection)) {
+          sortDirection = null
+        }
         this.setState({loading: true});
-        let paginationData = await
-            ServiceProxy.proxyTo({
+        try {
+            let paginationData = await            ServiceProxy.proxyTo({
                 body: {
                     uri: `{buzzService}/api/v1/users`,
                     useQuerystring: true,
@@ -221,26 +229,32 @@ export default class UserList extends React.Component {
                         role: this.props['user-type']
                     }, this.state.searchParams, {
                         start_time: this.state.searchParams.start_time ? new Date(this.state.searchParams.start_time) : undefined,
-                        end_time: this.state.searchParams.end_time ? new Date(this.state.searchParams.end_time) : undefined
+                        end_time: this.state.searchParams.end_time ? new Date(this.state.searchParams.end_time) : undefined,
+                        orderBy,
+                        orderDirection: sortDirection
                     }, this.state.pagination)
                 }
             });
 
-        let users = paginationData.data;
+            let users = paginationData.data;
 
-        this.setState({
-            loading: false,
-            users: await attachEvents.call(this, users),
-            pagination: {
-                current_page: paginationData.current_page,
-                from: paginationData.from,
-                last_page: paginationData.last_page,
-                offset: paginationData.offset,
-                per_page: paginationData.per_page,
-                to: paginationData.to,
-                total: paginationData.total
-            }
-        });
+            this.setState({
+                users: await attachEvents.call(this, users),
+                pagination: {
+                    current_page: paginationData.current_page,
+                    from: paginationData.from,
+                    last_page: paginationData.last_page,
+                    offset: paginationData.offset,
+                    per_page: paginationData.per_page,
+                    to: paginationData.to,
+                    total: paginationData.total
+                }
+            });
+        } catch (ex) {
+            ErrorHandler.handle(ex)
+        } finally {
+            this.setState({loading: false})
+        }
     }
 
     handleTextChange(event, {value, name}) {
@@ -263,7 +277,7 @@ export default class UserList extends React.Component {
 
     render() {
         return (
-            <Container>
+            <Container fluid style={{overflow: 'auto'}}>
                 {this.renderSearchForm()}
                 {
                     this.props['user-type'] === MemberType.Student &&
@@ -300,123 +314,48 @@ export default class UserList extends React.Component {
                     open={this.state.schedulePreferenceModalOpen}
                     user={this.state.currentUser}
                     onCloseCallback={this.closeSchedulePreferenceModal}/>
+                <LifeCycleChangeModal open={this.state.showLifecycleModal} onClose={() => this.setState({showLifecycleModal: false})} changeUserState={(user, newState, remark) => {
+                    let index = -1
+                    for (let i = 0; i < this.state.users.length; i++) {
+                        if (this.state.users[i].user_id === user.user_id) {
+                            index = i;
+                        }
+                    }
+                    this.setState({
+                        users: [...this.state.users.slice(0, index), {...user, state: newState}, ...this.state.users.slice(index + 1)]
+                    })
+                    this.props.changeUserState(user, newState, remark)
+                }} user={this.state.currentLifeCycleChange.user} newState={this.state.currentLifeCycleChange.newState}/>
             </Container>
         )
     }
 
+
+    changeState = (user, newState, i) => {
+        if (newState === StudentLifeCycleKeys.demo) {
+            this.setState({showLifecycleModal: true, currentLifeCycleChange: {newState: newState, user: user}});
+        } else {
+            const remark = window.prompt('请输入原因');
+            if (remark !== null) {
+                this.setState({
+                    users: [...this.state.users.slice(0, i), {...user, state: newState}, ...this.state.users.slice(i + 1)],
+                }, () => {
+                    console.log('user new state = ', this.state.users)
+                });
+
+                this.props.changeUserState(user, newState, remark)
+            }
+        }
+    }
+
     renderListTable() {
+
         return <Table celled selectable striped>
-            {this.renderTableHeader()}
+            <UserListTableHeader userType={this.props['user-type']} downloadLink={this.state.downloadLink} filename={this.state.filename} onExport={this.export} state={this.state.searchParams.state}/>
             <Table.Body>
                 {
                     this.state.users.map((user, i) =>
-                        <Table.Row key={user.user_id}
-                                   style={{cursor: 'pointer'}}
-                                   onClick={() => this.setState({activeIndex: this.state.activeIndex === i ? null : i})}
-                                   active={this.state.activeIndex === i}>
-                            <Table.Cell onClick={() => this.openProfile(user)}>
-                                <p>{user.user_id}</p>
-                                <p style={{color: 'gainsboro'}}>
-                                    {
-                                        user.country &&
-                                        <Flag name={user.country.toLowerCase()}/>
-                                    }
-                                    {user.country} {user.city}
-                                </p>
-                            </Table.Cell>
-                            <Table.Cell onClick={() => this.openProfile(user)}>
-                                <Menu text compact>
-                                    <Menu.Item style={{maxWidth: '100%'}}>
-                                        <Avatar userId={user.user_id}>
-                                        </Avatar>
-                                        {
-                                            this.props.match.path === '/users/:userId?' &&
-                                            <Label floating
-                                                   color={user.role === MemberType.Student ? 'yellow' : 'black'}>
-                                                <span
-                                                    style={{whiteSpace: 'nowrap'}}>{MemberTypeChinese[user.role] ? MemberTypeChinese[user.role].substr(0, 1) : ''}</span>
-                                            </Label>
-                                        }
-                                    </Menu.Item>
-                                </Menu>
-
-                                <div style={{color: 'gainsboro'}}>
-                                    {user.created_at}<br/>
-                                    <span
-                                        style={{color: 'darkgray'}}>{moment(user.created_at).format('LLLL')}</span>
-                                </div>
-                            </Table.Cell>
-                            {
-                                this.props['user-type'] === MemberType.Companion &&
-
-                                <Table.Cell
-                                    onClick={() => this.openProfile(user)}>
-                                    {user.country}
-                                </Table.Cell>
-                            }
-                            <Table.Cell onClick={() => this.openProfile(user)}>
-                                <p>{user.mobile}</p>
-                                <p>{user.email}</p>
-                            </Table.Cell>
-                            <Table.Cell onClick={() => this.openProfile(user)}>
-                                {Grades[user.grade]}
-                            </Table.Cell>
-                            <Table.Cell
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    this.openClassHours(user);
-                                }}
-                                style={{cursor: 'pointer'}}>
-                                <ClassHourDisplay user={user}/>
-                            </Table.Cell>
-                            {
-                                <Table.Cell
-                                    onClick={() => this.openIntegral(user)}
-                                    style={{cursor: 'pointer'}}>
-                                    {user.integral || 0}
-                                </Table.Cell>
-                            }
-                            {
-                                this.props['user-type'] === MemberType.Student && user.placement_test &&
-                                <Table.Cell
-                                    onClick={() => this.openLevelModal(user)}
-                                    style={{
-                                        whiteSpace: 'nowrap',
-                                        color: user.level ? 'black' : 'red'
-                                    }}>
-                                    {user.level ?
-                                        <strong>{user.level}</strong> : '待评级'}
-                                </Table.Cell>
-                            }
-                            {
-                                this.props['user-type'] === MemberType.Student && !user.placement_test &&
-                                <Popup
-                                    trigger={
-                                        <Table.Cell style={{
-                                            color: 'gainsboro',
-                                            whiteSpace: 'nowrap'
-                                        }}>待测试</Table.Cell>
-                                    }
-                                    content={`${user.display_name || user.name || user.wechat_name} 还没有进行测试，请提醒 TA 完成。`}
-                                    on='click'
-                                />
-                            }
-                            {/* <Table.Cell onClick={() => this.openProfile(user)}>
-                                {user.weekly_schedule_requirements || '1'}
-                            </Table.Cell> */}
-                            <Table.Cell
-                                onClick={() => this.openSchedulePreferenceModal(user)}>
-                                <BookingTable events={user.events}
-                                              defaultDate={new Date()}/>
-                            </Table.Cell>
-                            <Table.Cell onClick={() => this.openProfile(user)}>
-                                <span>{user.tags}</span>
-                            </Table.Cell>
-                            <Table.Cell>
-                                <a href={`/classes/?userIds=${user.user_id}&statuses=${ClassStatusCode.Opened}&statuses=${ClassStatusCode.Cancelled}&statuses=${ClassStatusCode.Ended}&start_time=1990-1-1`}
-                                   target="_blank">课程历史</a>
-                            </Table.Cell>
-                        </Table.Row>
+                        <UserListTableRow key={user.user_id} match={this.props.match} userType={this.props['user-type']} user={user} openProfile={this.openProfile} openClassHours={this.openClassHours} openIntegral={this.openIntegral} openLevelModal={this.openLevelModal} openSchedulePreferenceModal={this.openSchedulePreferenceModal} changeState={(newState) => this.changeState(user, newState, i)} state={this.state.searchParams.state}/>
                     )
                 }
             </Table.Body>
@@ -430,7 +369,7 @@ export default class UserList extends React.Component {
                                             await this.searchUsers();
                                         });
                                     }}
-                                    colSpan={this.props['user-type'] === MemberType.Student ? 10 : (this.props['user-type'] === MemberType.Companion ? 10 : 9)}/>
+                                    colSpan={this.props['user-type'] === MemberType.Student ? UserListTableHeader.getColumnNumber(this.state.searchParams.state) : (this.props['user-type'] === MemberType.Companion ? 11 : 10)}/>
                 </Table.Row>
             </Table.Footer>
         </Table>;
@@ -438,150 +377,120 @@ export default class UserList extends React.Component {
 
     renderSearchForm() {
         return <Form onSubmit={this.searchUsers} loading={this.state.loading}>
-            <Form.Group widths='equal'>
-                <Form.Field control={Input} label="微信昵称" name="wechat_name"
-                            value={this.state.searchParams.wechat_name}
-                            onChange={this.handleTextChange}/>
-                <Form.Field control={Input} label="（孩子）英文名"
-                            value={this.state.searchParams.name} name="name"
-                            onChange={this.handleTextChange}>
-                </Form.Field>
-                <Form.Field control={Input} label="备注名（内部可见）"
-                            value={this.state.searchParams.display_name}
-                            name="display_name"
-                            onChange={this.handleTextChange}/>
-                <Form.Field control={Input} label="手机号"
-                            value={this.state.searchParams.mobile}
-                            name="mobile" onChange={this.handleTextChange}/>
-                <Form.Field control={Input} label="邮箱"
-                            value={this.state.searchParams.email}
-                            name="email" onChange={this.handleTextChange}/>
-            </Form.Group>
-            <Form.Group widths="equal">
-                <Form.Field>
-                    <label>预约/排课时间段 开始时间</label>
-                    <DatePicker showTimeSelect
-                                selected={this.state.searchParams.start_time ? moment(this.state.searchParams.start_time) : null}
-                                name="start_time" isClearable={true}
-                                dateFormat={'YYYY-MM-DD HH:mm'}
-                                placeholderText={"开始时间"}
-                                onChange={date => this.handleDateChange('start_time', date)}/>
-                </Form.Field>
+            <div style={{padding: '0 15px'}}>
+                <Form.Group widths='equal'>
+                    <Form.Field control={Input} label="微信昵称" name="wechat_name"
+                                value={this.state.searchParams.wechat_name}
+                                onChange={this.handleTextChange}/>
+                    <Form.Field control={Input} label="（孩子）英文名"
+                                value={this.state.searchParams.name} name="name"
+                                onChange={this.handleTextChange}>
+                    </Form.Field>
+                    <Form.Field control={Input} label="备注名（内部可见）"
+                                value={this.state.searchParams.display_name}
+                                name="display_name"
+                                onChange={this.handleTextChange}/>
+                    <Form.Field control={Input} label="手机号"
+                                value={this.state.searchParams.mobile}
+                                name="mobile" onChange={this.handleTextChange}/>
+                    <Form.Field control={Input} label="邮箱"
+                                value={this.state.searchParams.email}
+                                name="email" onChange={this.handleTextChange}/>
+                    <Form.Field control={Input} label="跟进人"
+                                value={this.state.searchParams.follower}
+                                name="follower" onChange={this.handleTextChange}/>
+                </Form.Group>
+                <Form.Group widths="equal">
+                    <Form.Field>
+                        <label>预约/排课时间段 开始时间</label>
+                        <DatePicker showTimeSelect
+                                    selected={this.state.searchParams.start_time ? moment(this.state.searchParams.start_time) : null}
+                                    name="start_time" isClearable={true}
+                                    dateFormat={'YYYY-MM-DD HH:mm'}
+                                    placeholderText={"开始时间"}
+                                    onChange={date => this.handleDateChange('start_time', date)}/>
+                    </Form.Field>
 
-                <Form.Field>
-                    <label>结束时间</label>
-                    <DatePicker showTimeSelect
-                                selected={this.state.searchParams.end_time ? moment(this.state.searchParams.end_time) : null}
-                                name="end_time" isClearable={true}
-                                dateFormat={"YYYY-MM-DD HH:mm"}
-                                placeholderText={"结束时间"}
-                                onChange={date => this.handleDateChange('end_time', date)}/>
-                </Form.Field>
+                    <Form.Field>
+                        <label>结束时间</label>
+                        <DatePicker showTimeSelect
+                                    selected={this.state.searchParams.end_time ? moment(this.state.searchParams.end_time) : null}
+                                    name="end_time" isClearable={true}
+                                    dateFormat={"YYYY-MM-DD HH:mm"}
+                                    placeholderText={"结束时间"}
+                                    onChange={date => this.handleDateChange('end_time', date)}/>
+                    </Form.Field>
 
-                <Form.Field>
-                    <label>注册开始时间段 开始时间</label>
-                    <DatePicker
-                        selected={this.state.searchParams.create_start_time ? moment(this.state.searchParams.create_start_time) : null}
-                        name="create_start_time" isClearable={true}
-                        dateFormat={"YYYY-MM-DD HH:mm"}
-                        placeholderText={"注册开始时间段 开始时间"}
-                        onChange={date => this.handleDateChange('create_start_time', date)}/>
-                </Form.Field>
-                <Form.Field>
-                    <label>结束时间</label>
-                    <DatePicker showTimeSelect
-                                selected={this.state.searchParams.create_end_time ? moment(this.state.searchParams.create_end_time) : null}
-                                name="create_end_time" isClearable={true}
-                                dateFormat={"YYYY-MM-DD HH:mm"}
-                                placeholderText={"结束时间"}
-                                onChange={date => this.handleDateChange('create_end_time', date)}/>
-                </Form.Field>
-                <Form.Field control={Dropdown} label="用户标签" name="tags"
-                            value={this.state.searchParams.tags} multiple
-                            options={this.state.allTags}
-                            search selection
-                            onChange={this.handleSelectedTagsChange}/>
+                    <Form.Field>
+                        <label>注册开始时间段 开始时间</label>
+                        <DatePicker
+                            selected={this.state.searchParams.create_start_time ? moment(this.state.searchParams.create_start_time) : null}
+                            name="create_start_time" isClearable={true}
+                            dateFormat={"YYYY-MM-DD HH:mm"}
+                            placeholderText={"注册开始时间段 开始时间"}
+                            onChange={date => this.handleDateChange('create_start_time', date)}/>
+                    </Form.Field>
+                    <Form.Field>
+                        <label>结束时间</label>
+                        <DatePicker showTimeSelect
+                                    selected={this.state.searchParams.create_end_time ? moment(this.state.searchParams.create_end_time) : null}
+                                    name="create_end_time" isClearable={true}
+                                    dateFormat={"YYYY-MM-DD HH:mm"}
+                                    placeholderText={"结束时间"}
+                                    onChange={date => this.handleDateChange('create_end_time', date)}/>
+                    </Form.Field>
+                    <Form.Field control={Dropdown} label="用户标签" name="tags"
+                                value={this.state.searchParams.tags} multiple
+                                options={this.state.allTags}
+                                search selection
+                                onChange={this.handleSelectedTagsChange}/>
 
-                <Form.Field>
-                    <label>排课状态</label>
-                    <Form.Select options={[{
-                        key: 'all', text: '全部（不限）', value: ''
-                    }, {
-                        key: 'excess', text: '超额排课', value: 'excess'
-                    }, {
-                        key: 'no_need', text: '不可排课', value: 'no_need'
-                    }, {
-                        key: 'done', text: '排课完成', value: 'done'
-                    }, {
-                        key: 'need', text: '需排课', value: 'need'
-                    }]} placeholder="排课状态"
-                                 value={this.state.searchParams.weekly_schedule_requirements}
-                                 name="weekly_schedule_requirements"
-                                 onChange={this.handleTextChange}/>
-                </Form.Field>
-            </Form.Group>
-            <Form.Group>
-                <Button type="submit">
-                    <Icon name="search"/>
-                    查询
-                </Button>
-                {
-                    this.props['user-type'] === MemberType.Companion &&
-                    <Button type="button"
-                            onClick={this.createNewUser}>创建新用户</Button>
-                }
-
-                <label>快捷方式：</label>
-                <Label.Group color='blue'>
+                    <Form.Field>
+                        <label>排课状态</label>
+                        <Form.Select options={[{
+                            key: 'all', text: '全部（不限）', value: ''
+                        }, {
+                            key: 'excess', text: '超额排课', value: 'excess'
+                        }, {
+                            key: 'no_need', text: '不可排课', value: 'no_need'
+                        }, {
+                            key: 'done', text: '排课完成', value: 'done'
+                        }, {
+                            key: 'need', text: '需排课', value: 'need'
+                        }]} placeholder="排课状态"
+                                     value={this.state.searchParams.weekly_schedule_requirements}
+                                     name="weekly_schedule_requirements"
+                                     onChange={this.handleTextChange}/>
+                    </Form.Field>
+                </Form.Group>
+                <Form.Group>
+                    <Button type="submit">
+                        <Icon name="search"/>
+                        查询
+                    </Button>
                     {
-                        this.state.allTags.map(t => {
-                            return (
-                                <Label as="button" key={t.key} onClick={() => {
-                                    this.searchUsersByTag(t.key)
-                                }} style={{cursor: 'pointer'}}>
-                                    {t.text}
-                                </Label>
-                            )
-                        })
+                        this.props['user-type'] === MemberType.Companion &&
+                        <Button type="button"
+                                onClick={this.createNewUser}>创建新用户</Button>
                     }
-                </Label.Group>
-            </Form.Group>
-        </Form>
-            ;
-    }
 
-    renderTableHeader() {
-        return <Table.Header>
-            <Table.Row>
-                <Table.HeaderCell>用户编号</Table.HeaderCell>
-                <Table.HeaderCell>头像-昵称</Table.HeaderCell>
-                {
-                    this.props['user-type'] === MemberType.Companion &&
-                    <Table.HeaderCell>国籍</Table.HeaderCell>
-                }
-                <Table.HeaderCell>联系信息<br/>手机号<br/>邮箱</Table.HeaderCell>
-                <Table.HeaderCell>年级</Table.HeaderCell>
-                <Table.HeaderCell>
-                    总课时 <span style={{color: 'lightgray'}}> (已消费) </span>
-                    <br/>
-                    可用(冻结)
-                </Table.HeaderCell>
-                <Table.HeaderCell>
-                    积分
-                </Table.HeaderCell>
-                {
-                    this.props['user-type'] === MemberType.Student &&
-                    <Table.HeaderCell>能力评级</Table.HeaderCell>
-                }
-                <Table.HeaderCell>预约/排课</Table.HeaderCell>
-                <Table.HeaderCell>标签</Table.HeaderCell>
-                <Table.HeaderCell style={{cursor: 'pointer'}}>
-                    <a href={this.state.downloadLink}
-                       download={this.state.filename} onClick={this.export}
-                       style={{cursor: 'pointer'}}>导出</a>
-                </Table.HeaderCell>
-            </Table.Row>
-        </Table.Header>
+                    <label>快捷方式：</label>
+                    <Label.Group color='blue'>
+                        {
+                            this.state.allTags.map(t => {
+                                return (
+                                    <Label as="button" key={t.key} onClick={() => {
+                                        this.searchUsersByTag(t.key)
+                                    }} style={{cursor: 'pointer'}}>
+                                        {t.text}
+                                    </Label>
+                                )
+                            })
+                        }
+                    </Label.Group>
+                </Form.Group>
+            </div>
+        </Form>
             ;
     }
 
@@ -663,6 +572,8 @@ export default class UserList extends React.Component {
         selectedUser.date_of_birth = newProfile.date_of_birth;
         selectedUser.weekly_schedule_requirements = newProfile.weekly_schedule_requirements;
         selectedUser.password = newProfile.password;
+        selectedUser.source = newProfile.source;
+        selectedUser.follower = newProfile.follower;
 
         let newUsers = this.state.users.map(s => {
             if (s.user_id === selectedUser.user_id) {
@@ -790,7 +701,11 @@ export default class UserList extends React.Component {
         this.state.users.forEach(u => {
             let line = []
             headers.forEach(key => {
-                line.push(encodeURIComponent(String(u[key]).replace(/,/g, '|').replace(/[\r?\n]/g, '<br />')))
+                let value = u[key];
+                if (key === 'mobile_country') {
+                    value = u[key].country.country_full_name
+                }
+                line.push(encodeURIComponent(String(value).replace(/,/g, '|').replace(/[\r?\n]/g, '<br />')))
             })
 
             result.push(line.join(','))
@@ -816,9 +731,14 @@ export default class UserList extends React.Component {
         }
 
         this.setState({
-            searchParams: searchParams
+            searchParams: searchParams,
+            pagination: BuzzPaginationData
         }, async () => {
-            await this.searchUsers()
+            await this.searchUsers('user_states.timestamp', 'desc')
         })
     }
 }
+
+export default connect(null, dispatch => ({
+    changeUserState: (user, newState, remark) => dispatch(changeUserState(user, newState, remark))
+}))(UserList)

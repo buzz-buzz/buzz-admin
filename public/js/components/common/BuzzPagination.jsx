@@ -34,8 +34,10 @@ export default class BuzzPagination extends React.Component {
                 <label>每页条数：</label>
                 <Dropdown compact search searchInput={{type: 'text'}}
                           selection options={[{
-                    key: 10, text: '10', value: 10
+                    key: 1, text: '1', value: 1
                 }, {
+          key: 10, text: '10', value: 10
+      },{
                     key: 20, text: '20', value: 20
                 }, {
                     key: 50, text: '50', value: 50

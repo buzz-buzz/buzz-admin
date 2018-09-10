@@ -21,7 +21,7 @@ export default class Layout extends React.Component {
                 <link rel="stylesheet" href="/css/style.css"/>
             </head>
             <body>
-            <Container style={{marginTop: '7em'}}>
+            <Container fluid style={{marginTop: '7em'}}>
                 {this.props.children}
             </Container>
             <script src={cdn("/js/bundle.js", this.props.v)}></script>

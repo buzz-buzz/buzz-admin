@@ -21,6 +21,7 @@ import CurrentUser from "../../common/CurrentUser";
 import moment from 'moment';
 import DatePicker from 'react-datepicker';
 import TimeDisplay from '../common/time-display';
+import ClassRoomDisplay from "./ClassRoomDisplay";
 
 function nearestToper(x, y) {
     let now = new Date();
@@ -91,7 +92,7 @@ export default class ClassList extends React.Component {
                 text: ClassStatusCode[key]
             })),
             currentUser: {},
-            allUsers: []
+            allSales: []
         };
 
         this.openClassDetail = this.openClassDetail.bind(this);
@@ -218,7 +219,7 @@ export default class ClassList extends React.Component {
             body: {uri: `{buzzService}/api/v1/users`}
         });
         this.setState({
-            fetchingAllUsers: false, allUsers: result.map(u => ({
+            fetchingAllUsers: false, allSales: result.map(u => ({
                 key: u.user_id,
                 value: u.user_id,
                 text: u.name || u.display_name || u.wechat_name,
@@ -239,7 +240,7 @@ export default class ClassList extends React.Component {
     async componentWillMount() {
         await this.searchClasses();
         this.setState({
-            currentUser: await CurrentUser.getProfile()
+            currentUser: await CurrentUser.getInstance()
         })
     }
 
@@ -285,7 +286,7 @@ export default class ClassList extends React.Component {
 
     render() {
         return (
-            <Container>
+            <Container fluid>
                 {this.renderSearchForm()}
                 {this.renderClassStatuses()}
                 {/*{this.renderPagination()}*/}
@@ -389,7 +390,7 @@ export default class ClassList extends React.Component {
                                 whiteSpace: 'normal',
                                 wordWrap: 'break-word'
                             }}>
-                                {c.room_url}
+                                <ClassRoomDisplay roomUrl={c.room_url}/>
                             </Table.Cell>
                             <Table.Cell>
                                 {
@@ -498,7 +499,7 @@ export default class ClassList extends React.Component {
                                 onChange={this.handleUsersChange}
                                 onClick={this.fetchAllUsers}
                                 multiple search selection
-                                options={this.state.allUsers}
+                                options={this.state.allSales}
                                 loading={this.state.fetchingAllUsers}
                     />
                     <Form.Field control={Dropdown} label="排序方式" name="orderby"

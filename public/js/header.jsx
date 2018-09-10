@@ -12,9 +12,7 @@ export default class Header extends React.Component {
 
     async componentWillMount() {
         this.setState({
-            user: await CurrentUser.getProfile()
-        }, () => {
-            console.log('user = ', this.state.user)
+            user: await CurrentUser.getInstance()
         })
     }
 
@@ -24,7 +22,7 @@ export default class Header extends React.Component {
 
         return (
             <Menu fixed="top" inverted>
-                <Container>
+                <Container fluid>
                     <Menu.Item name="users" active={activeItem.startsWith('/users')} href="/users">所有用户列表</Menu.Item>
                     <Menu.Item name="students" active={activeItem.startsWith('/students')}
                                href="/students">中方学生列表</Menu.Item>
@@ -38,6 +36,8 @@ export default class Header extends React.Component {
                                target="_blank">运营位管理</Menu.Item>
                     <Menu.Item name="faq-list" active={activeItem === '/faq-list'} href="/admin-neue/faq-list"
                                target="_blank">常见问题管理</Menu.Item>
+                    <Menu.Item name="importUser" active={activeItem === '/importUser'} href="/admin-neue/importUser"
+                               target="_blank">导入用户</Menu.Item>
                     <Menu.Menu position="right">
                         <Dropdown item trigger={<Avatar userId={user.userId} profile={user.profile} icon={null}/>}>
                             <Dropdown.Menu>

@@ -59,12 +59,17 @@ app.use(async (ctx, next) => {
         if (401 === Number(err.status)) {
             ctx.set('WWW-Authenticate', 'Basic');
             membership.rejectAccess(ctx);
-        } else if (404 === Number(err.statusCode)) {
+        } else if (404 === Number(err.statusCode) && err.result && err.result.error !== 'The requested user does not exists') {
             await membership.signOut(ctx, async () => {
             });
             ctx.redirect(membership.getSignInUrl(ctx.request.url));
+            //ctx.throw(err.status, err);
         } else {
-            ctx.throw(err.status, err)
+            if(ctx.request.path === '/'){
+                ctx.redirect(membership.getSignInUrl(ctx.request.url)); 
+            }else{
+                ctx.throw(err.status, err)
+            }
         }
     }
 });
@@ -154,6 +159,9 @@ router
     })
     .get('/admin-neue/faq-list', async ctx => {
         ctx.redirect(`${config.endPoints.adminNeue}/faqList`);
+    })
+    .get('/admin-neue/importUser', async ctx => {
+        ctx.redirect(`${config.endPoints.adminNeue}/importUser`);
     })
     .get('/current-user', membership.ensureAuthenticated, membership.ensureSystemUsers, async ctx => {
         ctx.body = ctx.state.user;

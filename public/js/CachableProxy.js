@@ -10,4 +10,8 @@ export default class CachableProxy {
 
         return cache[key]
     }
+
+    static cancelAll() {
+        // todo
+    }
 }
