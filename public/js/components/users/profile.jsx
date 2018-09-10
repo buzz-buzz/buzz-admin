@@ -29,7 +29,7 @@ export default class Profile extends React.Component {
             country: '',
             city: '',
             remark: '',
-            old_remark: '',
+            order_remark: '',
             avatar: '',
             gender: '',
             grade: '',
@@ -80,7 +80,7 @@ export default class Profile extends React.Component {
                 country: this.state.user.country || '',
                 city: this.state.user.city || '',
                 remark: this.state.user.remark || '',
-                old_remark: this.state.user.old_remark || '',
+                order_remark: this.state.user.order_remark || '',
                 avatar: this.state.user.avatar || '',
                 gender: this.state.user.gender || '',
                 grade: this.state.user.grade || '',
@@ -110,7 +110,7 @@ export default class Profile extends React.Component {
         city: this.state.city,
         gender: this.state.gender,
         remark: this.state.remark,
-        old_remark: this.state.old_remark,
+        order_remark: this.state.order_remark,
         avatar: this.state.avatar,
         grade: this.state.grade,
         school_name: this.state.school_name,
@@ -377,7 +377,7 @@ export default class Profile extends React.Component {
                             </Form.Field>
                         </Form.Group>
                         <Form.Group>
-                            <Form.Field control={TextArea} label='备注' placeholder='old_remark' value={this.state.old_remark} name='old_remark'
+                            <Form.Field control={TextArea} label='备注' placeholder='order_remark' value={this.state.order_remark} name='order_remark'
                                 onChange={this.handleChange}/>
                         </Form.Group>
                         <Form.Group widths="equal">
