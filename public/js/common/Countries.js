@@ -4,7 +4,7 @@ export const list = Object.keys(countries).map(key => {
     return {
         key: key,
         text: countries[key].name,
-        value: countries[key].name,
+        value: countries[key].name.toLowerCase(),
         flag: key.toLowerCase()
     };
 });

@@ -321,7 +321,7 @@ export default class Profile extends React.Component {
                                 <label>国籍：{this.state.country}</label>
                                 <Dropdown selection multiple={false} search={true} name="country"
                                           options={Countries.list}
-                                          value={this.state.country} placeholder="国籍" onChange={this.handleChange}
+                                          value={this.state.country.toLowerCase()} placeholder="国籍" onChange={this.handleChange}
                                           onSearchChange={this.handleSearchChange}/>
                             </Form.Field>
                             {
