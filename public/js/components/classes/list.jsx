@@ -395,10 +395,9 @@ export default class ClassList extends React.Component {
                             <Table.Cell>
                                 {
                                     c.companions.map(userId => <a
-                                        href={`/companions/${userId}`}
                                         target="_blank"
                                         key={userId}>
-                                        <Avatar userId={userId}/>
+                                        <Avatar link={true} userId={userId}/>
                                     </a>)
                                 }
                             </Table.Cell>
@@ -406,10 +405,9 @@ export default class ClassList extends React.Component {
                                 onClick={(event) => event.stopPropagation()}>
                                 {
                                     c.students.map(userId => <a
-                                        href={`/students/${userId}`}
                                         target="_blank"
                                         key={userId}>
-                                        <Avatar userId={userId}/>
+                                        <Avatar  link={true} userId={userId}/>
                                     </a>)
                                 }
                             </Table.Cell>
@@ -417,9 +415,8 @@ export default class ClassList extends React.Component {
                                 onClick={event => event.stopPropagation()}>
                                 {
                                     c.subscribers.map(userId => <a
-                                        href={`/users/${userId}`}
                                         target="_blank" key={userId}>
-                                        <Avatar userId={userId}/>
+                                        <Avatar link={true} userId={userId}/>
                                     </a>)
                                 }
                             </Table.Cell>

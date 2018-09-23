@@ -376,7 +376,7 @@ export default class Profile extends React.Component {
                                 }}/>
                             </Form.Field>
                         </Form.Group>
-                        <Form.Group>
+                        <Form.Group  widths="equal">
                             <Form.Field control={TextArea} label='备注' placeholder='order_remark' value={this.state.order_remark} name='order_remark'
                                 onChange={this.handleChange}/>
                         </Form.Group>
