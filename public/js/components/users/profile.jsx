@@ -327,7 +327,7 @@ export default class Profile extends React.Component {
                             {
                                 this.state.user.role === MemberType.Student ? (
                                     <Form.Field>
-                                        <label>所在城市</label>
+                                        <label>所在城市: {this.state.city}</label>
                                         <Dropdown selection multiple={false} search={true} name="city"
                                                   options={Cities.list}
                                                   value={this.state.city} placeholder="所在城市"
