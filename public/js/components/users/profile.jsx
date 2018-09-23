@@ -76,7 +76,7 @@ export default class Profile extends React.Component {
                 email: this.state.user.email || '',
                 mobile: this.state.user.mobile || '',
                 parentName: this.state.user.parent_name || '',
-                name: this.state.user ? this.state.user.name || this.state.user.display_name || '' : '',
+                name: this.state.user ? this.state.user.name || '' : '',
                 country: this.state.user.country || '',
                 city: this.state.user.city || '',
                 remark: this.state.user.remark || '',
@@ -183,7 +183,7 @@ export default class Profile extends React.Component {
 
     async changeRole() {
         let newRole = this.state.theOtherRole
-        let confirmed = window.confirm(`确认要将该用户（${this.state.display_name || this.state.name}）从 ${MemberTypeChinese[this.state.user.role]} 切换成 ${MemberTypeChinese[newRole]} 吗？`
+        let confirmed = window.confirm(`确认要将该用户（${this.state.name || this.state.display_name}）从 ${MemberTypeChinese[this.state.user.role]} 切换成 ${MemberTypeChinese[newRole]} 吗？`
         )
 
         if (!confirmed) {

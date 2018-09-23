@@ -222,7 +222,7 @@ export default class ClassList extends React.Component {
             fetchingAllUsers: false, allSales: result.map(u => ({
                 key: u.user_id,
                 value: u.user_id,
-                text: u.name || u.display_name || u.wechat_name,
+                text: u.name || u.wechat_name,
                 // description: u.display_name,
                 image: {avatar: true, src: u.avatar}
             }))

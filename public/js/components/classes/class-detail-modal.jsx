@@ -269,7 +269,7 @@ export default class ClassDetail extends React.Component {
         return students.map(s => {
             return {
                 key: s.user_id,
-                text: s.display_name || s.name || s.wechat_name,
+                text: s.name || s.wechat_name,
                 value: s.user_id
             }
         })
@@ -295,7 +295,7 @@ export default class ClassDetail extends React.Component {
         return companions.map(s => {
             return {
                 key: s.user_id,
-                text: s.display_name || s.name || s.wechat_name,
+                text: s.name || s.wechat_name,
                 value: s.user_id
             }
         })
