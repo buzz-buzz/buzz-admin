@@ -163,6 +163,9 @@ router
     .get('/admin-neue/importUser', async ctx => {
         ctx.redirect(`${config.endPoints.adminNeue}/importUser`);
     })
+    .get('/admin-neue/weappList', async ctx => {
+        ctx.redirect(`${config.endPoints.adminNeue}/weappList`);
+    })
     .get('/current-user', membership.ensureAuthenticated, membership.ensureSystemUsers, async ctx => {
         ctx.body = ctx.state.user;
     })

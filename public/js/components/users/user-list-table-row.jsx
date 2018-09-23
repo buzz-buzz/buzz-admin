@@ -274,7 +274,7 @@ class UserListTableRow extends React.Component {
     }
 
     renderFollower(openProfile, user) {
-        return <Table.Cell>
+        return user.follower && user.user_id ? <Table.Cell>
             <UserDropdownSingle selectedUserId={user.follower} changeFollowerTo={async (follower) => {
                 await ServiceProxy.proxyTo({
                     body: {
@@ -293,7 +293,7 @@ class UserListTableRow extends React.Component {
                     }
                 })
             }}/>
-        </Table.Cell>
+        </Table.Cell> : <Table.Cell></Table.Cell>
     }
 
     renderDemoUsers(openProfile, user, match, changeState, userDemo, firstClass) {
