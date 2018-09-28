@@ -260,7 +260,7 @@ class UserListTableRow extends React.Component {
             {this.renderAvatar(openProfile, user, match)}
             {this.renderContact(openProfile, user)}
             {this.renderGrade(openProfile, user)}
-            {this.renderLevel(openProfile, user)}
+            {UserListTableRow.renderPlacementTest(user)}
             {this.renderSource(openProfile, user)}
             {this.renderFollower(openProfile, user)}
             {UserListTableRow.renderFollowup(user)}
