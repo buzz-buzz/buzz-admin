@@ -1,7 +1,7 @@
 import React from 'react';
 
 function getZoomRoomId(zoomUrl) {
-    return zoomUrl.replace('https://zoom.us/j/', '')
+    return zoomUrl? zoomUrl.replace('https://zoom.us/j/', '') : ''
 }
 
 export default ({roomUrl}) => <a onClick={e => e.stopPropagation()}
