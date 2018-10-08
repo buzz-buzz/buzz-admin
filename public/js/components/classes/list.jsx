@@ -390,7 +390,7 @@ export default class ClassList extends React.Component {
                                 whiteSpace: 'normal',
                                 wordWrap: 'break-word'
                             }}>
-                                <ClassRoomDisplay roomUrl={c.room_url}/>
+                                <ClassRoomDisplay roomUrl={c.room_url} MeetingId={c.zoom_meeting_id} />
                             </Table.Cell>
                             <Table.Cell>
                                 {
