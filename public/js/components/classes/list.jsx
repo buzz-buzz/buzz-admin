@@ -80,7 +80,8 @@ export default class ClassList extends React.Component {
                 end_time: '',
                 statuses: statuses,
                 user_ids: query.getAll('userIds').map(id => Number(id)),
-                orderby: 'diff ASC'
+                orderby: 'diff ASC',
+                need_export_recording: false
             },
             currentStatuses: statuses,
             column: null,
@@ -510,6 +511,18 @@ export default class ClassList extends React.Component {
                                     key: 'start_time DESC',
                                     value: 'start_time DESC',
                                     text: '开课时间倒序'
+                                }]} selection/>
+                    <Form.Field control={Dropdown} label="导出录像" name="need_export_recording"
+                                value={this.state.searchParams.need_export_recording}
+                                onChange={this.handleChange}
+                                options={[{
+                                    key: 'on',
+                                    value: true,
+                                    text: '是'
+                                }, {
+                                    key: 'off',
+                                    value: false,
+                                    text: '否'
                                 }]} selection/>
                 </Form.Group>
             </Form>
