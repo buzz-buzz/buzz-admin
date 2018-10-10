@@ -129,6 +129,7 @@ router
         if (ctx.request.body.uri) {
             ctx.request.body.uri = ctx.request.body.uri
                 .replace('{buzzService}', config.endPoints.buzzService)
+                .replace('{buzzApi}', config.endPoints.buzzApi)
             ;
         }
 

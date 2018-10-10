@@ -6,6 +6,7 @@ let config = {
             buzzService: `${process.env.cors}/127.0.0.1:16888`,
             // buzzService: 'http://localhost:16888',
             adminNeue: `${process.env.admin_neue}`,
+            buzzApi: `https://api.dev.buzzbuzzenglish.com`
         },
         superUsers: [532],
         signInUrl: `http://corner-test.buzzbuzzenglish.com/login?return_url=%s`,
@@ -16,6 +17,7 @@ let config = {
         endPoints: {
             buzzService: process.env.buzz_service_endpoints,
             adminNeue: `${process.env.admin_neue}`,
+            buzzApi: `https://api.dev.buzzbuzzenglish.com`
         },
         superUsers: [56],
         signInUrl: 'http://corner-test.buzzbuzzenglish.com/login?return_url=%s',
@@ -26,6 +28,7 @@ let config = {
         endPoints: {
             buzzService: process.env.buzz_service_endpoints,
             adminNeue: `${process.env.admin_neue}`,
+            buzzApi: `https://api.buzzbuzzenglish.com`
         },
         superUsers: [3],
         signInUrl: 'http://live.buzzbuzzenglish.com/login?return_url=%s',
