@@ -566,6 +566,7 @@ class UserList extends React.Component {
         selectedUser.gender = newProfile.gender;
         selectedUser.remark = newProfile.remark;
         selectedUser.order_remark = newProfile.order_remark;
+        selectedUser.rookie_room_url = newProfile.rookie_room_url;
         selectedUser.avatar = newProfile.avatar;
         selectedUser.grade = newProfile.grade;
         selectedUser.school_name = newProfile.school_name;
