@@ -30,6 +30,7 @@ export default class Profile extends React.Component {
             city: '',
             remark: '',
             order_remark: '',
+            rookie_room_url: '',
             avatar: '',
             gender: '',
             grade: '',
@@ -81,6 +82,7 @@ export default class Profile extends React.Component {
                 city: this.state.user.city || '',
                 remark: this.state.user.remark || '',
                 order_remark: this.state.user.order_remark || '',
+                rookie_room_url: this.state.user.rookie_room_url || '',
                 avatar: this.state.user.avatar || '',
                 gender: this.state.user.gender || '',
                 grade: this.state.user.grade || '',
@@ -111,6 +113,7 @@ export default class Profile extends React.Component {
         gender: this.state.gender,
         remark: this.state.remark,
         order_remark: this.state.order_remark,
+        rookie_room_url: this.state.rookie_room_url,
         avatar: this.state.avatar,
         grade: this.state.grade,
         school_name: this.state.school_name,
@@ -379,6 +382,10 @@ export default class Profile extends React.Component {
                         <Form.Group  widths="equal">
                             <Form.Field control={TextArea} label='备注' placeholder='order_remark' value={this.state.order_remark} name='order_remark'
                                 onChange={this.handleChange}/>
+                        </Form.Group>
+                        <Form.Group  widths="equal">
+                            <Form.Input placeholder="eg: https://zoom.us/j/2019579072" name="rookie_room_url" value={this.state.rookie_room_url}
+                                        onChange={this.handleChange} label="入门指导课教室链接"/>
                         </Form.Group>
                         <Form.Group widths="equal">
                             <UserFollowup userId={this.state.user.user_id}/>
