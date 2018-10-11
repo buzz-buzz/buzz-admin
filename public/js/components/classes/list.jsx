@@ -579,10 +579,12 @@ export default class ClassList extends React.Component {
                             type="button">批量更新班级结束状态</Button>
                 }
                 {
-                    this.state.recordingExport &&
+                    this.state.need_export_recording &&
                     <Button onClick={this.exportRecording}
                             type="button">导出本页已结束课程录像</Button>
                 }
+                <Button onClick={this.exportRecording}
+                            type="button">导出本页已结束课程录像</Button>
             </Form.Group>
         </Segment>;
     }
