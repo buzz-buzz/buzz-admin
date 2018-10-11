@@ -163,7 +163,11 @@ export default class ClassList extends React.Component {
                 }
             })
 
-            this.setState({ExportRecordingModal: true});
+            this.setState({
+                ExportRecordingModal: true,
+                windowsCopy: recordingResult.cmd && recordingResult.cmd.win ? recordingResult.cmd.win : '',
+                macCopy: recordingResult.cmd && recordingResult.cmd.macOS ? recordingResult.cmd.macOS : ''
+            });
 
             console.log('hank----log:');
             console.log(recordingResult);
@@ -579,12 +583,12 @@ export default class ClassList extends React.Component {
                             type="button">批量更新班级结束状态</Button>
                 }
                 {
-                    this.state.need_export_recording &&
+                    this.state.recordingExport &&
                     <Button onClick={this.exportRecording}
                             type="button">导出本页已结束课程录像</Button>
                 }
                 <Button onClick={this.exportRecording}
-                            type="button">导出本页已结束课程录像</Button>
+                            type="button">导出本页已结束课程录像 {!!this.state.need_export_recording} {!!this.state.recordingExport}</Button>
             </Form.Group>
         </Segment>;
     }
@@ -612,13 +616,32 @@ export default class ClassList extends React.Component {
         return (
             <Modal open={this.state.ExportRecordingModal} closeOnEscape={true} closeOnRootNodeClick={false} onClose={this.close}
             closeIcon>
-                <Modal.Header>Export recordings</Modal.Header>
+                <Modal.Header>导出Zoom课程录像</Modal.Header>
                 <Modal.Content image>
-                    <Image wrapped size='medium' src='/images/avatar/large/rachel.png' />
+                    <Image wrapped size='medium' src='//cdn-corner.resource.buzzbuzzenglish.com/new_buzz_logo.svg' />
                     <Modal.Description>
-                        <Header>导出课程录像</Header>
-                        <p>将以下命令复制，回车执行</p>
-                        <p>Is it okay to use this photo?</p>
+                        <Header>导出步骤</Header>
+                        <p>1. 将下方命令复制到剪切板，在终端（mac）或Powershell（windows）中回车执行</p>
+                        <p>2. 待下载完成后，到目标目录中找到文件</p>
+                        <p>3. 将第二步的文件上传至百度云盘</p>
+                        <div>
+                            {
+                                this.state.windowsCopy &&
+                                <textarea readOnly cols="30" rows="10">
+                                    {this.state.windowsCopy}
+                                </textarea>
+                            }
+                            <button>windows-复制到剪切板</button>
+                        </div>
+                        <div>
+                            {
+                                this.state.macCopy &&
+                                <textarea readOnly cols="30" rows="10">
+                                    {this.state.macCopy}
+                                </textarea>
+                            }
+                            <button>mac-复制到剪切板</button>
+                        </div>
                     </Modal.Description>
                 </Modal.Content>
             </Modal>
