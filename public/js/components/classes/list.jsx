@@ -144,36 +144,46 @@ export default class ClassList extends React.Component {
 
     async exportRecording(){
         //console.log() 此处弹窗 ExportRecordingModal
-        this.setState({loading: true});
+        try{
+            this.setState({loading: true});
 
-        let classIds = [];
+            let classIds = [];
 
-        this.state.classes.map((item)=>{
-           classIds.push(item.class_id);
-        });
-
-        if(classIds.length){
-            //api
-            let recordingResult = await ServiceProxy.proxyTo({
-                body: {
-                    uri: '{buzzApi}/class/getRecodingsByClassId',
-                    method: 'POST',
-                    json: {
-                        class_ids: classIds
-                    }
-                }
-            })
-
-            this.setState({
-                ExportRecordingModal: true,
-                windowsCopy: recordingResult.cmd && recordingResult.cmd.win ? recordingResult.cmd.win : '',
-                macCopy: recordingResult.cmd && recordingResult.cmd.macOS ? recordingResult.cmd.macOS : ''
+            this.state.classes.map((item)=>{
+            classIds.push(item.class_id);
             });
 
-            console.log('hank----log:');
-            console.log(recordingResult);
-        }else{
-            alert('未选择有效班级');
+            if(classIds.length){
+                //api
+                let recordingResult = await ServiceProxy.proxyTo({
+                    body: {
+                        uri: '{buzzApi}/class/getRecodingsByClassId',
+                        method: 'POST',
+                        json: {
+                            class_ids: classIds
+                        }
+                    }
+                })
+
+                this.setState({
+                    ExportRecordingModal: true,
+                    windowsCopy: recordingResult.cmd && recordingResult.cmd.win ? recordingResult.cmd.win : '',
+                    macCopy: recordingResult.cmd && recordingResult.cmd.macOS ? recordingResult.cmd.macOS : '',
+                    loading: false
+                });
+
+                console.log('hank----log:');
+                console.log(recordingResult);
+            }else{
+                alert('未选择有效班级');
+            }
+        }
+        catch(ex){
+            this.setState({
+                loading: false
+            }, ()=>{
+                alert('发生错误：' + ex);
+            });
         }
     }
 
@@ -249,7 +259,7 @@ export default class ClassList extends React.Component {
                 }),
                 currentStatuses: this.state.searchParams.statuses,
                 error: false,
-                recordingExport: this.state.need_export_recording
+                recordingExport: this.state.searchParams.need_export_recording
             })
         } catch (ex) {
             this.setState({
@@ -594,9 +604,6 @@ export default class ClassList extends React.Component {
                     <Button onClick={this.exportRecording}
                             type="button">导出本页已结束课程录像</Button>
                 }
-                <Button onClick={this.exportRecording}
-                            type="button">导出本页已结束课程录像</Button>
-                <span>need_export_recording: {this.state.need_export_recording} --recordingExport: {this.state.recordingExport}</span>
             </Form.Group>
         </Segment>;
     }
