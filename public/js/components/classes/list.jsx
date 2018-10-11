@@ -116,6 +116,7 @@ export default class ClassList extends React.Component {
         this.handleSort = this.handleSort.bind(this);
         this.gotoPage = this.gotoPage.bind(this);
         this.renderExportRecording = this.renderExportRecording.bind(this);
+        this.close = this.close.bind(this);
     }
 
     async updateStatus() {
@@ -174,6 +175,12 @@ export default class ClassList extends React.Component {
         }else{
             alert('未选择有效班级');
         }
+    }
+
+    close(){
+        this.setState({
+            ExportRecordingModal: false
+        });
     }
 
     handleChange(event, {name, value}) {
@@ -588,7 +595,8 @@ export default class ClassList extends React.Component {
                             type="button">导出本页已结束课程录像</Button>
                 }
                 <Button onClick={this.exportRecording}
-                            type="button">导出本页已结束课程录像 {!!this.state.need_export_recording} {!!this.state.recordingExport}</Button>
+                            type="button">导出本页已结束课程录像</Button>
+                <span>need_export_recording: {this.state.need_export_recording} --recordingExport: {this.state.recordingExport}</span>
             </Form.Group>
         </Segment>;
     }
