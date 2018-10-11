@@ -117,6 +117,7 @@ export default class ClassList extends React.Component {
         this.gotoPage = this.gotoPage.bind(this);
         this.renderExportRecording = this.renderExportRecording.bind(this);
         this.close = this.close.bind(this);
+        this.copy = this.copy.bind(this);
     }
 
     async updateStatus() {
@@ -639,24 +640,22 @@ export default class ClassList extends React.Component {
                         <p>1. 将下方命令复制到剪切板，在终端（mac）或Powershell（windows）中回车执行</p>
                         <p>2. 待下载完成后，到目标目录中找到文件</p>
                         <p>3. 将第二步的文件上传至百度云盘</p>
-                        <div>
-                            {
-                                this.state.windowsCopy &&
-                                <textarea readOnly cols="30" rows="10">
-                                    {this.state.windowsCopy}
+                        {
+                            this.state.windowsCopy && <div>
+                                <textarea readOnly cols="100" rows="10">
+                                        {this.state.windowsCopy}
                                 </textarea>
-                            }
-                            <button>windows-复制到剪切板</button>
-                        </div>
-                        <div>
-                            {
-                                this.state.macCopy &&
-                                <textarea readOnly cols="30" rows="10">
-                                    {this.state.macCopy}
+                                <Button onClick={()=>this.copy(this.state.windowsCopy)}>windows-复制到剪切板</Button>
+                            </div>
+                        }
+                        {
+                            this.state.macCopy && <div>
+                                <textarea readOnly cols="100" rows="10">
+                                        {this.state.macCopy}
                                 </textarea>
-                            }
-                            <button>mac-复制到剪切板</button>
-                        </div>
+                                <Button onClick={()=>this.copy(this.state.macCopy)}>mac-复制到剪切板</Button>
+                            </div>
+                        }
                     </Modal.Description>
                 </Modal.Content>
             </Modal>
@@ -717,5 +716,16 @@ export default class ClassList extends React.Component {
 
     openAdminNeueClassDetail() {
 
+    }
+
+    copy(text){
+        var oInput = document.createElement('input');
+        oInput.value = text;
+        document.body.appendChild(oInput);
+        oInput.select(); // 选择对象
+        document.execCommand("Copy"); // 执行浏览器复制命令
+        oInput.className = 'oInput';
+        oInput.style.display='none';
+        alert('复制成功!');
     }
 }
