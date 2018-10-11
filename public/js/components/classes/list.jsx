@@ -118,6 +118,7 @@ export default class ClassList extends React.Component {
         this.renderExportRecording = this.renderExportRecording.bind(this);
         this.close = this.close.bind(this);
         this.copy = this.copy.bind(this);
+        this.deleteZoom = this.deleteZoom.bind(this);
     }
 
     async updateStatus() {
@@ -190,7 +191,8 @@ export default class ClassList extends React.Component {
 
     close(){
         this.setState({
-            ExportRecordingModal: false
+            ExportRecordingModal: false,
+            loading: false
         });
     }
 
@@ -634,7 +636,6 @@ export default class ClassList extends React.Component {
             closeIcon>
                 <Modal.Header>导出Zoom课程录像</Modal.Header>
                 <Modal.Content image>
-                    <Image wrapped size='medium' src='//cdn-corner.resource.buzzbuzzenglish.com/new_buzz_logo.svg' />
                     <Modal.Description>
                         <Header>导出步骤</Header>
                         <p>1. 将下方命令复制到剪切板，在终端（mac）或Powershell（windows）中回车执行</p>
@@ -645,7 +646,9 @@ export default class ClassList extends React.Component {
                                 <textarea readOnly cols="100" rows="10">
                                         {this.state.windowsCopy}
                                 </textarea>
+                                <br/>
                                 <Button onClick={()=>this.copy(this.state.windowsCopy)}>windows-复制到剪切板</Button>
+                                <br/>
                             </div>
                         }
                         {
@@ -653,9 +656,16 @@ export default class ClassList extends React.Component {
                                 <textarea readOnly cols="100" rows="10">
                                         {this.state.macCopy}
                                 </textarea>
+                                <br/>
                                 <Button onClick={()=>this.copy(this.state.macCopy)}>mac-复制到剪切板</Button>
+                                <br/>
                             </div>
                         }
+                        <br/>
+                        <br/>
+                        <Button onClick={this.deleteZoom}>一键删除-清除Zoom云空间</Button>
+                        <br/>
+                        <br/>
                     </Modal.Description>
                 </Modal.Content>
             </Modal>
@@ -728,4 +738,48 @@ export default class ClassList extends React.Component {
         oInput.style.display='none';
         alert('复制成功!');
     }
+
+    async deleteZoom() {
+        let deleteConfirm = window.prompt('这个操作不可恢复，一旦删除，此页课程的Zoom云空间视频数据都将被永久删除。如果你确定要删除，请确保已经进行过百度云的‘搬砖转移’工作！！！确认删除请输入“删除”，否则撤销操作：')
+
+        if (String(deleteConfirm) !== '删除') {
+            window.alert('删除操作已取消')
+            return
+        }
+
+        try {
+            this.setState({loading: true});
+            let classIds = [];
+
+            this.state.classes.map((item)=>{
+            classIds.push(item.class_id);
+            });
+
+            if(classIds.length){
+                //api
+                let recordingResult = await ServiceProxy.proxyTo({
+                    body: {
+                        uri: '{buzzApi}/class/deleteRecordingsByClassId',
+                        method: 'POST',
+                        json: {
+                            class_ids: classIds
+                        }
+                    }
+                })
+
+                this.setState({
+                    loading: false
+                }, ()=>{
+                    alert('删除成功！');
+                });
+            }else{
+                alert('未选择有效班级');
+            }
+        } catch (error) {
+            this.setState({error: true, message: JSON.stringify(error.result || error)})
+        } finally {
+            this.setState({loading: false});
+        }
+    }
+
 }
