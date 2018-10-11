@@ -641,6 +641,7 @@ export default class ClassList extends React.Component {
                         <p>1. 将下方命令复制到剪切板，在终端（mac）或Powershell（windows）中回车执行</p>
                         <p>2. 待下载完成后，到目标目录中找到文件</p>
                         <p>3. 将第二步的文件上传至百度云盘</p>
+                        <p>4. 点击底部【一键删除-清除Zoom云空间】按钮，释放Zoom云空间</p>
                         {
                             this.state.windowsCopy && <div>
                                 <textarea readOnly cols="100" rows="10">
