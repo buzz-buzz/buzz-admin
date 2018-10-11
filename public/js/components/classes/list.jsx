@@ -7,7 +7,8 @@ import {
     Menu,
     Segment,
     Table,
-    Message
+    Message,
+    Header, Image, Modal
 } from "semantic-ui-react";
 import ServiceProxy from "../../service-proxy";
 import ClassDetail from "./class-detail-modal";
@@ -93,7 +94,8 @@ export default class ClassList extends React.Component {
                 text: ClassStatusCode[key]
             })),
             currentUser: {},
-            allSales: []
+            allSales: [],
+            ExportRecordingModal: false
         };
 
         this.openClassDetail = this.openClassDetail.bind(this);
@@ -106,12 +108,14 @@ export default class ClassList extends React.Component {
         this.handleDateChange = this.handleDateChange.bind(this);
         this.searchClasses = this.searchClasses.bind(this);
         this.updateStatus = this.updateStatus.bind(this);
+        this.exportRecording = this.exportRecording.bind(this);
         this.openFeedback = this.openFeedback.bind(this);
         this.onClassEvaluationClosed = this.onClassEvaluationClosed.bind(this);
 
         this.switchToStatus = this.switchToStatus.bind(this);
         this.handleSort = this.handleSort.bind(this);
         this.gotoPage = this.gotoPage.bind(this);
+        this.renderExportRecording = this.renderExportRecording.bind(this);
     }
 
     async updateStatus() {
@@ -134,6 +138,37 @@ export default class ClassList extends React.Component {
             })
         } finally {
             this.setState({loading: false})
+        }
+    }
+
+    async exportRecording(){
+        //console.log() 此处弹窗 ExportRecordingModal
+        this.setState({loading: true});
+
+        let classIds = [];
+
+        this.state.classes.map((item)=>{
+           classIds.push(item.class_id);
+        });
+
+        if(classIds.length){
+            //api
+            let recordingResult = await ServiceProxy.proxyTo({
+                body: {
+                    uri: '{buzzApi}/class/getRecodingsByClassId',
+                    method: 'POST',
+                    json: {
+                        class_ids: classIds
+                    }
+                }
+            })
+
+            this.setState({ExportRecordingModal: true});
+
+            console.log('hank----log:');
+            console.log(recordingResult);
+        }else{
+            alert('未选择有效班级');
         }
     }
 
@@ -203,6 +238,7 @@ export default class ClassList extends React.Component {
                 }),
                 currentStatuses: this.state.searchParams.statuses,
                 error: false,
+                recordingExport: this.state.need_export_recording
             })
         } catch (ex) {
             this.setState({
@@ -308,6 +344,7 @@ export default class ClassList extends React.Component {
                                  onClose={this.onClassEvaluationClosed}
                                  evaluation={this.state.currentClass}
                                  classInfo={this.state.currentClass}/>
+                {this.renderExportRecording()}
             </Container>
         );
     }
@@ -541,6 +578,11 @@ export default class ClassList extends React.Component {
                     <Button onClick={this.updateStatus}
                             type="button">批量更新班级结束状态</Button>
                 }
+                {
+                    this.state.recordingExport &&
+                    <Button onClick={this.exportRecording}
+                            type="button">导出本页已结束课程录像</Button>
+                }
             </Form.Group>
         </Segment>;
     }
@@ -561,6 +603,23 @@ export default class ClassList extends React.Component {
                     </Table.Row>
                 </Table.Header>
             </Table>
+        )
+    }
+
+    renderExportRecording(){
+        return (
+            <Modal open={this.state.ExportRecordingModal} closeOnEscape={true} closeOnRootNodeClick={false} onClose={this.close}
+            closeIcon>
+                <Modal.Header>Export recordings</Modal.Header>
+                <Modal.Content image>
+                    <Image wrapped size='medium' src='/images/avatar/large/rachel.png' />
+                    <Modal.Description>
+                        <Header>导出课程录像</Header>
+                        <p>将以下命令复制，回车执行</p>
+                        <p>Is it okay to use this photo?</p>
+                    </Modal.Description>
+                </Modal.Content>
+            </Modal>
         )
     }
 
