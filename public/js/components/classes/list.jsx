@@ -637,7 +637,7 @@ export default class ClassList extends React.Component {
                 <Modal.Header>导出Zoom课程录像</Modal.Header>
                 <Modal.Content image>
                     <Modal.Description>
-                        <Header>导出步骤</Header>
+                        <Header>导出步骤(1.复制命令-下载课程视频，上传至百度云盘 2.点击【一键删除】按钮)</Header>
                         <p>1. 将下方命令复制到剪切板，在终端（mac）或Powershell（windows）中回车执行</p>
                         <p>2. 待下载完成后，到目标目录中找到文件</p>
                         <p>3. 将第二步的文件上传至百度云盘</p>
@@ -647,7 +647,7 @@ export default class ClassList extends React.Component {
                                         {this.state.windowsCopy}
                                 </textarea>
                                 <br/>
-                                <Button onClick={()=>this.copy(this.state.windowsCopy)}>windows-复制到剪切板</Button>
+                                <Button className="ui green button" onClick={()=>this.copy(this.state.windowsCopy)}>windows-复制到剪切板</Button>
                                 <br/>
                             </div>
                         }
@@ -663,7 +663,7 @@ export default class ClassList extends React.Component {
                         }
                         <br/>
                         <br/>
-                        <Button onClick={this.deleteZoom}>一键删除-清除Zoom云空间</Button>
+                        <Button className="ui green button" onClick={this.deleteZoom}>一键删除-清除Zoom云空间</Button>
                         <br/>
                         <br/>
                     </Modal.Description>
