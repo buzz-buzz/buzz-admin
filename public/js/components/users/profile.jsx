@@ -42,7 +42,7 @@ export default class Profile extends React.Component {
             weekly_schedule_requirements: 1,
             password: '',
             source: '',
-            follower: 0
+            follower: ''
         };
 
         this.handleChange = this.handleChange.bind(this);
@@ -94,7 +94,7 @@ export default class Profile extends React.Component {
                 weekly_schedule_requirements: this.state.user.weekly_schedule_requirements,
                 password: this.state.user.password || '',
                 source: this.state.user.source || '',
-                follower: this.state.user.follower || 0,
+                follower: this.state.user.follower || '',
             });
         })
     }
