@@ -16,6 +16,7 @@ import {connect} from 'react-redux';
 import {addFirstClass, addLatestEndClass, addUserDemo} from "../../redux/actions";
 import TimeDisplay from '../common/time-display';
 import ClassAvatar from "../classes/class-avatar";
+import LifeCycleChangeModal from "./life-cycle-change-modal";
 
 class UserListTableRow extends React.Component {
     constructor(props) {
@@ -64,7 +65,7 @@ class UserListTableRow extends React.Component {
     }
 
     render() {
-        const {state, match, userType, openProfile, openClassHours, openIntegral, openLevelModal, openSchedulePreferenceModal, changeState, userDemo, firstClass, latestEndClass} = this.props
+        const {state, match, userType, openProfile, openClassHours, openIntegral, openLevelModal, openSchedulePreferenceModal, changeState, userDemo, firstClass, latestEndClass, renderDemoUsers} = this.props
         const {user} = this.state
 
         switch (state) {
@@ -73,7 +74,7 @@ class UserListTableRow extends React.Component {
             case StudentLifeCycleKeys.lead:
                 return this.renderLeads(openProfile, user, match, changeState)
             case StudentLifeCycleKeys.demo:
-                return this.renderDemoUsers(openProfile, user, match, changeState, userDemo, firstClass)
+                return this.renderDemoUsers(openProfile, user, match, changeState, userDemo, firstClass, renderDemoUsers)
             case StudentLifeCycleKeys.waiting_purchase:
                 return this.renderWaitingForPurchase(openProfile, openLevelModal, user, match, changeState, userDemo, firstClass)
             case StudentLifeCycleKeys.waiting_renewal:
@@ -296,7 +297,7 @@ class UserListTableRow extends React.Component {
         </Table.Cell> : <Table.Cell></Table.Cell>
     }
 
-    renderDemoUsers(openProfile, user, match, changeState, userDemo, firstClass) {
+    renderDemoUsers(openProfile, user, match, changeState, userDemo, firstClass, changeDemoTime) {
         return <Table.Row>
             {this.renderID(openProfile, user)}
             {this.renderAvatar(openProfile, user, match)}
@@ -306,8 +307,8 @@ class UserListTableRow extends React.Component {
             {UserListTableRow.renderPlacementTest(user)}
             {this.renderSource(openProfile, user)}
             {UserListTableRow.renderFollowup(user)}
-            {UserListTableRow.renderTrainingTime(openProfile, user, userDemo[user.user_id])}
-            {UserListTableRow.renderDemoTime(openProfile, user, userDemo[user.user_id])}
+            {UserListTableRow.renderTrainingTime(openProfile, user, userDemo[user.user_id], changeDemoTime)}
+            {UserListTableRow.renderDemoTime(openProfile, user, userDemo[user.user_id], changeDemoTime)}
             {UserListTableRow.renderFirstClass(openProfile, user, firstClass)}
             {this.renderFollower(openProfile, user)}
             {this.renderTags(openProfile, user)}
@@ -315,14 +316,14 @@ class UserListTableRow extends React.Component {
         </Table.Row>
     }
 
-    static renderTrainingTime(openProfile, user, userDemo) {
-        return <Table.Cell onClick={() => openProfile(user)}>
+    static renderTrainingTime(openProfile, user, userDemo, changeDemoTime) {
+        return <Table.Cell onClick={changeDemoTime}>
             {TimeDisplay({timestamp: (userDemo || {}).training_time, format: 'LL'})}
         </Table.Cell>
     }
 
-    static renderDemoTime(openProfile, user, userDemo) {
-        return <Table.Cell onClick={() => openProfile(user)}>
+    static renderDemoTime(openProfile, user, userDemo, changeDemoTime) {
+        return <Table.Cell onClick={changeDemoTime}>
             {TimeDisplay({timestamp: (userDemo || {}).demo_time, format: 'LL'})}
         </Table.Cell>
     }

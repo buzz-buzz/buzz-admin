@@ -30,11 +30,11 @@ export class Avatar extends React.Component {
 
     async loadProfile() {
         this.setState({
-            profile: await CachableProxy.get({
+            profile: this.props.userId ? await CachableProxy.get({
                 body: {
                     uri: `{buzzService}/api/v1/users/${this.props.userId}`
                 }
-            })
+            }) : {}
         })
     }
 

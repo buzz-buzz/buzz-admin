@@ -31,6 +31,7 @@ import ErrorHandler from "../../common/ErrorHandler";
 import {connect} from 'react-redux';
 import {changeUserState} from "../../redux/actions";
 import LifeCycleChangeModal from "./life-cycle-change-modal";
+import UserDemoTime from "./user-demo-time-modal";
 import UserListTableHeader from "./user-list-table-header";
 import UserListTableRow from "./user-list-table-row";
 
@@ -326,8 +327,14 @@ class UserList extends React.Component {
                     })
                     this.props.changeUserState(user, newState, remark)
                 }} user={this.state.currentLifeCycleChange.user} newState={this.state.currentLifeCycleChange.newState}/>
+                <UserDemoTime open={this.state.showUserDemoTime} onClose={() => this.setState({UserDemoTime: false})} 
+                 user={this.state.currentUserDemoTimeChange.user}/>
             </Container>
         )
+    }
+
+    changeDemoTime = (user, newState, i) =>{
+        this.setState({showUserDemoTime: true, currentUserDemoTimeChange: {newState: newState, user: user}});
     }
 
 
@@ -355,7 +362,12 @@ class UserList extends React.Component {
             <Table.Body>
                 {
                     this.state.users.map((user, i) =>
-                        <UserListTableRow key={user.user_id} match={this.props.match} userType={this.props['user-type']} user={user} openProfile={this.openProfile} openClassHours={this.openClassHours} openIntegral={this.openIntegral} openLevelModal={this.openLevelModal} openSchedulePreferenceModal={this.openSchedulePreferenceModal} changeState={(newState) => this.changeState(user, newState, i)} state={this.state.searchParams.state}/>
+                        <UserListTableRow key={user.user_id} match={this.props.match} userType={this.props['user-type']} user={user} openProfile={this.openProfile} 
+                        openClassHours={this.openClassHours} openIntegral={this.openIntegral} openLevelModal={this.openLevelModal} 
+                        openSchedulePreferenceModal={this.openSchedulePreferenceModal} 
+                        changeState={(newState) => this.changeState(user, newState, i)} 
+                        changeDemoTime={(newState) => this.changeDemoTime(user, newState, i)} 
+                        state={this.state.searchParams.state}/>
                     )
                 }
             </Table.Body>
