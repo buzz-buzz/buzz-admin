@@ -18,7 +18,7 @@ export default class UserDemoTime extends React.Component {
     render() {
         const {user} = this.props;
 
-        return <Modal closeIcon open={this.props.open} onClose={this.props.onClose} size="tiny">
+        return <Modal open={this.props.open} size="tiny">
             <Header content="修改信息"/>
             <Modal.Content>
                 <Form>
