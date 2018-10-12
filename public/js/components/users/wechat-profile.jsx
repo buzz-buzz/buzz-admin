@@ -65,7 +65,7 @@ export default class WechatProfile extends React.Component {
                 wechat_unionid: this.state.wechat_unionid
             }
 
-            if ((this.props.user.avatar.startsWith(`//thirdwx`) || this.props.user.avatar.startsWith(`http://thirdwx`) || this.props.user.avatar.startsWith(`https://thirdwx`)) && this.wechatData.headimgurl && this.props.user.avatar !== this.wechatData.headimgurl) {
+            if (this.props.user.avatar && (this.props.user.avatar.startsWith(`//thirdwx`) || this.props.user.avatar.startsWith(`http://thirdwx`) || this.props.user.avatar.startsWith(`https://thirdwx`)) && this.wechatData.headimgurl && this.props.user.avatar !== this.wechatData.headimgurl) {
                 updations.avatar = this.wechatData.headimgurl.replace('http://', '//')
             }
 
@@ -115,7 +115,7 @@ export default class WechatProfile extends React.Component {
             this.formStatus.success = false
             this.formStatus.message = error.result || error.message || error.toString()
 
-            if (error.result.startsWith('invalid openid hint')) {
+            if (error.result && error.result.startsWith('invalid openid hint')) {
                 this.formStatus.message += ` 该用户最初是通过扫码登录 BuzzBuzz 系统，所以其 openid 与公众号下的 openid 不同，无法主动获取用户微信基本信息，只能在下次用户自行授权时获得。`
             }
         } finally {
