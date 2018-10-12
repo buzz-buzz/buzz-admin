@@ -328,7 +328,7 @@ class UserList extends React.Component {
                     })
                     this.props.changeUserState(user, newState, remark)
                 }} user={this.state.currentLifeCycleChange.user} newState={this.state.currentLifeCycleChange.newState}/>
-                <UserDemoTime open={this.state.showUserDemoTime} onClose={() => this.setState({UserDemoTime: false})} 
+                <UserDemoTime open={this.state.showUserDemoTime} onClose={() => this.setState({showUserDemoTime: false})} 
                  user={this.state.currentUserDemoTimeChange.user}/>
             </Container>
         )
