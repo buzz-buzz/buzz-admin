@@ -317,13 +317,13 @@ class UserListTableRow extends React.Component {
     }
 
     static renderTrainingTime(openProfile, user, userDemo, changeDemoTime) {
-        return <Table.Cell onClick={changeDemoTime}>
+        return <Table.Cell onClick={()=>changeDemoTime(user.state)}>
             {TimeDisplay({timestamp: (userDemo || {}).training_time, format: 'LL'})}
         </Table.Cell>
     }
 
     static renderDemoTime(openProfile, user, userDemo, changeDemoTime) {
-        return <Table.Cell onClick={changeDemoTime}>
+        return <Table.Cell onClick={()=>changeDemoTime(user.state)}>
             {TimeDisplay({timestamp: (userDemo || {}).demo_time, format: 'LL'})}
         </Table.Cell>
     }
