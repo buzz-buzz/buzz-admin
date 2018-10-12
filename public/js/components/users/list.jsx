@@ -605,12 +605,12 @@ class UserList extends React.Component {
     }
 
     async userCreated(newUserId) {
-        let newUser = await ServiceProxy.proxyTo({
+        let newUser = newUserId ? await ServiceProxy.proxyTo({
             body: {
                 uri: `{buzzService}/api/v1/users/${newUserId}`,
                 method: 'GET'
             }
-        })
+        }) : {};
 
         let users = this.state.users;
         users.unshift(newUser);

@@ -111,7 +111,7 @@ router
     .get('/version', clientPage)
     .get('/feedbacks/:class_id', clientPage)
     .get('/avatar/:userId', async ctx => {
-        if(ctx.params.userId){
+        if(ctx.params.userId && ctx.params.userId !== '0'){
             let profile = await request(`${config.endPoints.buzzService}/api/v1/users/${ctx.params.userId}`, {
                 headers: {
                     'X-Requested-With': 'buzz-admin'

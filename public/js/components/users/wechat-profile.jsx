@@ -69,13 +69,13 @@ export default class WechatProfile extends React.Component {
                 updations.avatar = this.wechatData.headimgurl.replace('http://', '//')
             }
 
-            let p = await ServiceProxy.proxyTo({
+            let p = this.props.userId ? await ServiceProxy.proxyTo({
                 body: {
                     uri: `{buzzService}/api/v1/users/${this.props.userId}`,
                     method: 'PUT',
                     json: updations
                 }
-            })
+            }) : {};
 
             this.formStatus.success = true
             this.formStatus.message = '保存成功！'

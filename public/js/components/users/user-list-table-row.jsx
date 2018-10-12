@@ -277,15 +277,17 @@ class UserListTableRow extends React.Component {
     renderFollower(openProfile, user) {
         return user.follower && user.user_id ? <Table.Cell>
             <UserDropdownSingle selectedUserId={user.follower} changeFollowerTo={async (follower) => {
-                await ServiceProxy.proxyTo({
-                    body: {
-                        uri: `{buzzService}/api/v1/users/${user.user_id}`,
-                        method: 'PUT',
-                        json: {
-                            follower: follower
+                if(follower){
+                    await ServiceProxy.proxyTo({
+                        body: {
+                            uri: `{buzzService}/api/v1/users/${user.user_id}`,
+                            method: 'PUT',
+                            json: {
+                                follower: follower
+                            }
                         }
-                    }
-                })
+                    })
+                }
 
                 this.setState({
                     user: {
