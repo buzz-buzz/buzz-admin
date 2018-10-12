@@ -111,20 +111,23 @@ router
     .get('/version', clientPage)
     .get('/feedbacks/:class_id', clientPage)
     .get('/avatar/:userId', async ctx => {
-        let profile = await request(`${config.endPoints.buzzService}/api/v1/users/${ctx.params.userId}`, {
-            headers: {
-                'X-Requested-With': 'buzz-admin'
-            }
-        });
-
-        profile = JSON.parse(profile);
-        if (profile.avatar) {
-            ctx.redirect(profile.avatar)
-        } else {
+        if(ctx.params.userId){
+            let profile = await request(`${config.endPoints.buzzService}/api/v1/users/${ctx.params.userId}`, {
+                headers: {
+                    'X-Requested-With': 'buzz-admin'
+                }
+            });
+    
+            profile = JSON.parse(profile);
+            if (profile.avatar) {
+                ctx.redirect(profile.avatar)
+            } 
+        }else {
             await koaSend(ctx, '/images/empty_avatar.jpg', {
                 root: __dirname + '/public'
             })
         }
+        
     })
     .post('/proxy', async ctx => {
         if (ctx.request.body.uri) {
