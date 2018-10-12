@@ -28,7 +28,7 @@ export default class UserDemoTime extends React.Component {
                             <DatePicker showTimeSelect
                                         selected={this.state.training_time}
                                         name="training_time" isClearable={true}
-                                        dateFormat={'YYYY-MM-DD HH:mm'}
+                                        dateFormat={'YYYY-MM-DD'}
                                         placeholderText={"约定入门时间"}
                                         onChange={date => this.handleChange(null, {name: 'training_time', value: date})}/>
                         </Form.Field>
@@ -37,7 +37,7 @@ export default class UserDemoTime extends React.Component {
                             <DatePicker showTimeSelect
                                         selected={this.state.demo_time}
                                         name="demo_time" isClearable={true}
-                                        dateFormat={'YYYY-MM-DD HH:mm'}
+                                        dateFormat={'YYYY-MM-DD'}
                                         placeholderText={"预定体验时间"}
                                         onChange={date => this.handleChange(null, {name: 'demo_time', value: date})}/>
                         </Form.Field>
