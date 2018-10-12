@@ -6,6 +6,7 @@ import history from './components/common/history.js';
 import {configureUrlQuery} from 'react-url-query';
 import AllUserList from "./components/users/all-list";
 import FeedbackDetail from "./components/feedbacks/detail";
+import Version from './components/common/version.js';
 import {Provider} from "react-redux";
 import store from './redux/store';
 import Header from "./header";
@@ -31,6 +32,7 @@ function initApp() {
                         <Route path="/companions/:userId?" component={CompanionList}/>
                         <Route path="/classes" component={ClassList}/>
                         <Route path="/feedbacks/:class_id" component={FeedbackDetail}/>
+                        <Route path="/version" component={Version}/>
                     </Switch>
                 </BrowserRouter>
             </Provider>
