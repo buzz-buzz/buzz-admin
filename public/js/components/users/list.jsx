@@ -113,6 +113,7 @@ class UserList extends React.Component {
             loading: false,
             users: [],
             currentLifeCycleChange: {},
+            currentUserDemoTimeChange: {}
         };
 
         this.searchUsers = this.searchUsers.bind(this);
