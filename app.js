@@ -108,6 +108,7 @@ router
     .get('/students/:userId?', clientPage)
     .get('/companions/:userId?', clientPage)
     .get('/classes', clientPage)
+    .get('/version', clientPage)
     .get('/feedbacks/:class_id', clientPage)
     .get('/avatar/:userId', async ctx => {
         let profile = await request(`${config.endPoints.buzzService}/api/v1/users/${ctx.params.userId}`, {
