@@ -6,7 +6,7 @@ import history from './components/common/history.js';
 import {configureUrlQuery} from 'react-url-query';
 import AllUserList from "./components/users/all-list";
 import FeedbackDetail from "./components/feedbacks/detail";
-import Version from './components/common/version.js';
+import Version from './components/common/version';
 import {Provider} from "react-redux";
 import store from './redux/store';
 import Header from "./header";
