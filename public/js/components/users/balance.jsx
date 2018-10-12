@@ -51,7 +51,7 @@ export default class Balance extends React.Component {
     async componentWillReceiveProps(nextProps) {
         this.setState({
             balance: nextProps.user ? (nextProps.user[this.props.balanceType] || 0) : 0,
-            userId: nextProps.user ? nextProps.user.user_id : 0
+            userId: nextProps.user ? nextProps.user.user_id : ''
         }, async () => {
             await this.searchHistory();
         })

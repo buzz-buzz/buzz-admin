@@ -133,13 +133,13 @@ export default class Profile extends React.Component {
         try {
             this.setState({loading: true});
 
-            let result = await ServiceProxy.proxyTo({
+            let result = userId ? await ServiceProxy.proxyTo({
                 body: {
                     uri: `{buzzService}/api/v1/users/${userId}`,
                     json: updatedUser,
                     method: 'PUT'
                 }
-            })
+            }) : {};
 
             this.props.profileUpdateCallback(result);
             this.setState({error: false});
