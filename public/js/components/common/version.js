@@ -21,11 +21,6 @@ export default class Version extends React.Component {
     }
 
     componentWillMount(){
-        //如果是http 跳转至https
-        if (window.location.href.indexOf('https') === -1 ) {
-            window.location.href = window.location.href.replace('http', 'https');
-        }
-
         try{
             if(window.caches){
                 window.caches.keys().then(function(keys) {

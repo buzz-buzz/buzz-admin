@@ -316,19 +316,19 @@ class UserListTableRow extends React.Component {
     }
 
     static renderTrainingTime(openProfile, user, userDemo) {
-        return <Table.Cell onClick={openProfile}>
+        return <Table.Cell onClick={() => openProfile(user)}>
             {TimeDisplay({timestamp: (userDemo || {}).training_time, format: 'LL'})}
         </Table.Cell>
     }
 
     static renderDemoTime(openProfile, user, userDemo) {
-        return <Table.Cell onClick={openProfile}>
+        return <Table.Cell onClick={() => openProfile(user)}>
             {TimeDisplay({timestamp: (userDemo || {}).demo_time, format: 'LL'})}
         </Table.Cell>
     }
 
     static renderFirstClass(openProfile, user, classInfo) {
-        return <Table.Cell onClick={openProfile}>
+        return <Table.Cell onClick={() => openProfile(user)}>
             <ClassAvatar classInfo={classInfo[user.user_id]}/>
         </Table.Cell>
     }
