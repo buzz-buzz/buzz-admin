@@ -68,6 +68,7 @@
     "request-promise-native": "^1.0.5",
     "semantic-ui-css": "^2.2.14",
     "semantic-ui-react": "^0.78.2",
+    "ua_parser": "^1.2.4",
     "webpack": "^3.10.0"
   },
   "devDependencies": {
