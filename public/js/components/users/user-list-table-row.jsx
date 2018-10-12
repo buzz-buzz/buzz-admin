@@ -65,7 +65,7 @@ class UserListTableRow extends React.Component {
     }
 
     render() {
-        const {state, match, userType, openProfile, openClassHours, openIntegral, openLevelModal, openSchedulePreferenceModal, changeState, userDemo, firstClass, latestEndClass, renderDemoUsers} = this.props
+        const {state, match, userType, openProfile, openClassHours, openIntegral, openLevelModal, openSchedulePreferenceModal, changeState, userDemo, firstClass, latestEndClass, changeDemoTime} = this.props
         const {user} = this.state
 
         switch (state) {
@@ -74,7 +74,7 @@ class UserListTableRow extends React.Component {
             case StudentLifeCycleKeys.lead:
                 return this.renderLeads(openProfile, user, match, changeState)
             case StudentLifeCycleKeys.demo:
-                return this.renderDemoUsers(openProfile, user, match, changeState, userDemo, firstClass, renderDemoUsers)
+                return this.renderDemoUsers(openProfile, user, match, changeState, userDemo, firstClass, changeDemoTime)
             case StudentLifeCycleKeys.waiting_purchase:
                 return this.renderWaitingForPurchase(openProfile, openLevelModal, user, match, changeState, userDemo, firstClass)
             case StudentLifeCycleKeys.waiting_renewal:
