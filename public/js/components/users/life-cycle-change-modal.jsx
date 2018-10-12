@@ -35,7 +35,7 @@ export default class LifeCycleChangeModal extends React.Component {
                     <Form.Group widths="equal">
                         <Form.Field>
                             <label>入门时间</label>
-                            <DatePicker showTimeSelect
+                            <DatePicker 
                                         selected={this.state.training_time}
                                         name="training_time" isClearable={true}
                                         dateFormat={'YYYY-MM-DD'}
@@ -44,7 +44,7 @@ export default class LifeCycleChangeModal extends React.Component {
                         </Form.Field>
                         <Form.Field>
                             <label>体验时间</label>
-                            <DatePicker showTimeSelect
+                            <DatePicker 
                                         selected={this.state.demo_time}
                                         name="demo_time" isClearable={true}
                                         dateFormat={'YYYY-MM-DD'}
