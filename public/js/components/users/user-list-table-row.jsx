@@ -16,7 +16,6 @@ import {connect} from 'react-redux';
 import {addFirstClass, addLatestEndClass, addUserDemo} from "../../redux/actions";
 import TimeDisplay from '../common/time-display';
 import ClassAvatar from "../classes/class-avatar";
-import LifeCycleChangeModal from "./life-cycle-change-modal";
 
 class UserListTableRow extends React.Component {
     constructor(props) {
