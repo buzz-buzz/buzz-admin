@@ -648,7 +648,7 @@ export default class ClassList extends React.Component {
                                         {this.state.windowsCopy}
                                 </textarea>
                                 <br/>
-                                <Button className="ui green button" onClick={()=>this.copy(this.state.windowsCopy)}>windows-复制到剪切板</Button>
+                                <Button className="ui green button" onClick={()=>{}}>windows-手动复制到剪切板</Button>
                                 <br/>
                             </div>
                         }
@@ -658,7 +658,7 @@ export default class ClassList extends React.Component {
                                         {this.state.macCopy}
                                 </textarea>
                                 <br/>
-                                <Button className="ui green button" onClick={()=>this.copy(this.state.macCopy)}>mac-复制到剪切板</Button>
+                                <Button className="ui green button" onClick={()=>{}}>mac-手动复制到剪切板</Button>
                                 <br/>
                             </div>
                         }
