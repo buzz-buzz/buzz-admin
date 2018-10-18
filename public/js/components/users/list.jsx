@@ -107,7 +107,7 @@ class UserList extends React.Component {
                 follower: '',
                 weekly_schedule_requirements: '',
                 tags: [],
-                user_ids: props.location.params.user_id ? [props.location.params.user_id] : []
+                user_ids: props.match.params.userId ? [props.match.params.userId] : []
             },
             allTags: [],
             pagination: BuzzPaginationData,
