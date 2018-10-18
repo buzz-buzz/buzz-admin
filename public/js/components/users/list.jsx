@@ -127,7 +127,7 @@ class UserList extends React.Component {
             users: [],
             currentLifeCycleChange: {},
             currentUserDemoTimeChange: {},
-            allUsers: []
+            allUsers: props.match.params.userId ? [props.match.params.userId] : []
         };
 
         this.searchUsers = this.searchUsers.bind(this);
