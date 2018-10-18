@@ -77,6 +77,18 @@ class UserList extends React.Component {
             searchParams
         })
     };
+    handleAddUserId = async (e, {value: tag}) => {
+        this.setState({
+            allUsers: [{text: tag, value: tag, key: tag}, ...this.state.allUsers]
+        })
+    }
+    handleSelectedUsersChange = (e, {value}) => {
+        let {searchParams} = this.state;
+        searchParams.user_ids = value;
+        this.setState({
+            searchParams
+        })
+    };
     searchUsersByTag = async (tag) => {
         let {searchParams} = this.state
         searchParams.tags = [tag]
@@ -114,7 +126,8 @@ class UserList extends React.Component {
             loading: false,
             users: [],
             currentLifeCycleChange: {},
-            currentUserDemoTimeChange: {}
+            currentUserDemoTimeChange: {},
+            allUsers: []
         };
 
         this.searchUsers = this.searchUsers.bind(this);
@@ -415,6 +428,12 @@ class UserList extends React.Component {
                                 name="follower" onChange={this.handleTextChange}/>
                 </Form.Group>
                 <Form.Group widths="equal">
+                    <Form.Field control={Dropdown} label="用户ids" name="user_ids"
+                                value={this.state.searchParams.user_ids} multiple
+                                options={this.state.allUsers}
+                                search selection allowAdditions
+                                onAddItem={this.handleAddUserId}
+                                onChange={this.handleSelectedUsersChange}/>
                     <Form.Field>
                         <label>预约/排课时间段 开始时间</label>
                         <DatePicker showTimeSelect
