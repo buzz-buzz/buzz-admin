@@ -66,7 +66,7 @@ export default class ClassList extends React.Component {
         try{
             await ServiceProxy.proxyTo({
                 body: {
-                    uri: `{config.endPoints.buzzService}/api/v1/class-schedule/updatedCompanionScheduleConfirmState`,
+                    uri: `{buzzService}/api/v1/class-schedule/updatedCompanionScheduleConfirmState`,
                     json: {
                         class_id: classInfo.class_id,
                         user_id: classInfo.companions[0],
