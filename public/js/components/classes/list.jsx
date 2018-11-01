@@ -62,6 +62,12 @@ export default class ClassList extends React.Component {
         })
     };
 
+    handleConfirmStateChange = (value, classInfo) => {
+        //console.log(0)
+        console.log(value);
+        console.log(classInfo);
+    };
+
     fetchAllUsers = async () => {
         if (!this.state.allUsersLoaded) {
             await this.getAllUsers()
@@ -455,14 +461,19 @@ export default class ClassList extends React.Component {
                                 <ClassRoomDisplay roomUrl={c.room_url} MeetingId={c.zoom_meeting_id} />
                             </Table.Cell>
                             <Table.Cell>
-                                {
-                                    this.state.currentStatuses.indexOf('opened') > -1 ? 
-                                    <p><span>Tutor签到确认: </span><strong style={c.confirm_state === 'confirmed' ? {color: 'green'} : {color: 'red'}}>
-                                        {
-                                            c.confirm_state === 'cancelled' ? '已取消' : (c.confirm_state === 'confirmed' ? '已确认' :  c.confirm_state || '未确认')
-                                        }
-                                    </strong></p> : ''
-                                }
+                                <p style={c.confirm_state === 'confirmed' ? {color: 'green'} : {color: 'red'}}><span>Tutor签到: </span></p>
+                                <Form.Field control={Dropdown} label="签到状态" name="confirm_state"
+                                        value={c.confirm_state}
+                                        onChange={()=>this.handleConfirmStateChange(value, c)}
+                                        options={[{
+                                            key: '1',
+                                            value: 'confirmed',
+                                            text: '已确认'
+                                        }, {
+                                            key: '2',
+                                            value: 'cancelled',
+                                            text: '已取消'
+                                }]} selection/>
                                 {
                                     c.companions.map(userId => <a
                                         target="_blank"
