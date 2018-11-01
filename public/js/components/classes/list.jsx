@@ -84,6 +84,10 @@ export default class ClassList extends React.Component {
                     break;
                 }
             }
+
+            this.setState({
+                classes: classes
+            });
         }
         catch (ex) {
 
