@@ -478,7 +478,8 @@ export default class ClassList extends React.Component {
                                     <p>
                                     <Form.Field control={Dropdown} label="Tutor签到状态" name="confirm_state"
                                         value={c.confirm_state}
-                                        onChange={(event)=>this.handleConfirmStateChange(event, {value, c})}
+                                        classInfo={c}
+                                        onChange={this.handleConfirmStateChange}
                                         options={[{
                                             key: '1',
                                             value: 'confirmed',
