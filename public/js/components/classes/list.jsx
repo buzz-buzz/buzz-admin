@@ -455,11 +455,14 @@ export default class ClassList extends React.Component {
                                 <ClassRoomDisplay roomUrl={c.room_url} MeetingId={c.zoom_meeting_id} />
                             </Table.Cell>
                             <Table.Cell>
-                                <p><strong style={c.confirm_state === 'confirmed' ? {color: 'green'} : {color: 'red'}}>
                                 {
-                                    c.confirm_state === 'cancelled' ? '已取消' : (c.confirm_state === 'confirmed' ? '已确认' :  c.confirm_state || '未确认')
+                                    this.state.currentStatuses.indexOf('opened') > -1 ? 
+                                    <p><span>Tutor签到确认: </span><strong style={c.confirm_state === 'confirmed' ? {color: 'green'} : {color: 'red'}}>
+                                        {
+                                            c.confirm_state === 'cancelled' ? '已取消' : (c.confirm_state === 'confirmed' ? '已确认' :  c.confirm_state || '未确认')
+                                        }
+                                    </strong></p> : ''
                                 }
-                                </strong></p>
                                 {
                                     c.companions.map(userId => <a
                                         target="_blank"
