@@ -63,21 +63,31 @@ export default class ClassList extends React.Component {
     };
 
     handleConfirmStateChange = async (event, {value, classInfo}) => {
-        //console.log(0)
-        console.log(value);
-        console.log(classInfo);
+        try{
+            await ServiceProxy.proxyTo({
+                body: {
+                    uri: `{config.endPoints.buzzService}/api/v1/class-schedule/updatedCompanionScheduleConfirmState`,
+                    json: {
+                        class_id: classInfo.class_id,
+                        user_id: classInfo.companions[0],
+                        confirm_state: value,
+                    },
+                    method: 'POST'
+                }
+            });
 
-        // await ServiceProxy.proxyTo({
-        //     body: {
-        //         uri: `{config.endPoints.buzzService}/api/v1/class-schedule/updatedCompanionScheduleConfirmState`,
-        //         json: {
-        //             class_id: classInfo.class_id,
-        //             user_id: classInfo.companion,
-        //             confirm_state: value,
-        //         },
-        //         method: 'POST'
-        //     }
-        // });
+            let classes = Object.assign(this.state.classes, []);
+
+            for(let i in classes){
+                if(classes[i].class_id === classInfo.class_id){
+                    classes[i].confirm_state = value;
+                    break;
+                }
+            }
+        }
+        catch (ex) {
+
+        }
     };
 
     fetchAllUsers = async () => {
