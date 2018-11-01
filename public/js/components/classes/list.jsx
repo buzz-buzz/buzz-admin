@@ -62,7 +62,7 @@ export default class ClassList extends React.Component {
         })
     };
 
-    handleConfirmStateChange = async (event, value, classInfo) => {
+    handleConfirmStateChange = async (event, {value, classInfo}) => {
         //console.log(0)
         console.log(value);
         console.log(classInfo);
@@ -476,10 +476,9 @@ export default class ClassList extends React.Component {
                                 {
                                     this.state.currentStatuses.indexOf('opened') >= 0 ?
                                     <p>
-                                    <span style={c.confirm_state === 'confirmed' ? {color: 'green'} : {color: 'red'}}>Tutor签到: </span>
-                                    <Form.Field control={Dropdown} label="签到状态" name="confirm_state"
+                                    <Form.Field control={Dropdown} label="Tutor签到状态" name="confirm_state"
                                         value={c.confirm_state}
-                                        onChange={(event)=>this.handleConfirmStateChange(event, value, c)}
+                                        onChange={(event)=>this.handleConfirmStateChange(event, {value, c})}
                                         options={[{
                                             key: '1',
                                             value: 'confirmed',
