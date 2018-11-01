@@ -62,10 +62,22 @@ export default class ClassList extends React.Component {
         })
     };
 
-    handleConfirmStateChange = (value, classInfo) => {
+    handleConfirmStateChange = async (event, value, classInfo) => {
         //console.log(0)
         console.log(value);
         console.log(classInfo);
+
+        // await ServiceProxy.proxyTo({
+        //     body: {
+        //         uri: `{config.endPoints.buzzService}/api/v1/class-schedule/updatedCompanionScheduleConfirmState`,
+        //         json: {
+        //             class_id: classInfo.class_id,
+        //             user_id: classInfo.companion,
+        //             confirm_state: value,
+        //         },
+        //         method: 'POST'
+        //     }
+        // });
     };
 
     fetchAllUsers = async () => {
@@ -461,10 +473,13 @@ export default class ClassList extends React.Component {
                                 <ClassRoomDisplay roomUrl={c.room_url} MeetingId={c.zoom_meeting_id} />
                             </Table.Cell>
                             <Table.Cell>
-                                <p style={c.confirm_state === 'confirmed' ? {color: 'green'} : {color: 'red'}}><span>Tutor签到: </span></p>
-                                <Form.Field control={Dropdown} label="签到状态" name="confirm_state"
+                                {
+                                    this.state.currentStatuses.indexOf('opened') >= 0 ?
+                                    <p>
+                                    <span style={c.confirm_state === 'confirmed' ? {color: 'green'} : {color: 'red'}}>Tutor签到: </span>
+                                    <Form.Field control={Dropdown} label="签到状态" name="confirm_state"
                                         value={c.confirm_state}
-                                        onChange={()=>this.handleConfirmStateChange(value, c)}
+                                        onChange={(event)=>this.handleConfirmStateChange(event, value, c)}
                                         options={[{
                                             key: '1',
                                             value: 'confirmed',
@@ -473,7 +488,10 @@ export default class ClassList extends React.Component {
                                             key: '2',
                                             value: 'cancelled',
                                             text: '已取消'
-                                }]} selection/>
+                                        }]} selection/>
+                                    </p> : ''
+
+                                }
                                 {
                                     c.companions.map(userId => <a
                                         target="_blank"
