@@ -504,7 +504,7 @@ export default class ClassList extends React.Component {
                                             text: '已取消'
                                         }, {
                                             key: '3',
-                                            value: '',
+                                            value: null,
                                             text: '空(未确认)'
                                         }]} selection/>
                                     </p> : ''
