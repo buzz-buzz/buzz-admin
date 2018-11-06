@@ -801,8 +801,8 @@ class UserList extends React.Component {
                 }, this.state.searchParams, {
                     start_time: this.state.searchParams.start_time ? new Date(this.state.searchParams.start_time) : undefined,
                     end_time: this.state.searchParams.end_time ? new Date(this.state.searchParams.end_time) : undefined,
-                    orderBy,
-                    orderDirection: sortDirection
+                    orderBy: null,
+                    orderDirection: null
                 })
             }
         });
