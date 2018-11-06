@@ -8,7 +8,7 @@ import {
     Segment,
     Table,
     Message,
-    Header, Image, Modal
+    Header, Image, Modal, Icon
 } from "semantic-ui-react";
 import ServiceProxy from "../../service-proxy";
 import ClassDetail from "./class-detail-modal";
