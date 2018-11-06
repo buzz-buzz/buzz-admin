@@ -151,6 +151,7 @@ export default class ClassList extends React.Component {
         this.close = this.close.bind(this);
         this.copy = this.copy.bind(this);
         this.deleteZoom = this.deleteZoom.bind(this);
+        this.getAllEndedClasses = this.getAllEndedClasses.bind(this);
     }
 
     async updateStatus() {
@@ -175,6 +176,13 @@ export default class ClassList extends React.Component {
             this.setState({loading: false})
         }
     }
+
+    onExportAll = async () => {
+        this.setState({
+            downloadLink: `data:text/csv;charset=utf-8,\ufeff${await this.getAllEndedClasses()}`,
+            filename: 'allEndedClasses.csv'
+        })
+    };
 
     async exportRecording(){
         //console.log() 此处弹窗 ExportRecordingModal
@@ -296,6 +304,66 @@ export default class ClassList extends React.Component {
                 error: false,
                 recordingExport: this.state.searchParams.need_export_recording
             })
+        } catch (ex) {
+            this.setState({
+                error: true,
+                message: ex.message || JSON.stringify(ex)
+            })
+        } finally {
+            this.setState({loading: false})
+        }
+    }
+
+    async getAllEndedClasses() {
+        try {
+            const columnNames = {
+                class_id: '课程编号',
+                allow_sign_up: '允许报名',
+                class_hours: '占用课时数',
+                companion_name: 'Tutor昵称',
+                companions: 'Tutor编号',
+                students: 'Student编号',
+                confirm_state: 'Tutor签到状态',
+                start_time: '开始时间',
+                end_time: '结束时间',
+                module: '模块',
+                status: '状态',
+                topic: '主题',
+                topic_level: '主题级别',
+                zoom_meeting_id: '会议ID'
+            }
+            
+            let allClasses = await ServiceProxy.proxyTo({
+                body: {
+                    uri: '{buzzService}/api/v1/class-schedule',
+                    method: 'GET',
+                    qs: Object.assign({}, {
+                        statuses: 'ended'
+                    }),
+                    useQuerystring: true
+                }
+            })
+
+            let headers = Object.keys(allClasses[0]).filter(key => ['wechat_data', 'events', 'password', 'placement_test'].indexOf(key) < 0);
+
+            let result = [];
+            result.push(headers.map(h => columnNames[h] || h).join(','))
+
+            allClasses.forEach(u => {
+                let line = []
+                headers.forEach(key => {
+                    let value = u[key];
+                    if (key === 'mobile_country') {
+                        value = u[key].country.country_full_name
+                    }
+                    line.push(encodeURIComponent(String(value).replace(/,/g, '|').replace(/[\r?\n]/g, '<br />')));
+                    })
+
+                result.push(line.join(','));
+            })
+
+            return result.join('\n');
+
         } catch (ex) {
             this.setState({
                 error: true,
@@ -657,6 +725,14 @@ export default class ClassList extends React.Component {
                     <Button onClick={this.updateStatus}
                             type="button">批量更新班级结束状态</Button>
                 }
+                <Table.HeaderCell>
+                    <a href={this.state.downloadLink} className="ui button right floated"
+                       download={this.state.filename} onClick={this.onExportAll}
+                       style={{cursor: 'pointer'}}>
+                        <Icon name="download"/>
+                        导出全部班级信息(ended)
+                    </a>
+                </Table.HeaderCell>
                 {
                     this.state.recordingExport &&
                     <Button onClick={this.exportRecording}
