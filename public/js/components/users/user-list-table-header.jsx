@@ -5,7 +5,7 @@ import {StudentLifeCycleKeys} from "../../common/LifeCycles";
 
 export default class UserListTableHeader extends React.Component {
     render() {
-        const {userType, downloadLink, filename, onExport, state} = this.props
+        const {userType, downloadLink, filename, onExport, onExportAll, state} = this.props
         return <Table.Header>
             <Table.Row>
                 <Table.HeaderCell colSpan={UserListTableHeader.getColumnNumber(state)}>
@@ -14,6 +14,14 @@ export default class UserListTableHeader extends React.Component {
                        style={{cursor: 'pointer'}}>
                         <Icon name="download"/>
                         导出
+                    </a>
+                </Table.HeaderCell>
+                <Table.HeaderCell colSpan={UserListTableHeader.getColumnNumber(state)}>
+                    <a href={downloadLink} className="ui button right floated"
+                       download={filename} onClick={onExportAll}
+                       style={{cursor: 'pointer'}}>
+                        <Icon name="download"/>
+                        导出全部
                     </a>
                 </Table.HeaderCell>
             </Table.Row>

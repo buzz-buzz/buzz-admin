@@ -105,6 +105,12 @@ class UserList extends React.Component {
             filename: 'users.csv'
         })
     };
+    exportAll = async () => {
+        this.setState({
+            downloadLink: `data:text/csv;charset=utf-8,\ufeff${await this.generateCSVAll()}`,
+            filename: 'allUsers.csv'
+        })
+    };
 
     constructor(props) {
         super(props);
@@ -373,7 +379,7 @@ class UserList extends React.Component {
     renderListTable() {
 
         return <Table celled selectable striped>
-            <UserListTableHeader userType={this.props['user-type']} downloadLink={this.state.downloadLink} filename={this.state.filename} onExport={this.export} state={this.state.searchParams.state}/>
+            <UserListTableHeader userType={this.props['user-type']} downloadLink={this.state.downloadLink} filename={this.state.filename} onExport={this.export} onExportAll={this.exportAll} state={this.state.searchParams.state}/>
             <Table.Body>
                 {
                     this.state.users.map((user, i) =>
@@ -734,6 +740,79 @@ class UserList extends React.Component {
         result.push(headers.map(h => columnNames[h] || h).join(','))
 
         this.state.users.forEach(u => {
+            let line = []
+            headers.forEach(key => {
+                let value = u[key];
+                if (key === 'mobile_country') {
+                    value = u[key].country.country_full_name
+                }
+                line.push(encodeURIComponent(String(value).replace(/,/g, '|').replace(/[\r?\n]/g, '<br />')))
+            })
+
+            result.push(line.join(','))
+        })
+
+        return result.join('\n')
+    }
+
+    async generateCSVAll() {
+        const columnNames = {
+            user_id: '用户编号',
+            avatar: '用户头像',
+            name: '小孩英文名',
+            created_at: '注册时间',
+            role: '角色',
+            remark: '备注',
+            display_name: '备注名',
+            school_name: '学校',
+            time_zone: '时区',
+            order_remark: '订单备注',
+            youzan_mobile: '有赞手机号',
+            intro_done: '是否已完成新用户引导',
+            weekly_schedule_requirements: '周上课频率需求',
+            gender: '性别',
+            date_of_birth: '生日',
+            mobile: '手机号',
+            email: '邮箱',
+            language: '语言设置',
+            location: '地址',
+            description: '介绍',
+            grade: '年级',
+            parent_name: '父母姓名',
+            country: '国家',
+            city: '城市',
+            facebook_id: 'Facebook 编号',
+            wechat_name: '微信昵称',
+            wechat_openid: '微信 openid',
+            class_hours: '可用课时数',
+            integral: '积分',
+            level: '级别',
+            interests: '兴趣',
+            tags: '标签',
+            locked_class_hours: '冻结课时数'
+        }
+
+        let allUsers = await ServiceProxy.proxyTo({
+            body: {
+                uri: `{buzzService}/api/v1/users`,
+                useQuerystring: true,
+                qs: Object.assign({
+                    role: this.props['user-type']
+                }, this.state.searchParams, {
+                    start_time: this.state.searchParams.start_time ? new Date(this.state.searchParams.start_time) : undefined,
+                    end_time: this.state.searchParams.end_time ? new Date(this.state.searchParams.end_time) : undefined,
+                    orderBy,
+                    orderDirection: sortDirection
+                })
+            }
+        });
+
+        let headers = Object.keys(allUsers[0]).filter(key => ['wechat_data', 'events', 'password', 'placement_test'].indexOf(key) < 0)
+
+        let result = [];
+        result.push(headers.map(h => columnNames[h] || h).join(','))
+
+        allUsers.forEach(u => {
             let line = []
             headers.forEach(key => {
                 let value = u[key];
