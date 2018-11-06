@@ -725,14 +725,12 @@ export default class ClassList extends React.Component {
                     <Button onClick={this.updateStatus}
                             type="button">批量更新班级结束状态</Button>
                 }
-                <Table.HeaderCell>
-                    <a href={this.state.downloadLink} className="ui button right floated"
+                <a href={this.state.downloadLink} className="ui button right floated"
                        download={this.state.filename} onClick={this.onExportAll}
                        style={{cursor: 'pointer'}}>
                         <Icon name="download"/>
                         导出全部班级信息(ended)
-                    </a>
-                </Table.HeaderCell>
+                </a>
                 {
                     this.state.recordingExport &&
                     <Button onClick={this.exportRecording}
