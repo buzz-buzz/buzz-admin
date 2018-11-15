@@ -58,7 +58,8 @@ export default class Profile extends React.Component {
             follower: '',
             speak_chinese: '',
             second_foreign_language: '',
-            video_introduction: ''
+            video_introduction: '',
+            referrer: ''
         };
 
         this.handleChange = this.handleChange.bind(this);
@@ -114,6 +115,7 @@ export default class Profile extends React.Component {
                 speak_chinese: this.state.user.speak_chinese || '',
                 second_foreign_language: this.state.user.second_foreign_language || '',
                 video_introduction: this.state.user.video_introduction || '',
+                referrer: this.state.user.referrer || ''
             });
         })
     }
@@ -396,6 +398,8 @@ export default class Profile extends React.Component {
                                     })
                                 }}/>
                             </Form.Field>
+                            <Form.Input placeholder="推荐人" name="referrer" value={this.state.referrer}
+                                        onChange={this.handleChange} label="推荐人"/>
                         </Form.Group>
                         {
                             this.state.user.role === MemberType.Companion &&
