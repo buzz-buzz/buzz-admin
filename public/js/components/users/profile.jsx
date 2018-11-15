@@ -17,6 +17,19 @@ import ClassHourDisplay from "../common/ClassHourDisplay";
 import UserDropdownSingle from "./UserDropdownSingle";
 import UserFollowup from "./user-follow-up";
 
+const languageList = [
+    {key: 0, value: 'None', text: 'None'},
+    {key: 1, value: 'Chinese', text: 'Chinese'},
+    {key: 2, value: 'German', text: 'German'},
+    {key: 3, value: 'French', text: 'French'},
+    {key: 4, value: 'Russian', text: 'Russian'},
+    {key: 5, value: 'Spanish', text: 'Spanish'},
+    {key: 6, value: 'Japanese', text: 'Japanese'},
+    {key: 7, value: 'Arabic', text: 'Arabic'},
+    {key: 8, value: 'Korean', text: 'Korean'},
+    {key: 9, value: 'Punjabi', text: 'Punjabi'}
+];
+
 export default class Profile extends React.Component {
     constructor(props) {
         super(props);
@@ -42,7 +55,10 @@ export default class Profile extends React.Component {
             weekly_schedule_requirements: 1,
             password: '',
             source: '',
-            follower: ''
+            follower: '',
+            speak_chinese: '',
+            second_foreign_language: '',
+            video_introduction: ''
         };
 
         this.handleChange = this.handleChange.bind(this);
@@ -95,6 +111,9 @@ export default class Profile extends React.Component {
                 password: this.state.user.password || '',
                 source: this.state.user.source || '',
                 follower: this.state.user.follower || '',
+                speak_chinese: this.state.user.speak_chinese || '',
+                second_foreign_language: this.state.user.second_foreign_language || '',
+                video_introduction: this.state.user.video_introduction || '',
             });
         })
     }
@@ -360,7 +379,6 @@ export default class Profile extends React.Component {
                             <Form.Input label="学校名称" placeholder="学校名称" value={this.state.school_name}
                                         name="school_name" onChange={this.handleChange}/>
                         </Form.Group>
-
                         <Form.Group>
                             <Form.Input placeholder="周上课频率" name="weekly_schedule_requirements"
                                         value={this.state.weekly_schedule_requirements} onChange={this.handleChange}
@@ -379,6 +397,27 @@ export default class Profile extends React.Component {
                                 }}/>
                             </Form.Field>
                         </Form.Group>
+                        {
+                            this.state.user.role !== MemberType.Companion &&
+                            <Form.Group>
+                                <Form.Field>
+                                    <label>是否会中文</label>
+                                    <Dropdown selection multiple={false} name="speak_chinese"
+                                          options={[{value: '', text: '', key: 0}, {value: 'Yes', text: 'Yes', key: 1},{value: 'No', text: 'No', key: 2}]}
+                                          value={this.state.speak_chinese} placeholder="是否会中文" onChange={this.handleChange}
+                                          />
+                                </Form.Field>
+                                <Form.Field>
+                                    <label>第二语言</label>
+                                    <Dropdown selection multiple={false} name="second_foreign_language"
+                                          options={languageList}
+                                          value={this.state.second_foreign_language} placeholder="第二语言" onChange={this.handleChange}
+                                          />
+                                </Form.Field>
+                                <Form.Input placeholder="七牛云地址" name="video_introduction" value={this.state.video_introduction}
+                                        onChange={this.handleChange} label="Tutor自我介绍视频地址"/>
+                            </Form.Group>
+                        }
                         <Form.Group  widths="equal">
                             <Form.Field control={TextArea} label='备注' placeholder='order_remark' value={this.state.order_remark} name='order_remark'
                                 onChange={this.handleChange}/>
