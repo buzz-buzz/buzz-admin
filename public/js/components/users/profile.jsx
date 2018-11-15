@@ -398,8 +398,8 @@ export default class Profile extends React.Component {
                             </Form.Field>
                         </Form.Group>
                         {
-                            this.state.user.role !== MemberType.Companion &&
-                            <Form.Group>
+                            this.state.user.role === MemberType.Companion &&
+                            <Form.Group  widths="equal">
                                 <Form.Field>
                                     <label>是否会中文</label>
                                     <Dropdown selection multiple={false} name="speak_chinese"
