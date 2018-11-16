@@ -94,11 +94,11 @@ export default class UserFollowup extends React.Component {
                         </Table.Header>
                         <Table.Body>
                             {
-                                this.state.rows && this.state.rows.map(r => <Table.Row key={r.timestamp}>
-                                    <Table.Cell style={{whiteSpace: 'nowrap'}}>{moment(r.timestamp).fromNow()}</Table.Cell>
-                                    <Table.Cell><Avatar link={true} avatarOnly={true} userId={r.followed_by}/></Table.Cell>
-                                    <Table.Cell>{r.remark}</Table.Cell>
-                                </Table.Row>)
+                                this.state.rows && this.state.rows.length && <Table.Row key={this.state.rows[this.state.rows.length-1].timestamp}>
+                                    <Table.Cell style={{whiteSpace: 'nowrap'}}>{moment(this.state.rows[this.state.rows.length-1].timestamp).fromNow()}</Table.Cell>
+                                    <Table.Cell><Avatar link={true} avatarOnly={true} userId={this.state.rows[this.state.rows.length-1].followed_by}/></Table.Cell>
+                                    <Table.Cell>{this.state.rows[this.state.rows.length-1].remark}</Table.Cell>
+                                </Table.Row>
                             }
                         </Table.Body>
                         <Table.Footer>
