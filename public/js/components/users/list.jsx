@@ -615,6 +615,10 @@ class UserList extends React.Component {
         selectedUser.password = newProfile.password;
         selectedUser.source = newProfile.source;
         selectedUser.follower = newProfile.follower;
+        selectedUser.speak_chinese = newProfile.speak_chinese;
+        selectedUser.second_foreign_language = newProfile.second_foreign_language;
+        selectedUser.video_introduction = newProfile.video_introduction;
+        selectedUser.referrer = newProfile.referrer;
 
         let newUsers = this.state.users.map(s => {
             if (s.user_id === selectedUser.user_id) {
