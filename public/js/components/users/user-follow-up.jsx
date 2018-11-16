@@ -83,7 +83,7 @@ export default class UserFollowup extends React.Component {
 
     render() {
         return (<div>
-                <Popup hoverable trigger={<div dangerouslySetInnerHTML={{__html: (this.state.rows || []).map(r => r.remark).join('<br />')}}/>}>
+                <Popup hoverable trigger={<div dangerouslySetInnerHTML={{__html: ((this.state.rows && this.state.rows.length) ? this.state.rows[0].remark : '')}}/>}>
                     <Table>
                         <Table.Header>
                             <Table.Row>
