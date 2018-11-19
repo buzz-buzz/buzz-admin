@@ -411,7 +411,7 @@ export default class Profile extends React.Component {
                                 <Form.Field>
                                     <label>是否会中文</label>
                                     <Dropdown selection multiple={false} name="speak_chinese"
-                                          options={[{value: '', text: '', key: 0}, {value: 'Yes', text: 'Yes', key: 1},{value: 'No', text: 'No', key: 2}]}
+                                          options={[{value: '', text: '', key: 0}, {value: 'No', text: 'No', key: 1},{value: 'Just a little', text: 'Just a little', key: 2},{value: 'Conversational', text: 'Conversational', key: 3},{value: 'Native language', text: 'Native language', key: 4}]}
                                           value={this.state.speak_chinese} placeholder="是否会中文" onChange={this.handleChange}
                                           />
                                 </Form.Field>
