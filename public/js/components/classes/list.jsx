@@ -299,7 +299,7 @@ export default class ClassList extends React.Component {
                     c.students = (c.students || '').split(',').filter(uniqueFilter);
                     c.subscribers = (c.subscribers || '').split(',').filter(uniqueFilter);
                     return c;
-                }),
+                }).filter(i=>{ return i.start_time && i.students}),
                 currentStatuses: this.state.searchParams.statuses,
                 error: false,
                 recordingExport: this.state.searchParams.need_export_recording
