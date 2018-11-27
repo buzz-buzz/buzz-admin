@@ -266,7 +266,7 @@ class UserListTableRow extends React.Component {
             {UserListTableRow.renderPlacementTest(user)}
             {this.renderSource(openProfile, user)}
             {this.renderFollower(openProfile, user)}
-            {UserListTableRow.renderFollowup(user)}
+            {UserListTableRow.renderFollowup(openProfile, user)}
             {this.renderTags(openProfile, user)}
             {UserListTableRow.renderState(user, changeState)}
         </Table.Row>
@@ -310,7 +310,7 @@ class UserListTableRow extends React.Component {
             {this.renderClassHours(openProfile, user)}
             {UserListTableRow.renderPlacementTest(user)}
             {this.renderSource(openProfile, user)}
-            {UserListTableRow.renderFollowup(user)}
+            {UserListTableRow.renderFollowup(openProfile, user)}
             {UserListTableRow.renderTrainingTime(openProfile, user, userDemo[user.user_id], changeDemoTime)}
             {UserListTableRow.renderDemoTime(openProfile, user, userDemo[user.user_id], changeDemoTime)}
             {UserListTableRow.renderFirstClass(openProfile, user, firstClass)}
@@ -347,7 +347,7 @@ class UserListTableRow extends React.Component {
             {UserListTableRow.renderPlacementTest(user)}
             {UserListTableRow.renderFirstClass(openProfile, user, firstClass)}
             {this.renderFollower(openProfile, user)}
-            {UserListTableRow.renderFollowup(user)}
+            {UserListTableRow.renderFollowup(openProfile, user)}
             {this.renderTags(openProfile, user)}
             {UserListTableRow.renderState(user, changeState)}
         </Table.Row>
@@ -361,7 +361,7 @@ class UserListTableRow extends React.Component {
             {this.renderGrade(openProfile, user)}
             {UserListTableRow.renderPlacementTest(user)}
             {this.renderClassHours(openClassHours, user)}
-            {UserListTableRow.renderFollowup(user)}
+            {UserListTableRow.renderFollowup(openProfile, user)}
             {UserListTableRow.renderLatestEndClassFor(user, latestEndClass)}
             {this.renderFollower(openProfile, user)}
             {this.renderTags(openProfile, user)}
@@ -384,7 +384,7 @@ class UserListTableRow extends React.Component {
             {UserListTableRow.renderPlacementTest(user)}
             {this.renderClassHours(openClassHours, user)}
             {this.renderSource(openProfile, user)}
-            {UserListTableRow.renderFollowup(user)}
+            {UserListTableRow.renderFollowup(openProfile, user)}
             {this.renderFollower(openProfile, user)}
             {this.renderTags(openProfile, user)}
             {UserListTableRow.renderState(user, changeState)}
