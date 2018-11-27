@@ -317,7 +317,7 @@ export default class ClassList extends React.Component {
     async getAllEndedClasses() {
         try {
             const columnNames = {
-                class_id: '课程编号',
+                class_id: '课程ID',
                 allow_sign_up: '允许报名',
                 class_hours: '占用课时数',
                 companion_name: 'Tutor昵称',
@@ -328,8 +328,8 @@ export default class ClassList extends React.Component {
                 end_time: '结束时间',
                 module: '模块',
                 status: '状态',
-                topic: '主题',
-                topic_level: '主题级别',
+                topic: '课程内容',
+                class_hours: '课时数',
                 zoom_meeting_id: '会议ID'
             }
             
@@ -479,34 +479,25 @@ export default class ClassList extends React.Component {
                 <Table.Row>
                     <Table.HeaderCell
                         sorted={this.state.column === 'class_id' ? this.state.direction : null}
-                        onClick={() => this.handleSort('class_id')}>班级ID</Table.HeaderCell>
-                    <Table.HeaderCell
-                        sorted={this.state.column === 'name' ? this.state.direction : null}
-                        onClick={() => this.handleSort('name')}>班级名称</Table.HeaderCell>
+                        onClick={() => this.handleSort('class_id')}>课程ID</Table.HeaderCell>
                     <Table.HeaderCell
                         sorted={this.state.column === 'topic' ? this.state.direction : null}
-                        onClick={() => this.handleSort('topic')}>主题名</Table.HeaderCell>
+                        onClick={() => this.handleSort('topic')}>课程内容</Table.HeaderCell>
                     <Table.HeaderCell
-                        sorted={this.state.column === 'topic_level' ? this.state.direction : null}
-                        onClick={() => this.handleSort('topic_level')}>级别 </Table.HeaderCell>
-                    <Table.HeaderCell
-                        sorted={this.state.column === 'start_time' ? this.state.direction : null}
-                        onClick={() => this.handleSort('start_time')}>开课日期</Table.HeaderCell>
+                        sorted={this.state.column === 'class_hours' ? this.state.direction : null}
+                        onClick={() => this.handleSort('class_hours')}>课时数</Table.HeaderCell>
                     <Table.HeaderCell
                         sorted={this.state.column === 'start_time' ? this.state.direction : null}
-                        onClick={() => this.handleSort('start_time')}>开始时间</Table.HeaderCell>
-                    <Table.HeaderCell
-                        sorted={this.state.column === 'end_time' ? this.state.direction : null}
-                        onClick={() => this.handleSort('end_time')}>结束时间</Table.HeaderCell>
+                        onClick={() => this.handleSort('start_time')}>课程开始时间</Table.HeaderCell>
                     <Table.HeaderCell
                         sorted={this.state.column === 'room_url' ? this.state.direction : null}
                         onClick={() => this.handleSort('room_url')}>教室（链接）</Table.HeaderCell>
                     <Table.HeaderCell
                         sorted={this.state.column === 'companions' ? this.state.direction : null}
-                        onClick={() => this.handleSort('companions')}>外籍伙伴</Table.HeaderCell>
+                        onClick={() => this.handleSort('companions')}>教学方</Table.HeaderCell>
                     <Table.HeaderCell
                         sorted={this.state.column === 'students' ? this.state.direction : null}
-                        onClick={() => this.handleSort('students')}>中方用户</Table.HeaderCell>
+                        onClick={() => this.handleSort('students')}>学习方</Table.HeaderCell>
                     <Table.HeaderCell
                         sorted={this.state.column === 'subscribers' ? this.state.direction : null}
                         onClick={() => this.handleSort('subscribers')}>运营人员</Table.HeaderCell>
@@ -522,31 +513,19 @@ export default class ClassList extends React.Component {
                                 {c.class_id}
                             </Table.Cell>
                             <Table.Cell>
-                                <strong>{c.name}</strong><br/>
-                                <span
-                                    style={{color: 'gainsboro'}}>{c.status}</span><br/>
-                                <span style={{color: 'lightgray'}}>$</span>
-                                <span
-                                    style={{color: c.class_hours > 1 ? 'red' : c.class_hours < 1 ? 'gray' : 'black'}}>{c.class_hours}</span>
+                                <strong>{c.module}</strong><br/>
+                                <span style={{color: 'gainsboro'}}>{c.topic_level}</span><br/>
+                                <span>{c.topic}</span>
                             </Table.Cell>
                             <Table.Cell>
-                                {c.topic}
-                            </Table.Cell>
-                            <Table.Cell>
-                                {c.topic_level}
+                                {c.class_hours}
                             </Table.Cell>
                             <Table.Cell>
                                 <TimeDisplay timestamp={c.start_time}/>
-                            </Table.Cell>
-                            <Table.Cell>
+                                <br/>
                                 {new Date(c.start_time).toLocaleTimeString()}<br/>
                                 <span
                                     style={{color: 'lightgray'}}>{moment(c.start_time).format('LT')}</span>
-                            </Table.Cell>
-                            <Table.Cell>
-                                {new Date(c.end_time).toLocaleTimeString()}<br/>
-                                <span
-                                    style={{color: 'lightgray'}}>{moment(c.end_time).format('LT')}</span>
                             </Table.Cell>
                             <Table.Cell style={{
                                 whiteSpace: 'normal',
