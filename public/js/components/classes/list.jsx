@@ -568,7 +568,7 @@ export default class ClassList extends React.Component {
                             <Table.Cell
                                 onClick={(event) => event.stopPropagation()}>
                                 {
-                                    c.students.split(',').map((item, index) => <a
+                                    c && c.students && c.students.split(',').map((item, index) => <a
                                         target="_blank"
                                         key={index}>
                                         <Avatar profile={{name: c.student_name.split(',')[index], avatar: c.student_avatar.split(',')[index]}} link={true} userId={item}/>
