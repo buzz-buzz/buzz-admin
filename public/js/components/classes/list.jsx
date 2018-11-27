@@ -297,6 +297,8 @@ export default class ClassList extends React.Component {
                     let uniqueFilter = (value, index, self) => self.indexOf(value) === index;
                     c.companions = (c.companions || '').split(',').filter(uniqueFilter);
                     c.students = (c.students || '').split(',').filter(uniqueFilter);
+                    c.student_avatar = (c.student_avatar || '').split(',').filter(uniqueFilter);
+                    c.student_name = (c.student_name || '').split(',').filter(uniqueFilter);
                     c.subscribers = (c.subscribers || '').split(',').filter(uniqueFilter);
                     return c;
                 }).filter(i=>{ return i.start_time && i.students}),
@@ -568,10 +570,10 @@ export default class ClassList extends React.Component {
                             <Table.Cell
                                 onClick={(event) => event.stopPropagation()}>
                                 {
-                                    c && c.students && c.students.split(',').map((item, index) => <a
+                                    c && c.students && c.students.map((item, index) => <a
                                         target="_blank"
                                         key={index}>
-                                        <Avatar profile={{name: c.student_name.split(',')[index], avatar: c.student_avatar.split(',')[index]}} link={true} userId={item}/>
+                                        <Avatar profile={{name: c.student_name[index], avatar: c.student_avatar[index]}} link={true} userId={item}/>
                                     </a>)
                                 }
                             </Table.Cell>
