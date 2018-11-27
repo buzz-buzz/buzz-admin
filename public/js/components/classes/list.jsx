@@ -561,17 +561,17 @@ export default class ClassList extends React.Component {
                                     c.companions.map(userId => <a
                                         target="_blank"
                                         key={userId}>
-                                        <Avatar link={true} userId={userId}/>
+                                        <Avatar profile={{name: c.companion_name, avatar: c.companion_avatar}}  link={true} userId={userId}/>
                                     </a>)
                                 }
                             </Table.Cell>
                             <Table.Cell
                                 onClick={(event) => event.stopPropagation()}>
                                 {
-                                    c.students.map(userId => <a
+                                    c.students.split(',').map((item, index) => <a
                                         target="_blank"
-                                        key={userId}>
-                                        <Avatar  link={true} userId={userId}/>
+                                        key={index}>
+                                        <Avatar profile={{name: c.student_name.split(',')[index], avatar: c.student_avatar.split(',')[index]}} link={true} userId={item}/>
                                     </a>)
                                 }
                             </Table.Cell>

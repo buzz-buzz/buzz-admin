@@ -12,7 +12,12 @@ export class Avatar extends React.Component {
     }
 
     async componentWillMount() {
-        if (this.props.userId) {
+        if(this.props.profile && this.props.profile.name){
+            this.setState({
+                pofile: this.props.profile,
+                avatar: this.props.avatar
+            });
+        }else if(this.props.userId) {
             this.setState({userId: this.props.userId})
             await this.loadProfile()
         }
@@ -47,7 +52,9 @@ export class Avatar extends React.Component {
 
         return props.userId ? <a href={props.link === true ? `/users/${props.userId}` : 'javascript:void(0)'} target="_blank">
                 <Popup trigger={
-                    <object data={`/avatar/${props.userId}`} type="image/png"
+                    this.state.profile.avatar ? <Image avatar alt={props.userId} title={props.userId}
+                    src={this.state.profile.avatar}
+                    />  : <object data={`/avatar/${props.userId}`} type="image/png"
                             className="ui image avatar" title={props.userId} alt={props.userId}>
                         <Image avatar alt={props.userId} title={props.userId}
                                src={`/images/empty_avatar.jpg`}
