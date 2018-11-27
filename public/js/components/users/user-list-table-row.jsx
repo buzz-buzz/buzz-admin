@@ -112,12 +112,12 @@ class UserListTableRow extends React.Component {
             {this.renderBookings(openSchedulePreferenceModal, user)}
             {this.renderTags(openProfile, user)}
             {UserListTableRow.renderState(user, changeState)}
-            {UserListTableRow.renderFollowup(user)}
+            {UserListTableRow.renderFollowup(openProfile, user)}
         </Table.Row>;
     }
 
-    static renderFollowup(user) {
-        return <Table.Cell>
+    static renderFollowup(openProfile, user) {
+        return <Table.Cell  onClick={() => openProfile(user)}>
             <UserFollowup userId={user.user_id}/>
         </Table.Cell>;
     }
