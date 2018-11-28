@@ -111,23 +111,26 @@ router
     .get('/version', clientPage)
     .get('/feedbacks/:class_id', clientPage)
     .get('/avatar/:userId', async ctx => {
-        if(ctx.params.userId && ctx.params.userId !== '0'){
-            let profile = await request(`${config.endPoints.buzzService}/api/v1/users/${ctx.params.userId}`, {
-                headers: {
-                    'X-Requested-With': 'buzz-admin'
-                }
-            });
-    
-            profile = JSON.parse(profile);
-            if (profile.avatar) {
-                ctx.redirect(profile.avatar)
-            } 
-        }else {
-            await koaSend(ctx, '/images/empty_avatar.jpg', {
-                root: __dirname + '/public'
-            })
-        }
+        try {
+            if(ctx.params.userId && ctx.params.userId !== '0'){
+                let profile = await request(`${config.endPoints.buzzService}/api/v1/users/${ctx.params.userId}`, {
+                    headers: {
+                        'X-Requested-With': 'buzz-admin'
+                    }
+                });
         
+                profile = JSON.parse(profile);
+                if (profile.avatar) {
+                    ctx.redirect(profile.avatar)
+                }
+            }else {
+                await koaSend(ctx, '/images/empty_avatar.jpg', {
+                    root: __dirname + '/public'
+                })
+            }
+        } catch (error) {
+            ctx.redirect('https://cdn-corner.resource.buzzbuzzenglish.com/logo2.png');
+        }
     })
     .post('/proxy', async ctx => {
         if (ctx.request.body.uri) {
