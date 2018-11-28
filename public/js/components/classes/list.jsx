@@ -335,7 +335,7 @@ export default class ClassList extends React.Component {
                 zoom_meeting_id: '会议ID'
             }
             
-            let allClasses = await ServiceProxy.proxyTo({
+            let allClasses = (await ServiceProxy.proxyTo({
                 body: {
                     uri: '{buzzService}/api/v1/class-schedule',
                     method: 'GET',
@@ -344,9 +344,9 @@ export default class ClassList extends React.Component {
                     }),
                     useQuerystring: true
                 }
-            })
+            })).filter(item =>{return item.start_time && item.students})
 
-            let headers = Object.keys(allClasses[0]).filter(key => columnNames.indexOf(key) >= 0);
+            let headers = Object.keys(allClasses[0]).filter(key => ['wechat_data', 'events', 'password', 'placement_test'].indexOf(key) < 0);
 
             let result = [];
             result.push(headers.map(h => columnNames[h] || h).join(','))
@@ -355,7 +355,9 @@ export default class ClassList extends React.Component {
                 let line = []
                 headers.forEach(key => {
                     let value = u[key];
-                   
+                    if (key === 'mobile_country') {
+                        value = u[key].country.country_full_name
+                    }
                     line.push(encodeURIComponent(String(value).replace(/,/g, '|').replace(/[\r?\n]/g, '<br />')));
                     })
 
