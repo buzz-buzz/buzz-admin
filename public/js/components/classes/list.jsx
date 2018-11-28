@@ -330,7 +330,7 @@ export default class ClassList extends React.Component {
                 end_time: '结束时间',
                 module: '模块',
                 status: '状态',
-                topic: '课程内容',
+                topic: '课程主题',
                 class_hours: '课时数',
                 zoom_meeting_id: '会议ID'
             }
@@ -346,7 +346,7 @@ export default class ClassList extends React.Component {
                 }
             })
 
-            let headers = Object.keys(allClasses[0]).filter(key => ['wechat_data', 'events', 'password', 'placement_test'].indexOf(key) < 0);
+            let headers = Object.keys(allClasses[0]).filter(key => columnNames.indexOf(key) >= 0);
 
             let result = [];
             result.push(headers.map(h => columnNames[h] || h).join(','))
@@ -355,9 +355,7 @@ export default class ClassList extends React.Component {
                 let line = []
                 headers.forEach(key => {
                     let value = u[key];
-                    if (key === 'mobile_country') {
-                        value = u[key].country.country_full_name
-                    }
+                   
                     line.push(encodeURIComponent(String(value).replace(/,/g, '|').replace(/[\r?\n]/g, '<br />')));
                     })
 
