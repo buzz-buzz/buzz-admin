@@ -346,7 +346,7 @@ export default class ClassList extends React.Component {
                 }
             })).filter(item =>{return item.start_time && item.students})
 
-            let headers = Object.keys(allClasses[0]).filter(key => ['wechat_data', 'events', 'password', 'placement_test'].indexOf(key) < 0);
+            let headers = Object.keys(allClasses[0]).filter(key => ['wechat_data', 'events', 'password', 'placement_test'].indexOf(key) < 0 && columnNames[key]);
 
             let result = [];
             result.push(headers.map(h => columnNames[h] || h).join(','))

@@ -738,7 +738,7 @@ class UserList extends React.Component {
             locked_class_hours: '冻结课时数'
         }
 
-        let headers = Object.keys(this.state.users[0]).filter(key => ['wechat_data', 'events', 'password', 'placement_test'].indexOf(key) < 0)
+        let headers = Object.keys(this.state.users[0]).filter(key => ['wechat_data', 'events', 'password', 'placement_test'].indexOf(key) < 0 && columnNames[key])
 
         let result = [];
         result.push(headers.map(h => columnNames[h] || h).join(','))
@@ -811,7 +811,7 @@ class UserList extends React.Component {
             }
         });
 
-        let headers = Object.keys(allUsers[0]).filter(key => ['wechat_data', 'events', 'password', 'placement_test'].indexOf(key) < 0)
+        let headers = Object.keys(allUsers[0]).filter(key => ['wechat_data', 'events', 'password', 'placement_test'].indexOf(key) < 0 && columnNames[key]);
 
         let result = [];
         result.push(headers.map(h => columnNames[h] || h).join(','))
