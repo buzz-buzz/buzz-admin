@@ -526,9 +526,7 @@ export default class ClassList extends React.Component {
                             <Table.Cell>
                                 <TimeDisplay timestamp={c.start_time}/>
                                 <br/>
-                                {new Date(c.start_time).toLocaleTimeString()}<br/>
-                                <span
-                                    style={{color: 'lightgray'}}>{moment(c.start_time).format('LT')}</span>
+                                <span style={{color: 'red'}}>{moment(c.start_time).format('LT')}</span><br/>
                             </Table.Cell>
                             <Table.Cell style={{
                                 whiteSpace: 'normal',
