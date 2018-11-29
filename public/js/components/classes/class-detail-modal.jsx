@@ -163,12 +163,12 @@ export default class ClassDetail extends React.Component {
     }
 
     async componentWillMount() {
-        let availableStudents = await this.getAvailableStudents();
-        let availableCompanions = await this.getAvailableCompanions();
-        this.setState({
-            availableStudents: availableStudents,
-            availableCompanions: availableCompanions
-        });
+        // let availableStudents = await this.getAvailableStudents();
+        // let availableCompanions = await this.getAvailableCompanions();
+        // this.setState({
+        //     availableStudents: availableStudents,
+        //     availableCompanions: availableCompanions
+        // });
     }
 
     render() {
