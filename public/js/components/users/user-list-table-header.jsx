@@ -13,13 +13,13 @@ export default class UserListTableHeader extends React.Component {
                        download={filename} onClick={onExport}
                        style={{cursor: 'pointer'}}>
                         <Icon name="download"/>
-                        导出
+                        导出本页
                     </a>
                     <a href={downloadLink} className="ui button right floated"
                        download={filename} onClick={onExportAll}
                        style={{cursor: 'pointer'}}>
                         <Icon name="download"/>
-                        导出全部
+                        导出所有(慎用)
                     </a>
                 </Table.HeaderCell>
             </Table.Row>

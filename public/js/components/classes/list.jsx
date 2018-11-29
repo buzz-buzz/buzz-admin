@@ -335,23 +335,24 @@ export default class ClassList extends React.Component {
                 zoom_meeting_id: '会议ID'
             }
             
-            let allClasses = (await ServiceProxy.proxyTo({
-                body: {
-                    uri: '{buzzService}/api/v1/class-schedule',
-                    method: 'GET',
-                    qs: Object.assign({}, {
-                        statuses: 'ended'
-                    }),
-                    useQuerystring: true
-                }
-            })).filter(item =>{return item.start_time && item.students})
+            //this.state.classes
+            // let allClasses = (await ServiceProxy.proxyTo({
+            //     body: {
+            //         uri: '{buzzService}/api/v1/class-schedule',
+            //         method: 'GET',
+            //         qs: Object.assign({}, {
+            //             statuses: 'ended'
+            //         }),
+            //         useQuerystring: true
+            //     }
+            // })).filter(item =>{return item.start_time && item.students})
 
-            let headers = Object.keys(allClasses[0]).filter(key => ['wechat_data', 'events', 'password', 'placement_test'].indexOf(key) < 0 && columnNames[key]);
+            let headers = Object.keys(this.state.classes[0]).filter(key => ['wechat_data', 'events', 'password', 'placement_test'].indexOf(key) < 0 && columnNames[key]);
 
             let result = [];
             result.push(headers.map(h => columnNames[h] || h).join(','))
 
-            allClasses.forEach(u => {
+            this.state.classes.forEach(u => {
                 let line = []
                 headers.forEach(key => {
                     let value = u[key];
@@ -710,7 +711,7 @@ export default class ClassList extends React.Component {
                        download={this.state.filename} onClick={this.onExportAll}
                        style={{cursor: 'pointer'}}>
                         <Icon name="download"/>
-                        导出全部班级信息(ended)
+                        导出班级信息(搜索结果-本页)
                 </a>
                 {
                     this.state.recordingExport &&
