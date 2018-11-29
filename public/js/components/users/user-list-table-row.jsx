@@ -175,7 +175,7 @@ class UserListTableRow extends React.Component {
         return <Table.Cell
             onClick={() => openIntegral(user)}
             style={{cursor: 'pointer'}}>
-            {user.integral || 0}
+            {user.integral || 0} <br/> ({user.total_integral || 0})
         </Table.Cell>;
     }
 
