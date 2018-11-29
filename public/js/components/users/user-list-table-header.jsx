@@ -15,8 +15,6 @@ export default class UserListTableHeader extends React.Component {
                         <Icon name="download"/>
                         导出
                     </a>
-                </Table.HeaderCell>
-                <Table.HeaderCell colSpan={UserListTableHeader.getColumnNumber(state)}>
                     <a href={downloadLink} className="ui button right floated"
                        download={filename} onClick={onExportAll}
                        style={{cursor: 'pointer'}}>
