@@ -19,7 +19,7 @@ export default class UserListTableHeader extends React.Component {
                        download={filename} onClick={onExportAll}
                        style={{cursor: 'pointer'}}>
                         <Icon name="download"/>
-                        导出所有(慎用)
+                        导出所有用户(慎用)
                     </a>
                 </Table.HeaderCell>
             </Table.Row>
