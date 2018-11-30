@@ -37,13 +37,13 @@ class UserListTableRow extends React.Component {
         }
 
         if (!firstClass[this.state.user.user_id]) {
-            // const firstClass = await ServiceProxy.proxyTo({
-            //     body: {
-            //         uri: `{buzzService}/api/v1/student-class-schedule/demo-class/${this.state.user.user_id}`
-            //     }
-            // })
+            const firstClass = await ServiceProxy.proxyTo({
+                body: {
+                    uri: `{buzzService}/api/v1/student-class-schedule/demo-class/${this.state.user.user_id}`
+                }
+            })
 
-            // addFirstClassToStore(this.state.user.user_id, firstClass)
+            addFirstClassToStore(this.state.user.user_id, firstClass)
         }
 
         if (!latestEndClass[this.state.user.user_id]) {
