@@ -516,6 +516,8 @@ export default class ClassList extends React.Component {
                                    onClick={() => process.env.NODE_ENV !== 'production' ? this.openClassDetail(c) : this.openAdminNeueClassDetail(c)}>
                             <Table.Cell>
                                 {c.class_id}
+                                <br/>
+                                {c.name}
                             </Table.Cell>
                             <Table.Cell>
                                 <strong>{c.module}</strong><br/>
