@@ -76,11 +76,12 @@ export class Avatar extends React.Component {
         return <span>
                     <span>{this.state.profile.name}</span>
             &emsp;
-            <span style={{color: 'green'}}>{this.state.profile.wechat_name}</span>
+            <span style={{color: 'green'}}>{this.state.profile.wechat_name ? ' | ' +  this.state.profile.wechat_name : '' }</span>
             &emsp;
-            <span style={{color: 'blue'}}>{this.state.profile.facebook_name}</span>
+            <span style={{color: 'darkgray'}}>{this.state.profile.display_name ? ' | ' +  this.state.profile.display_name : ''}</span>
             &emsp;
-            <span style={{color: 'darkgray'}}>{this.state.profile.display_name}</span>
+            <span style={{color: 'blue'}}>{this.state.profile.facebook_name ? ' | ' +  this.state.profile.facebook_name : ''}</span>
+            &emsp;
                     <span>&emsp;</span>
                         </span>;
     }
