@@ -73,16 +73,6 @@ export class Avatar extends React.Component {
     }
 
     displayUserName() {
-        return <span>
-                    <span>{this.state.profile.name}</span>
-            &emsp;
-            <span style={{color: 'green'}}>{this.state.profile.wechat_name ? ' | ' +  this.state.profile.wechat_name : '' }</span>
-            &emsp;
-            <span style={{color: 'darkgray'}}>{this.state.profile.display_name ? ' | ' +  this.state.profile.display_name : ''}</span>
-            &emsp;
-            <span style={{color: 'blue'}}>{this.state.profile.facebook_name ? ' | ' +  this.state.profile.facebook_name : ''}</span>
-            &emsp;
-                    <span>&emsp;</span>
-                        </span>;
+        return <span>{[this.state.profile.name, this.state.profile.wechat_name, this.state.profile.display_name].filter(item => !!item).join(' | ')}</span>;
     }
 }
