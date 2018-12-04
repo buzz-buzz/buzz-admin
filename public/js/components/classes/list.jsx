@@ -792,7 +792,7 @@ export default class ClassList extends React.Component {
         if (column !== clickedColumn) {
             this.setState({
                 column: clickedColumn,
-                classes: _.sortBy(classes, [clickedColumn]),
+                classes: _.sortBy(classes, [function(o) { return o[clickedColumn]; }]),
                 direction: 'ascending'
             });
 
