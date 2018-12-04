@@ -486,8 +486,8 @@ export default class ClassList extends React.Component {
                         sorted={this.state.column === 'class_id' ? this.state.direction : null}
                         onClick={() => this.handleSort('class_id')}>课程ID</Table.HeaderCell>
                     <Table.HeaderCell
-                        sorted={this.state.column === 'topic' ? this.state.direction : null}
-                        onClick={() => this.handleSort('topic')}>课程内容</Table.HeaderCell>
+                        sorted={this.state.column === 'module' ? this.state.direction : null}
+                        onClick={() => this.handleSort('module')}>课程内容</Table.HeaderCell>
                     <Table.HeaderCell
                         sorted={this.state.column === 'class_hours' ? this.state.direction : null}
                         onClick={() => this.handleSort('class_hours')}>课时数</Table.HeaderCell>
