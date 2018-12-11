@@ -5,7 +5,7 @@ import TimeDisplay from '../common/time-display';
 import {Avatar} from "../../common/Avatar";
 import RemarkDisplay from "../common/RemarkDisplay";
 
-const history = ({userId, history, pagination, paginationChanged, clearData}) =>
+const history = ({userId, history, pagination, paginationChanged, clearData, timeFix}) =>
     <Table striped>
         <Table.Header>
             <Table.Row>
@@ -22,7 +22,7 @@ const history = ({userId, history, pagination, paginationChanged, clearData}) =>
                     <Table.Row
                         key={r.timestamp}>
                         <Table.Cell>
-                            <TimeDisplay timestamp={r.timestamp} format="LLLL"/>
+                            <TimeDisplay timestamp={r.timestamp} timeFix={timeFix} format="LLLL"/>
                         </Table.Cell>
                         <Table.Cell>
                             <Avatar userId={r.by}></Avatar>

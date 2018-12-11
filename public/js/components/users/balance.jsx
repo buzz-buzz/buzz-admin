@@ -220,7 +220,7 @@ export default class Balance extends React.Component {
                     }
                     {
                         this.props.balanceType === 'integral' &&
-                        <CreditsHistory userId={this.state.userId} pagination={this.state.pagination} paginationChanged={this.paginationChanged}
+                        <CreditsHistory userId={this.state.userId} timeFix={true} pagination={this.state.pagination} paginationChanged={this.paginationChanged}
                                         clearData={() => {
                                             this.setState({
                                                 pagination: {
