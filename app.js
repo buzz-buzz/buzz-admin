@@ -159,6 +159,9 @@ router
     .get('/admin-neue/classDetail/:class_id', async ctx => {
         ctx.redirect(`${config.endPoints.adminNeue}/classDetail/${ctx.params.class_id}`);
     })
+    .get('/admin-neue/tagDetail/:user_id', async ctx => {
+        ctx.redirect(`${config.endPoints.adminNeue}/tagDetail/${ctx.params.user_id}`);
+    })
     .get('/admin-neue/content-list', async ctx => {
         ctx.redirect(`${config.endPoints.adminNeue}/contentList`);
     })

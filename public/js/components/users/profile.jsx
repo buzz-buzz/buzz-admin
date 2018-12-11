@@ -69,12 +69,17 @@ export default class Profile extends React.Component {
         this.handleSearchChange = this.handleSearchChange.bind(this);
         this.deleteUser = this.deleteUser.bind(this);
         this.changeRole = this.changeRole.bind(this);
+        this.classTagManage = this.classTagManage.bind(this);
     }
 
     handleChange(e, {name, value}) {
         this.setState({
             [name]: value
         })
+    }
+
+    classTagManage(){
+        window.open('/admin-neue/tagDetail/' + this.state.user.user_id);  
     }
 
     handleSearchChange(e, {search}) {
@@ -453,6 +458,13 @@ export default class Profile extends React.Component {
                                              content={`切换成 ${MemberTypeChinese[this.state.theOtherRole]}`}
                                              type="button"
                                              onClick={this.changeRole}/>
+                            }
+                            {
+                                this.state.user.user_id &&
+                                <Form.Button color="yellow"
+                                             content={`排课标签管理`}
+                                             type="button"
+                                             onClick={this.classTagManage}/>
                             }
                         </Form.Group>
                     </Form>
