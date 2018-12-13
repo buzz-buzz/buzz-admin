@@ -60,7 +60,9 @@ export default class Profile extends React.Component {
             speak_chinese: '',
             second_foreign_language: '',
             video_introduction: '',
-            referrer: ''
+            referrer: '',
+            accent: '',
+            color: ''
         };
 
         this.handleChange = this.handleChange.bind(this);
@@ -121,7 +123,9 @@ export default class Profile extends React.Component {
                 speak_chinese: this.state.user.speak_chinese || '',
                 second_foreign_language: this.state.user.second_foreign_language || '',
                 video_introduction: this.state.user.video_introduction || '',
-                referrer: this.state.user.referrer || ''
+                referrer: this.state.user.referrer || '',
+                color: this.state.user.color || '',
+                accent: this.state.user.accent || ''
             });
         })
     }
@@ -155,6 +159,8 @@ export default class Profile extends React.Component {
         second_foreign_language: this.state.second_foreign_language,
         video_introduction: this.state.video_introduction,
         referrer: this.state.referrer,
+        color: this.state.color,
+        accent: this.state.accent,
 
         wechat_openid: this.state.user.wechat_openid,
         wechat_unionid: this.state.user.wechat_unionid,
@@ -432,6 +438,25 @@ export default class Profile extends React.Component {
                                 </Form.Field>
                                 <Form.Input placeholder="七牛云地址" name="video_introduction" value={this.state.video_introduction}
                                         onChange={this.handleChange} label="Tutor自我介绍视频地址"/>
+                            </Form.Group>
+                        }
+                        {
+                            this.state.user.role === MemberType.Companion &&
+                            <Form.Group  widths="equal">
+                                <Form.Field>
+                                    <label>肤色(排课专用)</label>
+                                    <Dropdown selection multiple={false} name="color"
+                                          options={[{value: 'White', text: 'White', key: 0}, {value: 'Black', text: 'Black', key: 1},{value: 'Yellow', text: 'Yellow', key: 2},{value: 'Brown', text: 'Brown', key: 3}]}
+                                          value={this.state.color} placeholder="肤色" onChange={this.handleChange}
+                                          />
+                                </Form.Field>
+                                <Form.Field>
+                                    <label>口音(排课专用)</label>
+                                    <Dropdown selection multiple={false} name="accent"
+                                          options={[{value: 'American', text: 'American', key: 0}, {value: 'British', text: 'British', key: 1},{value: 'A little', text: 'A little', key: 2},{value: 'Other', text: 'Other', key: 3}]}
+                                          value={this.state.accent} placeholder="口音" onChange={this.handleChange}
+                                          />
+                                </Form.Field>
                             </Form.Group>
                         }
                         <Form.Group  widths="equal">
