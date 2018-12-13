@@ -60,6 +60,7 @@ export default class Profile extends React.Component {
             speak_chinese: '',
             second_foreign_language: '',
             video_introduction: '',
+            referral: null,
             referrer: '',
             accent: '',
             color: ''
@@ -123,6 +124,7 @@ export default class Profile extends React.Component {
                 speak_chinese: this.state.user.speak_chinese || '',
                 second_foreign_language: this.state.user.second_foreign_language || '',
                 video_introduction: this.state.user.video_introduction || '',
+                referral: this.state.user.referral || null,
                 referrer: this.state.user.referrer || '',
                 color: this.state.user.color || '',
                 accent: this.state.user.accent || ''
@@ -158,6 +160,7 @@ export default class Profile extends React.Component {
         speak_chinese: this.state.speak_chinese,
         second_foreign_language: this.state.second_foreign_language,
         video_introduction: this.state.video_introduction,
+        referral: this.state.referral,
         referrer: this.state.referrer,
         color: this.state.color,
         accent: this.state.accent,
@@ -416,7 +419,7 @@ export default class Profile extends React.Component {
                                     })
                                 }}/>
                             </Form.Field>
-                            <Form.Input placeholder="推荐人" name="referrer" value={this.state.referrer}
+                            <Form.Input placeholder="注册推荐人" name="referral" value={this.state.referral}
                                         onChange={this.handleChange} label="推荐人"/>
                         </Form.Group>
                         {
@@ -457,6 +460,8 @@ export default class Profile extends React.Component {
                                           value={this.state.accent} placeholder="口音" onChange={this.handleChange}
                                           />
                                 </Form.Field>
+                                <Form.Input placeholder="tutor推荐人" name="referrer" value={this.state.referrer}
+                                        onChange={this.handleChange} label="推荐人"/>
                             </Form.Group>
                         }
                         <Form.Group  widths="equal">
