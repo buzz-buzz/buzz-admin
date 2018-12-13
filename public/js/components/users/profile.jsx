@@ -9,6 +9,7 @@ import Timezones from "../../common/Timezones";
 import TimeHelper from "../../common/TimeHelper";
 import {MemberType, MemberTypeChinese} from "../../common/MemberType";
 import WechatProfile from "./wechat-profile";
+import history from '../common/history';
 import UserTags from "./user-tags";
 import {ClassStatusCode} from "../../common/ClassStatus";
 import {StudentLifeCyclesMapping} from "../../common/LifeCycles";
@@ -207,6 +208,8 @@ export default class Profile extends React.Component {
             await this.props.onUserDeleted(userId);
 
             this.close();
+            history.push('/users');
+            
         } catch (error) {
             this.setState({error: true, message: JSON.stringify(error.result || error)})
         } finally {
