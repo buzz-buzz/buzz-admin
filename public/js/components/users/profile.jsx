@@ -63,6 +63,7 @@ export default class Profile extends React.Component {
             referral: null,
             referrer: '',
             accent: '',
+            level: '',
             color: ''
         };
 
@@ -127,7 +128,8 @@ export default class Profile extends React.Component {
                 referral: this.state.user.referral || null,
                 referrer: this.state.user.referrer || '',
                 color: this.state.user.color || '',
-                accent: this.state.user.accent || ''
+                accent: this.state.user.accent || '',
+                level: this.state.user.level || ''
             });
         })
     }
@@ -164,6 +166,7 @@ export default class Profile extends React.Component {
         referrer: this.state.referrer,
         color: this.state.color,
         accent: this.state.accent,
+        level: this.state.level,
 
         wechat_openid: this.state.user.wechat_openid,
         wechat_unionid: this.state.user.wechat_unionid,
@@ -422,6 +425,10 @@ export default class Profile extends React.Component {
                             <Form.Input placeholder="注册推荐人" name="referral" value={this.state.referral}
                                         onChange={this.handleChange} label="推荐人"/>
                         </Form.Group>
+                        {
+                            this.state.user.role === MemberType.Student && <Form.Input placeholder="级别" name="level" value={this.state.level}
+                            onChange={this.handleChange} label="级别"/>
+                        }
                         {
                             this.state.user.role === MemberType.Companion &&
                             <Form.Group  widths="equal">
