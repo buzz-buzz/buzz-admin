@@ -426,8 +426,19 @@ export default class Profile extends React.Component {
                                         onChange={this.handleChange} label="推荐人"/>
                         </Form.Group>
                         {
-                            this.state.user.role === MemberType.Student && <Form.Input placeholder="级别" name="level" value={this.state.level}
-                            onChange={this.handleChange} label="级别"/>
+                            this.state.user.role === MemberType.Student &&
+                            <Form.Field>
+                                    <label>评级</label>
+                                    <Dropdown selection multiple={false} name="level"
+                                          options={[{ key: '1', value: '1', text: '1' },
+                                          { key: '2', value: '2', text: '2' },
+                                          { key: '3', value: '3', text: '3' },
+                                          { key: '4', value: '4', text: '4' },
+                                          { key: '5', value: '5', text: '5' },
+                                          { key: '6', value: '6', text: '6' },]}
+                                          value={this.state.level} placeholder="评级" onChange={this.handleChange}
+                                          />
+                                </Form.Field>
                         }
                         {
                             this.state.user.role === MemberType.Companion &&
