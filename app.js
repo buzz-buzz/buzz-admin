@@ -174,6 +174,9 @@ router
     .get('/admin-neue/importUser', async ctx => {
         ctx.redirect(`${config.endPoints.adminNeue}/importUser`);
     })
+    .get('/admin-neue/referralList', async ctx => {
+        ctx.redirect(`${config.endPoints.adminNeue}/referralList`);
+    })
     .get('/admin-neue/weappList', async ctx => {
         ctx.redirect(`${config.endPoints.adminNeue}/weappList`);
     })
