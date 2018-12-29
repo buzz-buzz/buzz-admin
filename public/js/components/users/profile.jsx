@@ -64,7 +64,8 @@ export default class Profile extends React.Component {
             referrer: '',
             accent: '',
             level: '',
-            color: ''
+            color: '',
+            campaign: ''
         };
 
         this.handleChange = this.handleChange.bind(this);
@@ -129,6 +130,7 @@ export default class Profile extends React.Component {
                 referrer: this.state.user.referrer || '',
                 color: this.state.user.color || '',
                 accent: this.state.user.accent || '',
+                campaign: this.state.user.campaign || '',
                 level: this.state.user.level || ''
             });
         })
@@ -166,6 +168,7 @@ export default class Profile extends React.Component {
         referrer: this.state.referrer,
         color: this.state.color,
         accent: this.state.accent,
+        campaign: this.state.campaign,
         level: this.state.level,
 
         wechat_openid: this.state.user.wechat_openid,
@@ -427,7 +430,8 @@ export default class Profile extends React.Component {
                         </Form.Group>
                         {
                             this.state.user.role === MemberType.Student &&
-                            <Form.Field>
+                            <Form.Group>
+                                <Form.Field>
                                     <label>评级</label>
                                     <Dropdown selection multiple={false} name="level"
                                           options={[{ key: '1', value: '1', text: '1' },
@@ -439,6 +443,8 @@ export default class Profile extends React.Component {
                                           value={this.state.level} placeholder="评级" onChange={this.handleChange}
                                           />
                                 </Form.Field>
+                                <Form.Input placeholder="活动来源" name="campaign" value={this.state.campaign} onChange={this.handleChange} label="活动来源"/>
+                        </Form.Group>
                         }
                         {
                             this.state.user.role === MemberType.Companion &&
