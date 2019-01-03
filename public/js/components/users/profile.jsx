@@ -65,7 +65,9 @@ export default class Profile extends React.Component {
             accent: '',
             level: '',
             color: '',
-            campaign: ''
+            campaign: '',
+            child_age: '',
+            en_exp: ''
         };
 
         this.handleChange = this.handleChange.bind(this);
@@ -131,6 +133,8 @@ export default class Profile extends React.Component {
                 color: this.state.user.color || '',
                 accent: this.state.user.accent || '',
                 campaign: this.state.user.campaign || '',
+                child_age: this.state.user.child_age || '',
+                en_exp: this.state.user.en_exp || '',
                 level: this.state.user.level || ''
             });
         })
@@ -169,6 +173,8 @@ export default class Profile extends React.Component {
         color: this.state.color,
         accent: this.state.accent,
         campaign: this.state.campaign,
+        child_age: this.state.child_age,
+        en_exp: this.state.en_exp,
         level: this.state.level,
 
         wechat_openid: this.state.user.wechat_openid,
@@ -444,6 +450,8 @@ export default class Profile extends React.Component {
                                           />
                                 </Form.Field>
                                 <Form.Input placeholder="活动来源" name="campaign" value={this.state.campaign} onChange={this.handleChange} label="活动来源"/>
+                                <Form.Input placeholder="孩子年龄" name="child_age" value={this.state.child_age} onChange={this.handleChange} label="孩子年龄"/>
+                                <Form.Input placeholder="英语学习经验" name="en_exp" value={this.state.en_exp} onChange={this.handleChange} label="英语学习经验"/>
                         </Form.Group>
                         }
                         {
