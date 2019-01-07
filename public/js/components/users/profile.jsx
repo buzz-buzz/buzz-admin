@@ -101,7 +101,6 @@ export default class Profile extends React.Component {
             referrer: '',
             accent: '',
             level: '',
-            update_level: '',
             color: '',
             campaign: '',
             child_age: '',
@@ -119,7 +118,7 @@ export default class Profile extends React.Component {
     }
 
     handleChange(e, {name, value}) {
-        if(name === 'update_level'){
+        if(name === 'level'){
             levelUpdate = true;
         }
 
@@ -138,7 +137,7 @@ export default class Profile extends React.Component {
                     uri: `{buzzService}/api/v1/user-placement-tests/${this.state.user.user_id}`,
                     method: 'PUT',
                     json: {
-                        level: this.state.update_level
+                        level: this.state.level
                     }
                 }
             });
@@ -200,7 +199,6 @@ export default class Profile extends React.Component {
                 child_age: this.state.user.child_age || '',
                 en_exp: this.state.user.en_exp || '',
                 level: this.state.user.level || '',
-                update_level: this.state.user.level || ''
             });
         })
     }
@@ -240,7 +238,7 @@ export default class Profile extends React.Component {
         campaign: this.state.campaign,
         child_age: this.state.child_age,
         en_exp: this.state.en_exp,
-        level: this.state.update_level,
+        level: this.state.level,
 
         wechat_openid: this.state.user.wechat_openid,
         wechat_unionid: this.state.user.wechat_unionid,
@@ -259,7 +257,7 @@ export default class Profile extends React.Component {
             }) : {};
 
             //
-            if(this.state.update_level && levelUpdate){
+            if(this.state.level && levelUpdate){
                 await this.handleLevelChange();
             }
 
@@ -509,14 +507,14 @@ export default class Profile extends React.Component {
                             <Form.Group>
                                 <Form.Field>
                                     <label>评级</label>
-                                    <Dropdown selection multiple={false} name="update_level"
+                                    <Dropdown selection multiple={false} name="level"
                                           options={[{ key: '1', value: '1', text: '1' },
                                           { key: '2', value: '2', text: '2' },
                                           { key: '3', value: '3', text: '3' },
                                           { key: '4', value: '4', text: '4' },
                                           { key: '5', value: '5', text: '5' },
                                           { key: '6', value: '6', text: '6' },]}
-                                          value={this.state.update_level} placeholder="能力评级" onChange={this.handleChange}
+                                          value={this.state.level} placeholder="能力评级" onChange={this.handleChange}
                                           />
                                 </Form.Field>
                                 <Form.Input placeholder="活动来源" name="campaign" value={this.state.campaign} onChange={this.handleChange} label="活动来源"/>
