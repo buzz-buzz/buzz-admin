@@ -124,9 +124,6 @@ export default class Profile extends React.Component {
 
         this.setState({
             [name]: value
-        }, ()=>{
-            console.log('--change--');
-            console.log(this.state);
         })
     }
 
@@ -248,6 +245,10 @@ export default class Profile extends React.Component {
         try {
             this.setState({loading: true});
 
+            if(this.state.level && levelUpdate){
+                await this.handleLevelChange();
+             }
+
             let result = userId ? await ServiceProxy.proxyTo({
                 body: {
                     uri: `{buzzService}/api/v1/users/${userId}`,
@@ -255,11 +256,6 @@ export default class Profile extends React.Component {
                     method: 'PUT'
                 }
             }) : {};
-
-            //
-            if(this.state.level && levelUpdate){
-                await this.handleLevelChange();
-            }
 
             this.props.profileUpdateCallback(result);
             this.setState({error: false});
