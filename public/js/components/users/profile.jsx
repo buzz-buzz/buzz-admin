@@ -113,6 +113,32 @@ export default class Profile extends React.Component {
         })
     }
 
+    async handleLevelChange(e, {name, value}) {
+        try {
+            let result = await ServiceProxy.proxyTo({
+                body: {
+                    uri: `{buzzService}/api/v1/user-placement-tests/${this.state.user.user_id}`,
+                    method: 'PUT',
+                    json: {
+                        level: value
+                    }
+                }
+            });
+
+            console.log('result = ', result);
+            this.setState({
+                level: result.level
+            })
+        } catch (error) {
+            this.setState({
+                error: true,
+                message: JSON.stringify(error.result)
+            })
+        } finally {
+            this.setState({ loading: false })
+        }
+    }
+
     classTagManage(){
         window.open('/admin-neue/tagDetail/' + this.state.user.user_id);  
     }
@@ -473,7 +499,7 @@ export default class Profile extends React.Component {
                                           { key: '4', value: '4', text: '4' },
                                           { key: '5', value: '5', text: '5' },
                                           { key: '6', value: '6', text: '6' },]}
-                                          value={this.state.level} placeholder="评级" onChange={this.handleChange}
+                                          value={this.state.level} placeholder="评级" onChange={this.handleLevelChange}
                                           />
                                 </Form.Field>
                                 <Form.Input placeholder="活动来源" name="campaign" value={this.state.campaign} onChange={this.handleChange} label="活动来源"/>
