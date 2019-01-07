@@ -66,7 +66,7 @@ const levelOption = [
     { key: 5, value: '6', text: '6' }
 ]
 
-const levelUpdate = false;
+let levelUpdate = false;
 
 export default class Profile extends React.Component {
     constructor(props) {
@@ -125,6 +125,9 @@ export default class Profile extends React.Component {
 
         this.setState({
             [name]: value
+        }, ()=>{
+            console.log('--change--');
+            console.log(this.state);
         })
     }
 
