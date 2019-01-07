@@ -57,6 +57,7 @@ const EnExp = [
     {key: 4, value: '3年以上', text: '3年以上'}
 ];
 
+const levelUpdate = false;
 
 export default class Profile extends React.Component {
     constructor(props) {
@@ -108,34 +109,31 @@ export default class Profile extends React.Component {
     }
 
     handleChange(e, {name, value}) {
+        if(name === 'level'){
+            levelUpdate = true;
+        }
+
         this.setState({
             [name]: value
         })
     }
 
-    async handleLevelChange(e, {name, value}) {
+    async handleLevelChange() {
         try {
-            let result = await ServiceProxy.proxyTo({
+            await ServiceProxy.proxyTo({
                 body: {
                     uri: `{buzzService}/api/v1/user-placement-tests/${this.state.user.user_id}`,
                     method: 'PUT',
                     json: {
-                        level: value
+                        level: this.state.level
                     }
                 }
             });
-
-            console.log('result = ', result);
-            this.setState({
-                level: result.level
-            })
         } catch (error) {
             this.setState({
                 error: true,
                 message: JSON.stringify(error.result)
             })
-        } finally {
-            this.setState({ loading: false })
         }
     }
 
@@ -245,6 +243,11 @@ export default class Profile extends React.Component {
                     method: 'PUT'
                 }
             }) : {};
+
+            //
+            if(this.state.level && levelUpdate){
+                await this.handleLevelChange();
+            }
 
             this.props.profileUpdateCallback(result);
             this.setState({error: false});
@@ -499,7 +502,7 @@ export default class Profile extends React.Component {
                                           { key: '4', value: '4', text: '4' },
                                           { key: '5', value: '5', text: '5' },
                                           { key: '6', value: '6', text: '6' },]}
-                                          value={this.state.level} placeholder="评级" onChange={this.handleLevelChange}
+                                          value={this.state.level} placeholder="评级" onChange={this.handleChange}
                                           />
                                 </Form.Field>
                                 <Form.Input placeholder="活动来源" name="campaign" value={this.state.campaign} onChange={this.handleChange} label="活动来源"/>
