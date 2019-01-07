@@ -57,6 +57,15 @@ const EnExp = [
     {key: 4, value: '3年以上', text: '3年以上'}
 ];
 
+const levelOption = [
+    { key: 0, value: '1', text: '1' },
+    { key: 1, value: '2', text: '2' },
+    { key: 2, value: '3', text: '3' },
+    { key: 3, value: '4', text: '4' },
+    { key: 4, value: '5', text: '5' },
+    { key: 5, value: '6', text: '6' }
+]
+
 const levelUpdate = false;
 
 export default class Profile extends React.Component {
@@ -496,12 +505,7 @@ export default class Profile extends React.Component {
                                 <Form.Field>
                                     <label>评级</label>
                                     <Dropdown selection multiple={false} name="level"
-                                          options={[{ key: '1', value: '1', text: '1' },
-                                          { key: '2', value: '2', text: '2' },
-                                          { key: '3', value: '3', text: '3' },
-                                          { key: '4', value: '4', text: '4' },
-                                          { key: '5', value: '5', text: '5' },
-                                          { key: '6', value: '6', text: '6' },]}
+                                          options={levelOption}
                                           value={this.state.level} placeholder="评级" onChange={this.handleChange}
                                           />
                                 </Form.Field>
