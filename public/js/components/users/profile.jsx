@@ -31,6 +31,33 @@ const languageList = [
     {key: 9, value: 'Punjabi', text: 'Punjabi'}
 ];
 
+const ChildAge = [
+    {key: 0, value: '4岁以下', text: '4岁以下'},
+    {key: 1, value: '4岁', text: '4岁'},
+    {key: 2, value: '5岁', text: '5岁'},
+    {key: 3, value: '6岁', text: '6岁'},
+    {key: 4, value: '7岁', text: '7岁'},
+    {key: 5, value: '8岁', text: '8岁'},
+    {key: 6, value: '9岁', text: '9岁'},
+    {key: 7, value: '10岁', text: '10岁'},
+    {key: 8, value: '11岁', text: '11岁'},
+    {key: 9, value: '12岁', text: '12岁'},
+    {key: 10, value: '13岁', text: '13岁'},
+    {key: 11, value: '14岁', text: '14岁'},
+    {key: 12, value: '15岁', text: '15岁'},
+    {key: 13, value: '16岁', text: '16岁'},
+    {key: 14, value: '16岁以上', text: '16岁以上'}
+];
+
+const EnExp = [
+    {key: 0, value: '没有', text: '没有'},
+    {key: 1, value: '1年以下', text: '1年以下'},
+    {key: 2, value: '1-2年', text: '1-2年'},
+    {key: 3, value: '2-3年', text: '2-3年'},
+    {key: 4, value: '3年以上', text: '3年以上'}
+];
+
+
 export default class Profile extends React.Component {
     constructor(props) {
         super(props);
@@ -450,8 +477,20 @@ export default class Profile extends React.Component {
                                           />
                                 </Form.Field>
                                 <Form.Input placeholder="活动来源" name="campaign" value={this.state.campaign} onChange={this.handleChange} label="活动来源"/>
-                                <Form.Input placeholder="孩子年龄" name="child_age" value={this.state.child_age} onChange={this.handleChange} label="孩子年龄"/>
-                                <Form.Input placeholder="英语学习经验" name="en_exp" value={this.state.en_exp} onChange={this.handleChange} label="英语学习经验"/>
+                                <Form.Field>
+                                    <label>孩子年龄</label>
+                                    <Dropdown selection multiple={false} name="child_age"
+                                          options={ChildAge}
+                                          value={this.state.child_age} placeholder="孩子年龄" onChange={this.handleChange}
+                                          />
+                                </Form.Field>
+                                <Form.Field>
+                                    <label>英语学习经验</label>
+                                    <Dropdown selection multiple={false} name="en_exp"
+                                          options={EnExp}
+                                          value={this.state.en_exp} placeholder="英语学习经验" onChange={this.handleChange}
+                                          />
+                                </Form.Field>
                         </Form.Group>
                         }
                         {
