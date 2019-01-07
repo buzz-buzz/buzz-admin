@@ -319,7 +319,7 @@ export default class Profile extends React.Component {
 
     render() {
         return (
-            <Modal open={this.props.open} closeOnEscape={true} closeOnRootNodeClick={false} onClose={this.close}
+            <Modal open={this.props.open} closeOnEscape={true} closeOnRootNodeClick={true} onClose={this.close}
                    closeIcon>
                 <Header content={
                     <div>
@@ -570,6 +570,10 @@ export default class Profile extends React.Component {
                                              type="button"
                                              onClick={this.classTagManage}/>
                             }
+                            <Form.Button color="red"
+                                             content={`关闭窗口`}
+                                             type="button"
+                                             onClick={this.close}/>
                         </Form.Group>
                     </Form>
                 </Modal.Content>
