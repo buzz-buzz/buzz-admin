@@ -235,10 +235,10 @@ export default class Profile extends React.Component {
         child_age: this.state.child_age,
         en_exp: this.state.en_exp,
 
-        // wechat_openid: this.state.user.wechat_openid,
-        // wechat_unionid: this.state.user.wechat_unionid,
-        // wechat_data: this.state.user.wechat_data,
-        // wechat_name: this.state.user.wechat_name
+        wechat_openid: this.state.user.wechat_openid,
+        wechat_unionid: this.state.user.wechat_unionid,
+        wechat_data: this.state.user.wechat_data,
+        wechat_name: this.state.user.wechat_name
     }) {
         try {
             this.setState({loading: true});
