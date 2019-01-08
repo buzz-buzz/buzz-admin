@@ -64,9 +64,7 @@ const levelOption = [
     { key: 3, value: '4', text: '4' },
     { key: 4, value: '5', text: '5' },
     { key: 5, value: '6', text: '6' }
-]
-
-let levelUpdate = false;
+];
 
 export default class Profile extends React.Component {
     constructor(props) {
@@ -108,6 +106,7 @@ export default class Profile extends React.Component {
         };
 
         this.handleChange = this.handleChange.bind(this);
+        this.handleLevelChange = this.handleLevelChange.bind(this);
         this.close = this.close.bind(this);
         this.updateProfile = this.updateProfile.bind(this);
         this.createUser = this.createUser.bind(this);
@@ -118,32 +117,32 @@ export default class Profile extends React.Component {
     }
 
     handleChange(e, {name, value}) {
-        if(name === 'level'){
-            levelUpdate = true;
-        }
-
         this.setState({
             [name]: value
         })
     }
 
-    async handleLevelChange() {
-        try {
-            await ServiceProxy.proxyTo({
-                body: {
-                    uri: `{buzzService}/api/v1/user-placement-tests/${this.state.user.user_id}`,
-                    method: 'PUT',
-                    json: {
-                        level: this.state.level
+    async handleLevelChange(e, {name, value}){
+        this.setState({
+            level: value
+        },async ()=>{
+            try {
+                await ServiceProxy.proxyTo({
+                    body: {
+                        uri: `{buzzService}/api/v1/user-placement-tests/${this.state.user.user_id}`,
+                        method: 'PUT',
+                        json: {
+                            level: value
+                        }
                     }
-                }
-            });
-        } catch (error) {
-            this.setState({
-                error: true,
-                message: JSON.stringify(error.result)
-            })
-        }
+                });
+            } catch (error) {
+                this.setState({
+                    error: true,
+                    message: JSON.stringify(error.result)
+                })
+            }
+        });
     }
 
     classTagManage(){
@@ -235,7 +234,6 @@ export default class Profile extends React.Component {
         campaign: this.state.campaign,
         child_age: this.state.child_age,
         en_exp: this.state.en_exp,
-        level: this.state.level,
 
         wechat_openid: this.state.user.wechat_openid,
         wechat_unionid: this.state.user.wechat_unionid,
@@ -244,11 +242,6 @@ export default class Profile extends React.Component {
     }) {
         try {
             this.setState({loading: true});
-
-            if(this.state.level && levelUpdate){
-                await this.handleLevelChange();
-             }
-
             let result = userId ? await ServiceProxy.proxyTo({
                 body: {
                     uri: `{buzzService}/api/v1/users/${userId}`,
@@ -504,13 +497,8 @@ export default class Profile extends React.Component {
                                 <Form.Field>
                                     <label>评级</label>
                                     <Dropdown selection multiple={false} name="level"
-                                          options={[{ key: '1', value: '1', text: '1' },
-                                          { key: '2', value: '2', text: '2' },
-                                          { key: '3', value: '3', text: '3' },
-                                          { key: '4', value: '4', text: '4' },
-                                          { key: '5', value: '5', text: '5' },
-                                          { key: '6', value: '6', text: '6' },]}
-                                          value={this.state.level} placeholder="能力评级" onChange={this.handleChange}
+                                          options={levelOption}
+                                          value={this.state.level} placeholder="能力评级" onChange={this.handleLevelChange}
                                           />
                                 </Form.Field>
                                 <Form.Input placeholder="活动来源" name="campaign" value={this.state.campaign} onChange={this.handleChange} label="活动来源"/>
