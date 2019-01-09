@@ -69,7 +69,7 @@ class UserListTableRow extends React.Component {
 
         switch (state) {
             case StudentLifeCycleKeys.potential:
-                return this.renderPotential(openProfile, user, match)
+                return this.renderPotential(openProfile, user, match, changeState)
             case StudentLifeCycleKeys.lead:
                 return this.renderLeads(openProfile, user, match, changeState)
             case StudentLifeCycleKeys.demo:
@@ -247,13 +247,13 @@ class UserListTableRow extends React.Component {
         </Table.Cell>;
     }
 
-    renderPotential(openProfile, user, match) {
+    renderPotential(openProfile, user, match, changeState) {
         return <Table.Row>
             {this.renderID(openProfile, user)}
             {this.renderAvatar(openProfile, user, match)}
             {this.renderSource(openProfile, user)}
             {this.renderTags(openProfile, user)}
-            {UserListTableRow.renderState(user)}
+            {UserListTableRow.renderState(user, changeState)}
         </Table.Row>
     }
 

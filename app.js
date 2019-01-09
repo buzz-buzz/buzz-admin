@@ -17,6 +17,7 @@ const bodyParser = require('koa-bodyparser');
 const request = require('request-promise-native');
 const cors = require('koa-cors');
 const pkg = require('./package.json');
+const jwt = require('jsonwebtoken');
 
 let viewpath = path.join(__dirname, 'views');
 let assetPath = path.join(__dirname, 'public');
@@ -142,11 +143,23 @@ router
 
         let auth = `Basic ${new Buffer(`${process.env.BASIC_NAME}:${process.env.BASIC_PASS}`).toString('base64')}`;
 
-        let options = {
-            headers: {
-                'X-Requested-With': 'buzz-admin',
-                Cookie: `user_id=${ctx.state.user.userId}`
+        let headers = {
+            'X-Requested-With': 'buzz-admin'
+        };
+
+        if(ctx.state && ctx.state.user && ctx.state.user.userId){
+            let token = '';
+            try{
+                token = jwt.sign({user_id: ctx.state.user.userId}, process.env.BASIC_PASS);
             }
+            catch (ex){
+                
+            }
+            headers.Cookie = token ? `user_id=${ctx.state.user.userId};token=${token}` : `user_id=${ctx.state.user.userId}`;
+        }
+
+        let options = {
+            headers: headers
         };
 
         if (['qa', 'production', 'preProduction'].indexOf(process.env.NODE_ENV) >= 0) {

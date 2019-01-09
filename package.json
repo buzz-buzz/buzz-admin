@@ -43,6 +43,7 @@
     "d3-transition": "1.1.1",
     "history": "^4.7.2",
     "immutability-helper": "^2.7.0",
+    "jsonwebtoken": "^8.4.0",
     "jsx-loader": "^0.13.2",
     "koa": "^2.4.1",
     "koa-basic-auth": "^2.0.0",
