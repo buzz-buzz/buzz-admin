@@ -155,7 +155,8 @@ router
             catch (ex){
                 
             }
-            headers.Cookie = token ? `user_id=${ctx.state.user.userId};token=${token}` : `user_id=${ctx.state.user.userId}`;
+            headers.Token = token;
+            headers.Cookie = `user_id=${ctx.state.user.userId}`;
         }
 
         let options = {
