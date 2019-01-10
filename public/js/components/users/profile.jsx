@@ -220,7 +220,7 @@ export default class Profile extends React.Component {
             }) : {};
 
             this.props.profileUpdateCallback(result);
-            this.setState({error: false});
+            this.setState({error: false, updateInfo: {}});
 
             return true
         } catch (error) {
