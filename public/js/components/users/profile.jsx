@@ -102,7 +102,8 @@ export default class Profile extends React.Component {
             color: '',
             campaign: '',
             child_age: '',
-            en_exp: ''
+            en_exp: '',
+            updateInfo: {}
         };
 
         this.handleChange = this.handleChange.bind(this);
@@ -117,8 +118,12 @@ export default class Profile extends React.Component {
     }
 
     handleChange(e, {name, value}) {
+        let updateInfo = Object.assign(this.state.updateInfo, {});
+        updateInfo[name] = value;
+
         this.setState({
-            [name]: value
+            [name]: value,
+            updateInfo: updateInfo
         })
     }
 
@@ -203,43 +208,7 @@ export default class Profile extends React.Component {
         this.props.onCloseCallback();
     }
 
-    async updateProfile(userId = this.state.user.user_id, updatedUser = {
-        mobile: this.state.mobile,
-        email: this.state.email,
-        parent_name: this.state.parentName,
-        name: this.state.name,
-        country: this.state.country,
-        city: this.state.city,
-        gender: this.state.gender,
-        remark: this.state.remark,
-        order_remark: this.state.order_remark,
-        rookie_room_url: this.state.rookie_room_url,
-        avatar: this.state.avatar,
-        grade: this.state.grade,
-        school_name: this.state.school_name,
-        time_zone: this.state.time_zone,
-        date_of_birth: this.state.date_of_birth && new Date(this.state.date_of_birth),
-        display_name: this.state.display_name,
-        weekly_schedule_requirements: this.state.weekly_schedule_requirements,
-        password: this.state.password,
-        source: this.state.source,
-        follower: this.state.follower,
-        speak_chinese: this.state.speak_chinese,
-        second_foreign_language: this.state.second_foreign_language,
-        video_introduction: this.state.video_introduction,
-        referral: this.state.referral,
-        referrer: this.state.referrer,
-        color: this.state.color,
-        accent: this.state.accent,
-        campaign: this.state.campaign,
-        child_age: this.state.child_age,
-        en_exp: this.state.en_exp,
-
-        wechat_openid: this.state.user.wechat_openid,
-        wechat_unionid: this.state.user.wechat_unionid,
-        wechat_data: this.state.user.wechat_data,
-        wechat_name: this.state.user.wechat_name
-    }) {
+    async updateProfile(userId = this.state.user.user_id, updatedUser = this.state.updateInfo ) {
         try {
             this.setState({loading: true});
             let result = userId ? await ServiceProxy.proxyTo({
