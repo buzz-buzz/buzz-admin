@@ -67,7 +67,7 @@ app.use(async (ctx, next) => {
             //ctx.throw(err.status, err);
         } else {
             if(ctx.request.path === '/'){
-                ctx.redirect(membership.getSignInUrl(ctx.request.url)); 
+                ctx.redirect(membership.getSignInUrl(ctx.request.url));
             }else{
                 ctx.throw(err.status, err)
             }
@@ -75,7 +75,7 @@ app.use(async (ctx, next) => {
     }
 });
 
-app.use(auth({name: process.env.BASIC_NAME, pass: process.env.BASIC_PASS}));
+// app.use(auth({name: process.env.BASIC_NAME, pass: process.env.BASIC_PASS}));
 
 app.use(membership.ensureAuthenticated)
 
@@ -119,7 +119,7 @@ router
                         'X-Requested-With': 'buzz-admin'
                     }
                 });
-        
+
                 profile = JSON.parse(profile);
                 if (profile.avatar) {
                     ctx.redirect(profile.avatar)
@@ -153,7 +153,7 @@ router
                 token = jwt.sign({user_id: ctx.state.user.userId}, process.env.BASIC_PASS);
             }
             catch (ex){
-                
+
             }
             headers.Token = token;
             headers.Cookie = `user_id=${ctx.state.user.userId}`;
