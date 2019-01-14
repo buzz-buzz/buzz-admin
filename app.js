@@ -155,7 +155,7 @@ router
             catch (ex){
                 
             }
-            headers.Token = token;
+            headers.token = token;
             headers.Cookie = `user_id=${ctx.state.user.userId}`;
         }
 
@@ -168,7 +168,13 @@ router
             console.log('auth when proxy because it is in ', process.env.NODE_ENV);
         }
 
-        ctx.body = await oldRequest(Object.assign(options, ctx.request.body));
+        let response = await oldRequest(Object.assign(options, ctx.request.body)); 
+
+        if(response.statusCode === 401 || response.statusCode === 403){
+            ctx.redirect(membership.getSignInUrl(ctx.request.url)); 
+        }else{
+            ctx.body = response;
+        }
     })
     .get('/admin-neue/classDetail/:class_id', async ctx => {
         ctx.redirect(`${config.endPoints.adminNeue}/classDetail/${ctx.params.class_id}`);

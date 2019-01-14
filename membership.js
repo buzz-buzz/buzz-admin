@@ -2,6 +2,7 @@ const config = require('./config');
 const cookie = require('./cookie-helper');
 const util = require('util');
 const request = require('request-promise-native')
+const jwt = require('jsonwebtoken');
 
 async function setUserToState(context, user_id) {
     context.state.user = {
@@ -74,12 +75,21 @@ membership.rejectAccess = function (ctx) {
 };
 
 membership.ensureSystemUsers = async function (context, next) {
-    let userId = context.state.user.userId
+    let userId = context.state.user.userId;
+
+    let token = '';
+    try{
+        token = jwt.sign({user_id: userId}, process.env.BASIC_PASS);
+       }
+        catch (ex){
+                
+       }
 
     let profile = JSON.parse(await request({
         uri: `${config.endPoints.buzzService}/api/v1/users/${userId}`,
         headers: {
-            'X-Requested-With': 'buzz-admin'
+            'X-Requested-With': 'buzz-admin',
+            token: token
         }
     }));
 
