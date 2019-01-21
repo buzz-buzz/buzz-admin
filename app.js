@@ -171,7 +171,7 @@ router
         let response = await oldRequest(Object.assign(options, ctx.request.body)); 
 
         if(response.statusCode === 401 || response.statusCode === 403){
-            ctx.redirect(membership.getSignInUrl(ctx.request.url)); 
+            ctx.redirect(membership.getSignInUrl('/')); 
         }else{
             ctx.body = response;
         }

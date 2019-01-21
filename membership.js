@@ -27,23 +27,8 @@ async function setUserFromCookie(context) {
     }
 }
 
-async function setUserFromQueryString(context) {
-    // TODO: allow login by query string using more safer method (temp token, for example)
-    return false;
-
-    let user_id = context.query.user_id;
-
-    if (user_id) {
-        await setUserToState(context, user_id);
-        cookie.setUserId.call(context, user_id);
-    }
-
-    return user_id;
-}
-
 async function setUserFromQSOrCookie(context) {
-    (await setUserFromQueryString(context))
-    || (await setUserFromCookie(context));
+    await setUserFromCookie(context);
 }
 
 let membership = {};
@@ -51,6 +36,7 @@ let membership = {};
 membership.getSignInUrl = function (returnUrl) {
     return util.format(config.signInUrl, `${encodeURIComponent(`${config.origin}${returnUrl}`)}`);
 };
+
 membership.ensureAuthenticated = async function (context, next) {
     await setUserFromQSOrCookie(context);
 
