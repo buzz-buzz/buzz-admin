@@ -185,25 +185,60 @@ router
         }
     })
     .get('/admin-neue/tagDetail/:user_id', async ctx => {
-        ctx.redirect(`${config.endPoints.adminNeue}/tagDetail/${ctx.params.user_id}`);
+        if(ctx.state && ctx.state.user && ctx.state.user.userId){
+            let token = jwt.sign({user_id: ctx.state.user.userId}, process.env.BASIC_PASS);
+            ctx.redirect(`${config.endPoints.adminNeue}/tagDetail/${ctx.params.user_id}?token=${token}`);
+        }else{
+            ctx.redirect(`${config.endPoints.adminNeue}/tagDetail/${ctx.params.user_id}`);
+        }
     })
     .get('/admin-neue/content-list', async ctx => {
-        ctx.redirect(`${config.endPoints.adminNeue}/contentList`);
+        if(ctx.state && ctx.state.user && ctx.state.user.userId){
+            let token = jwt.sign({user_id: ctx.state.user.userId}, process.env.BASIC_PASS);
+            ctx.redirect(`${config.endPoints.adminNeue}/contentList?token=${token}`);
+        }else{
+            ctx.redirect(`${config.endPoints.adminNeue}/contentList`);
+        }
     })
     .get('/admin-neue/bannerList', async ctx => {
-        ctx.redirect(`${config.endPoints.adminNeue}/bannerList`);
+        if(ctx.state && ctx.state.user && ctx.state.user.userId){
+            let token = jwt.sign({user_id: ctx.state.user.userId}, process.env.BASIC_PASS);
+            ctx.redirect(`${config.endPoints.adminNeue}/bannerList?token=${token}`);
+        }else{
+            ctx.redirect(`${config.endPoints.adminNeue}/bannerList`);
+        }
     })
     .get('/admin-neue/faq-list', async ctx => {
-        ctx.redirect(`${config.endPoints.adminNeue}/faqList`);
+        if(ctx.state && ctx.state.user && ctx.state.user.userId){
+            let token = jwt.sign({user_id: ctx.state.user.userId}, process.env.BASIC_PASS);
+            ctx.redirect(`${config.endPoints.adminNeue}/faqList?token=${token}`);
+        }else{
+            ctx.redirect(`${config.endPoints.adminNeue}/faqList`);
+        }
     })
     .get('/admin-neue/importUser', async ctx => {
-        ctx.redirect(`${config.endPoints.adminNeue}/importUser`);
+        if(ctx.state && ctx.state.user && ctx.state.user.userId){
+            let token = jwt.sign({user_id: ctx.state.user.userId}, process.env.BASIC_PASS);
+            ctx.redirect(`${config.endPoints.adminNeue}/importUser?token=${token}`);
+        }else{
+            ctx.redirect(`${config.endPoints.adminNeue}/importUser`);
+        }
     })
     .get('/admin-neue/referralList', async ctx => {
-        ctx.redirect(`${config.endPoints.adminNeue}/referralList`);
+        if(ctx.state && ctx.state.user && ctx.state.user.userId){
+            let token = jwt.sign({user_id: ctx.state.user.userId}, process.env.BASIC_PASS);
+            ctx.redirect(`${config.endPoints.adminNeue}/referralList?token=${token}`);
+        }else{
+            ctx.redirect(`${config.endPoints.adminNeue}/referralList`);
+        }
     })
     .get('/admin-neue/weappList', async ctx => {
-        ctx.redirect(`${config.endPoints.adminNeue}/weappList`);
+        if(ctx.state && ctx.state.user && ctx.state.user.userId){
+            let token = jwt.sign({user_id: ctx.state.user.userId}, process.env.BASIC_PASS);
+            ctx.redirect(`${config.endPoints.adminNeue}/weappList?token=${token}`);
+        }else{
+            ctx.redirect(`${config.endPoints.adminNeue}/weappList`);
+        }
     })
     .get('/current-user', membership.ensureAuthenticated, membership.ensureSystemUsers, async ctx => {
         ctx.body = ctx.state.user;
