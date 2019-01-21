@@ -177,7 +177,12 @@ router
         }
     })
     .get('/admin-neue/classDetail/:class_id', async ctx => {
-        ctx.redirect(`${config.endPoints.adminNeue}/classDetail/${ctx.params.class_id}`);
+        if(ctx.state && ctx.state.user && ctx.state.user.userId){
+            let token = jwt.sign({user_id: ctx.state.user.userId}, process.env.BASIC_PASS);
+            ctx.redirect(`${config.endPoints.adminNeue}/classDetail/${ctx.params.class_id}?token=${token}`);
+        }else{
+            ctx.redirect(`${config.endPoints.adminNeue}/classDetail/${ctx.params.class_id}`);
+        }
     })
     .get('/admin-neue/tagDetail/:user_id', async ctx => {
         ctx.redirect(`${config.endPoints.adminNeue}/tagDetail/${ctx.params.user_id}`);
