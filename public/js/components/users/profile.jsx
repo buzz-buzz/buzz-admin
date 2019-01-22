@@ -243,7 +243,7 @@ export default class Profile extends React.Component {
         try {
             this.setState({loading: true});
 
-            let result = await ServiceProxy.proxyTo({
+            await ServiceProxy.proxyTo({
                 body: {
                     uri: `{buzzService}/api/v1/users/${this.state.user.user_id}`,
                     method: 'DELETE',
@@ -252,11 +252,8 @@ export default class Profile extends React.Component {
             })
 
             this.setState({error: false});
-            await this.props.onUserDeleted(userId);
-
             this.close();
-            history.push('/users');
-            
+            await this.props.onUserDeleted(userId);
         } catch (error) {
             this.setState({error: true, message: JSON.stringify(error.result || error)})
         } finally {
@@ -564,10 +561,6 @@ export default class Profile extends React.Component {
                                              type="button"
                                              onClick={this.classTagManage}/>
                             }
-                            <Form.Button color="red"
-                                             content={`关闭窗口`}
-                                             type="button"
-                                             onClick={this.close}/>
                         </Form.Group>
                     </Form>
                 </Modal.Content>
