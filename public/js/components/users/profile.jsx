@@ -103,6 +103,12 @@ export default class Profile extends React.Component {
             campaign: '',
             child_age: '',
             en_exp: '',
+            admin_code: '',
+            admin_id: '',
+            admin_name: '',
+            channel_code: '',
+            channel_id: '',
+            channel_name: '',
             updateInfo: {}
         };
 
@@ -199,7 +205,13 @@ export default class Profile extends React.Component {
                 campaign: this.state.user.campaign || '',
                 child_age: this.state.user.child_age || '',
                 en_exp: this.state.user.en_exp || '',
-                level: this.state.user.level || '',
+                level: this.state.user.level || '',     
+                admin_code: this.state.user.admin_code || '',
+                admin_id: this.state.user.admin_id || '',
+                admin_name: this.state.user.admin_name || '',
+                channel_code: this.state.user.channel_code || '',
+                channel_id: this.state.user.channel_id || '',
+                channel_name: this.state.user.channel_name || '',
             });
         })
     }
@@ -494,6 +506,20 @@ export default class Profile extends React.Component {
                                 </Form.Field>
                         </Form.Group>
                         }
+                        <Form.Group>
+                            <Form.Input label="分销代码" placeholder="分销代码" value={this.state.admin_code}
+                                        readOnly/>
+                            <Form.Input label="分销id" placeholder="分销id" value={this.state.admin_id}
+                                        readOnly/>
+                            <Form.Input label="分销名称" placeholder="分销名称" value={this.state.admin_name}
+                                        readOnly/>
+                            <Form.Input label="渠道代码" placeholder="渠道代码" value={this.state.channel_code}
+                                        readOnly/>
+                            <Form.Input label="渠道id" placeholder="渠道id" value={this.state.channel_id}
+                                        readOnly/>
+                            <Form.Input label="渠道名称" placeholder="渠道名称" value={this.state.channel_name}
+                                        readOnly/>
+                        </Form.Group>
                         {
                             this.state.user.role === MemberType.Companion &&
                             <Form.Group  widths="equal">
