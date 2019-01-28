@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {Button, Dropdown, Form, Header, Image, Message, Modal, Popup, TextArea} from "semantic-ui-react";
+import {Dropdown, Form, Header, Image, Message, Modal, Popup, TextArea} from "semantic-ui-react";
 import ServiceProxy from "../../service-proxy";
 import * as Countries from "../../common/Countries";
 import Cities from "../../common/Cities";
@@ -9,7 +9,6 @@ import Timezones from "../../common/Timezones";
 import TimeHelper from "../../common/TimeHelper";
 import {MemberType, MemberTypeChinese} from "../../common/MemberType";
 import WechatProfile from "./wechat-profile";
-import history from '../common/history';
 import UserTags from "./user-tags";
 import {ClassStatusCode} from "../../common/ClassStatus";
 import {StudentLifeCyclesMapping} from "../../common/LifeCycles";
@@ -18,6 +17,7 @@ import ClassHourDisplay from "../common/ClassHourDisplay";
 import UserDropdownSingle from "./UserDropdownSingle";
 import UserFollowup from "./user-follow-up";
 
+//option list ... language,age,english-exp
 const languageList = [
     {key: 0, value: 'None', text: 'None'},
     {key: 1, value: 'Chinese', text: 'Chinese'},
@@ -118,7 +118,7 @@ export default class Profile extends React.Component {
     }
 
     handleChange(e, {name, value}) {
-        let updateInfo = Object.assign(this.state.updateInfo, {});
+        let updateInfo = Object.assign({}, this.state.updateInfo);
         updateInfo[name] = value;
 
         this.setState({
@@ -266,6 +266,11 @@ export default class Profile extends React.Component {
         let confirmed = window.confirm(`确认要将该用户（${this.state.name || this.state.display_name}）从 ${MemberTypeChinese[this.state.user.role]} 切换成 ${MemberTypeChinese[newRole]} 吗？`
         )
 
+        //new role = this.state.theOtherRole
+        if(this.state.role){
+            
+        }
+
         if (!confirmed) {
             window.alert('切换角色操作已取消')
             return
@@ -395,6 +400,11 @@ export default class Profile extends React.Component {
 
                             <Form.Input label="登录密码" placeholder="用户密码,不小于6位" value={this.state.password}
                                         name="password" onChange={this.handleChange}/>
+                            {
+                                this.state.user.role === MemberType.Student && 
+                                <Form.Input label="邮箱" placeholder="邮箱地址" value={this.state.email}
+                                name="email" onChange={this.handleChange}/> 
+                            }          
                         </Form.Group>
                         <Form.Group widths="equal">
                             <Form.Field>

@@ -76,7 +76,7 @@ export default class ClassList extends React.Component {
                 }
             });
 
-            let classes = Object.assign(this.state.classes, []);
+            let classes = Object.assign([], this.state.classes);
 
             for(let i in classes){
                 if(classes[i].class_id === classInfo.class_id){
@@ -178,10 +178,12 @@ export default class ClassList extends React.Component {
     }
 
     onExportAll = async () => {
-        this.setState({
-            downloadLink: `data:text/csv;charset=utf-8,\ufeff${await this.getAllEndedClasses()}`,
-            filename: 'allEndedClasses.csv'
-        })
+        if(confirm('确定导出全部用户吗？这个过程将很缓慢，请耐心等待，预计数分钟....请留意浏览器下方下载栏。')){
+            this.setState({
+                downloadLink: `data:text/csv;charset=utf-8,\ufeff${await this.getAllEndedClasses()}`,
+                filename: 'allEndedClasses.csv'
+            })
+        }
     };
 
     async exportRecording(){

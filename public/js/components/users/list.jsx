@@ -243,7 +243,7 @@ class UserList extends React.Component {
         }
         this.setState({loading: true});
         try {
-            let paginationData = await            ServiceProxy.proxyTo({
+            let paginationData = await ServiceProxy.proxyTo({
                 body: {
                     uri: `{buzzService}/api/v1/users`,
                     useQuerystring: true,
