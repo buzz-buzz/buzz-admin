@@ -401,7 +401,7 @@ export default class Profile extends React.Component {
                             <Form.Input label="登录密码" placeholder="用户密码,不小于6位" value={this.state.password}
                                         name="password" onChange={this.handleChange}/>
                             {
-                                this.state.user.role === MemberType.Student && 
+                                this.state.user.role === MemberType.Companion && 
                                 <Form.Input label="邮箱" placeholder="邮箱地址" value={this.state.email}
                                 name="email" onChange={this.handleChange}/> 
                             }          
