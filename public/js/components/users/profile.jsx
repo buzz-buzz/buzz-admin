@@ -513,6 +513,8 @@ export default class Profile extends React.Component {
                                         readOnly/>
                             <Form.Input label="分销名称" placeholder="分销名称" value={this.state.admin_name}
                                         readOnly/>
+                        </Form.Group>
+                        <Form.Group>
                             <Form.Input label="渠道代码" placeholder="渠道代码" value={this.state.channel_code}
                                         readOnly/>
                             <Form.Input label="渠道id" placeholder="渠道id" value={this.state.channel_id}
