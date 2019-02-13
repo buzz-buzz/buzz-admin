@@ -173,7 +173,7 @@ router
         if(response.statusCode === 401 || response.statusCode === 403){
             ctx.redirect(membership.getSignInUrl('/')); 
         }else{
-            ctx.body = response;
+            ctx.body = response + '-------';
         }
     })
     .get('/admin-neue/classDetail/:class_id', async ctx => {
