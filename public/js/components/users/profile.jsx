@@ -471,8 +471,12 @@ export default class Profile extends React.Component {
                             <Form.Field>
                                 <label>销售跟进人</label>
                                 <UserDropdownSingle selectedUserId={this.state.follower} changeFollowerTo={async (follower) => {
+                                    let updateInfo = Object.assign({}, this.state.updateInfo);
+                                    updateInfo.follower = follower;
+
                                     this.setState({
-                                        follower
+                                        follower: follower,
+                                        updateInfo: updateInfo
                                     })
                                 }}/>
                             </Form.Field>
