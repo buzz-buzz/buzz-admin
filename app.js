@@ -105,12 +105,12 @@ router
     .get('/', async ctx => {
         ctx.redirect('/classes');
     })
-    .get('/users/:userId?', membership.ensureAuthenticated, membership.ensureSystemUsers, clientPage)
-    .get('/students/:userId?', membership.ensureAuthenticated, membership.ensureSystemUsers, clientPage)
-    .get('/companions/:userId?', membership.ensureAuthenticated, membership.ensureSystemUsers, clientPage)
-    .get('/classes', membership.ensureAuthenticated, membership.ensureSystemUsers, clientPage)
+    .get('/users/:userId?', clientPage)
+    .get('/students/:userId?',  clientPage)
+    .get('/companions/:userId?',  clientPage)
+    .get('/classes',  clientPage)
     .get('/version', clientPage)
-    .get('/feedbacks/:class_id', membership.ensureAuthenticated, membership.ensureSystemUsers, clientPage)
+    .get('/feedbacks/:class_id',  clientPage)
     .get('/avatar/:userId', async ctx => {
         try {
             if(ctx.params.userId && ctx.params.userId !== '0'){
@@ -172,6 +172,7 @@ router
 
         if(response.statusCode === 401 || response.statusCode === 403){
             //ctx.redirect(membership.getSignInUrl('/')); 
+            console.log('--no auth--');
             ctx.body = '<html><head><title>Buzzbuzz Admin</title></head><body>你当前登录的用户身份没有权限查看该页面，请<a' +
             ' href="/sign-out">点击这里</a>尝试用新的身份登录。</body></html>';
         }else{
