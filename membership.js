@@ -45,7 +45,7 @@ membership.ensureAuthenticated = async function (context, next) {
             context.status = 401;
             //context.body = membership.getSignInUrl(context.request.referer);
             context.body = '<html><head><title>Buzzbuzz Admin</title></head><body>你当前登录的用户身份没有权限查看该页面，请<a' +
-            ' href="/">点击这里</a>尝试用新的身份登录。</body></html>';
+            ' href="/sign-out">点击这里</a>尝试用新的身份登录。</body></html>';
         } else {
             return context.redirect(membership.getSignInUrl(context.request.url));
         }
@@ -59,7 +59,7 @@ membership.ensureAuthenticated = async function (context, next) {
 membership.rejectAccess = function (ctx) {
     ctx.status = 401;
     ctx.body = '<html><head><title>Buzzbuzz Admin</title></head><body>你当前登录的用户身份没有权限查看该页面，请<a' +
-        ' href="/">点击这里</a>尝试用新的身份登录。</body></html>';
+        ' href="/sign-out">点击这里</a>尝试用新的身份登录。</body></html>';
 };
 
 membership.ensureSystemUsers = async function (context, next) {

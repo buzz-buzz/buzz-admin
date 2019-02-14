@@ -171,7 +171,9 @@ router
         let response = await oldRequest(Object.assign(options, ctx.request.body)); 
 
         if(response.statusCode === 401 || response.statusCode === 403){
-            ctx.redirect(membership.getSignInUrl('/')); 
+            //ctx.redirect(membership.getSignInUrl('/')); 
+            ctx.body = '<html><head><title>Buzzbuzz Admin</title></head><body>你当前登录的用户身份没有权限查看该页面，请<a' +
+            ' href="/sign-out">点击这里</a>尝试用新的身份登录。</body></html>';
         }else{
             ctx.body = response;
         }
