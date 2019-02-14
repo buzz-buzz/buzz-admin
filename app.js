@@ -105,12 +105,12 @@ router
     .get('/', async ctx => {
         ctx.redirect('/classes');
     })
-    .get('/users/:userId?', clientPage)
-    .get('/students/:userId?', clientPage)
-    .get('/companions/:userId?', clientPage)
-    .get('/classes', clientPage)
+    .get('/users/:userId?', membership.ensureAuthenticated, membership.ensureSystemUsers, clientPage)
+    .get('/students/:userId?', membership.ensureAuthenticated, membership.ensureSystemUsers, clientPage)
+    .get('/companions/:userId?', membership.ensureAuthenticated, membership.ensureSystemUsers, clientPage)
+    .get('/classes', membership.ensureAuthenticated, membership.ensureSystemUsers, clientPage)
     .get('/version', clientPage)
-    .get('/feedbacks/:class_id', clientPage)
+    .get('/feedbacks/:class_id', membership.ensureAuthenticated, membership.ensureSystemUsers, clientPage)
     .get('/avatar/:userId', async ctx => {
         try {
             if(ctx.params.userId && ctx.params.userId !== '0'){
