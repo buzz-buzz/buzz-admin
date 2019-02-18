@@ -60,8 +60,8 @@ export class Avatar extends React.Component {
                                src={`/images/empty_avatar.jpg`}
                         />
                     </object>
-                } content={props.userId} >
-                    {this.displayUserName()}
+                }>
+                    {props.userId}
                 </Popup>
                 {
                     props.avatarOnly !== true &&
