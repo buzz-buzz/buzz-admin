@@ -1,6 +1,6 @@
 import React from "react";
 import ServiceProxy from "../../service-proxy";
-import {Button, Form, Popup, Table, TextArea, Modal} from "semantic-ui-react";
+import {Button, Form, Popup, Table, TextArea, Modal, Header} from "semantic-ui-react";
 import CurrentUser from "../../common/CurrentUser";
 import ErrorHandler from "../../common/ErrorHandler";
 import moment from "moment";
