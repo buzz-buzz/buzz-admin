@@ -117,7 +117,7 @@ class UserListTableRow extends React.Component {
     }
 
     static renderFollowup(openProfile, user) {
-        return <Table.Cell  onClick={() => openProfile(user)}>
+        return <Table.Cell>
             {
                 user && user.user_id &&
                 <UserFollowup userId={user.user_id}/>

@@ -83,48 +83,48 @@ export default class UserFollowup extends React.Component {
 
     render(){
         return (
-            <div>
+            <div className="buzz-follow">
                 <Modal trigger={<Button className="" color="yellow">添加跟进记录</Button>}>
-                    <Modal.Header>
+                    <Modal.Content>
                         <Form onSubmit={this.saveFollowup} loading={this.state.loading}>
-                            <TextArea autoHeight placeholder="填写跟进内容" value={this.state.followup} onChange={this.handleChange} name="followup" rows={1}/>
-                            <div>&nbsp;</div>
-                            <Button className="" color="yellow">保存</Button>
+                                <TextArea autoHeight placeholder="填写跟进内容" value={this.state.followup} onChange={this.handleChange} name="followup" rows={1}/>
+                                <div>&nbsp;</div>
+                                <Button className="" color="yellow">保存</Button>
                         </Form>
-                    </Modal.Header>
-                    <Modal.Description>
-                        <Table>
-                            <Table.Header>
-                                <Table.Row>
-                                    <Table.HeaderCell>时间</Table.HeaderCell>
-                                    <Table.HeaderCell>跟进人</Table.HeaderCell>
-                                    <Table.HeaderCell>内容</Table.HeaderCell>
-                                </Table.Row>
-                            </Table.Header>
-                            <Table.Body>
-                                {
-                                    this.state.rows && this.state.rows.map(r => <Table.Row key={r.timestamp}>
-                                        <Table.Cell style={{whiteSpace: 'nowrap'}}>{moment(r.timestamp).fromNow()}</Table.Cell>
-                                        <Table.Cell><Avatar link={true} avatarOnly={true} userId={r.followed_by}/></Table.Cell>
-                                        <Table.Cell>{r.remark}</Table.Cell>
-                                    </Table.Row>)
-                                }
-                            </Table.Body>
-                            <Table.Footer>
-                                <Table.Row>
-                                    <BuzzPagination pagination={this.state.pagination}
-                                                    gotoPage={this.gotoPage}
-                                                    paginationChanged={(newPagination) => {
-                                                        window.localStorage.setItem('pagination.per_page', newPagination.per_page);
-                                                        this.setState({pagination: newPagination}, async () => {
-                                                            await this.searchFollowups();
-                                                        });
-                                                    }}
-                                                    colSpan={3}/>
-                                </Table.Row>
-                            </Table.Footer>
-                        </Table>
-                    </Modal.Description>
+                        <Modal.Description>
+                                <Table>
+                                    <Table.Header>
+                                        <Table.Row>
+                                            <Table.HeaderCell>时间</Table.HeaderCell>
+                                            <Table.HeaderCell>跟进人</Table.HeaderCell>
+                                            <Table.HeaderCell>内容</Table.HeaderCell>
+                                        </Table.Row>
+                                    </Table.Header>
+                                    <Table.Body>
+                                        {
+                                            this.state.rows && this.state.rows.map(r => <Table.Row key={r.timestamp}>
+                                                <Table.Cell style={{whiteSpace: 'nowrap'}}>{moment(r.timestamp).fromNow()}</Table.Cell>
+                                                <Table.Cell><Avatar link={true} avatarOnly={true} userId={r.followed_by}/></Table.Cell>
+                                                <Table.Cell>{r.remark}</Table.Cell>
+                                            </Table.Row>)
+                                        }
+                                    </Table.Body>
+                                    <Table.Footer>
+                                        <Table.Row>
+                                            <BuzzPagination pagination={this.state.pagination}
+                                                            gotoPage={this.gotoPage}
+                                                            paginationChanged={(newPagination) => {
+                                                                window.localStorage.setItem('pagination.per_page', newPagination.per_page);
+                                                                this.setState({pagination: newPagination}, async () => {
+                                                                    await this.searchFollowups();
+                                                                });
+                                                            }}
+                                                            colSpan={3}/>
+                                        </Table.Row>
+                                    </Table.Footer>
+                                </Table>
+                        </Modal.Description>
+                    </Modal.Content>
                 </Modal>
             </div>
         )
