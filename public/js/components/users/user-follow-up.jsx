@@ -85,12 +85,14 @@ export default class UserFollowup extends React.Component {
         return (
             <div className="buzz-follow">
                 <Modal trigger={<Button className="" color="yellow">添加跟进记录</Button>}>
+                    <Modal.Header>添加用户跟进信息</Modal.Header>
                     <Modal.Content>
                         <Form onSubmit={this.saveFollowup} loading={this.state.loading}>
-                                <TextArea autoHeight placeholder="填写跟进内容" value={this.state.followup} onChange={this.handleChange} name="followup" rows={1}/>
+                                <TextArea autoHeight placeholder="请填写跟进内容" value={this.state.followup} onChange={this.handleChange} name="followup" rows={1}/>
                                 <div>&nbsp;</div>
-                                <Button className="" color="yellow">保存</Button>
+                                <Button className="" color="yellow">保存记录</Button>
                         </Form>
+                        <div style={{marginBottom: '30px'}}></div>
                         <Modal.Description>
                                 <Table>
                                     <Table.Header>
