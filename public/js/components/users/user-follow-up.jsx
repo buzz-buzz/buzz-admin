@@ -94,6 +94,7 @@ export default class UserFollowup extends React.Component {
                         </Form>
                         <div style={{marginBottom: '30px'}}></div>
                         <Modal.Description>
+                                <Header>历史跟进记录</Header>
                                 <Table>
                                     <Table.Header>
                                         <Table.Row>
