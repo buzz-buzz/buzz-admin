@@ -88,7 +88,7 @@ export default class UserFollowup extends React.Component {
                     <Modal.Header>添加用户跟进信息</Modal.Header>
                     <Modal.Content>
                         <Form onSubmit={this.saveFollowup} loading={this.state.loading}>
-                                <TextArea autoHeight placeholder="请填写跟进内容" value={this.state.followup} onChange={this.handleChange} name="followup" rows={1}/>
+                                <TextArea autoHeight placeholder="填写新的跟进内容" value={this.state.followup} onChange={this.handleChange} name="followup" rows={1}/>
                                 <div>&nbsp;</div>
                                 <Button className="" color="yellow">保存记录</Button>
                         </Form>
